@@ -1,6 +1,6 @@
-#Contribution
+# Contribution
 
-##Coding standards:
+## Coding standards:
 For this project, we follow the coding standards as presented by the unity guildelines: 
 https://wiki.unity3d.com/index.php/Csharp_Coding_Guidelines
 
@@ -31,6 +31,6 @@ public class SomeClass
 }
 ```
 
-##Unity files naming standards:
+## Unity files naming standards:
 
-##Pull request standards:
+## Pull request standards:
