@@ -36,5 +36,5 @@ sysinfo.txt
 *.unitypackage
 
 # Test scenes
-QEGame/Assets/Scenes/MarekTestScene.unity
-QEGame/Assets/Scenes/MarekTestScene.unity.meta
+QEGame/Assets/Scenes/TestScene.unity
+QEGame/Assets/Scenes/TestScene.unity.meta
