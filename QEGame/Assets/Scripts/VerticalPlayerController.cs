@@ -8,12 +8,12 @@ public class VerticalPlayerController : MonoBehaviour
 
     private CharacterController characterController;
     private Vector3 moveDirection = Vector3.zero;
-    
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
     }
-    
+
     void Update()
     {
         moveDirection = new Vector3(0.0f, 0.0f, Input.GetAxis("Vertical") * movementSpeed);
