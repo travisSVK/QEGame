@@ -1,36 +1,38 @@
 # Contribution
 
-## Coding standards:
-For this project, we follow the coding standards as presented by the unity guildelines: 
-https://wiki.unity3d.com/index.php/Csharp_Coding_Guidelines
+## Coding standards
+For this project, we follow the [Unity guidelines](https://wiki.unity3d.com/index.php/Csharp_Coding_Guidelines) for coding, with the following additions:
+- Four spaces are used for indentation.
+- Lines cannot be longer than 100 characters.
+- Otherwise empty lines must not contain any leftover indentation.
+- Every file must end with a newline character.
+- Files uploaded to the repository must not overwrite existing line ending configurations (_LF_ or _CRLF_).
 
-Additionally, we follow the following script organization rules:
+Additionally, we follow the following script organization rules for classes:
 
-1. Members of the class are on top of the class definition. They are organized in the following order: public, protected, private.
-2. Methods of the class are bellow the members definition. They are organized in the following order: public, protected, private. 
-They are also ordered alphabetically, within in each modifier.
-3. Private memeber variable has the prefix of an underscore.
+1. Constants.
+1. Member variables, organized in the following order: `public`, `protected`, `private`.
+2. Methods, including getters and setters, organized in the following order: `public`, `protected`, `private`. Additionally, within each set of methods corresponding to a particular modifier, methods are ordered alphabetically.
+3. The identifiers of _private_ memeber variable begin with `_`.
+
+Example:
 ```csharp
 public class SomeClass
 {
-  public float speed;
+    public float speed;
   
-  private float _width;
-  
-  public float width;
-  {
-    get
+    private float _width;
+
+    public float Width;
     {
-      return _width;
+        get { return _width; }
+        set { _width = value; }
     }
-    set
-    {
-      _width = value;
-    }
-  }
 }
 ```
 
-## Unity files naming standards:
+## Unity file naming standards
+...
 
-## Pull request standards:
+## Pull request standards
+...
