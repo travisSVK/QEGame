@@ -27,7 +27,7 @@ public class SomeClass
     /**
      * @brief Width of something.
      */
-    public float width;
+    public float Width
     {
         get { return _width; }
         set { _width = value; }
