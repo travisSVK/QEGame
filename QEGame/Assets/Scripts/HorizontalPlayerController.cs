@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class HorizontalPlayerController : MonoBehaviour
 {
-    public float movementSpeed = 5.0f;
+    private float _movementSpeed = 5.0f;
 
     private CharacterController characterController;
     private Vector3 moveDirection = Vector3.zero;
+
+    public float MovementSpeed
+    {
+        get { return _movementSpeed; }
+        set { _movementSpeed = value; }
+    }
 
     void Start()
     {
@@ -16,7 +22,7 @@ public class HorizontalPlayerController : MonoBehaviour
 
     void Update()
     {
-        moveDirection = new Vector3(Input.GetAxis("Horizontal") * movementSpeed, 0.0f, 0.0f);
+        moveDirection = new Vector3(Input.GetAxis("Horizontal") * _movementSpeed, 0.0f, 0.0f);
         characterController.Move(moveDirection * Time.deltaTime);
     }
 }
