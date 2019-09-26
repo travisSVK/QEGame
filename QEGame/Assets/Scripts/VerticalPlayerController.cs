@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class VerticalPlayerController : MonoBehaviour
 {
+    [SerializeField]
     private float _movementSpeed = 5.0f;
     private CharacterController characterController;
     private Vector3 moveDirection = Vector3.zero;
