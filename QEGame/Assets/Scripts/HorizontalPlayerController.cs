@@ -6,8 +6,8 @@ public class HorizontalPlayerController : MonoBehaviour
 {
     [SerializeField]
     private float _movementSpeed = 5.0f;
-    private CharacterController characterController;
-    private Vector3 moveDirection = Vector3.zero;
+    private CharacterController _characterController;
+    private Vector3 _moveDirection = Vector3.zero;
 
     public float MovementSpeed
     {
@@ -17,12 +17,12 @@ public class HorizontalPlayerController : MonoBehaviour
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        _characterController = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-        moveDirection = new Vector3(Input.GetAxis("Horizontal") * _movementSpeed, 0.0f, 0.0f);
-        characterController.Move(moveDirection * Time.deltaTime);
+        _moveDirection = new Vector3(Input.GetAxis("Horizontal") * _movementSpeed, 0.0f, 0.0f);
+        _characterController.Move(_moveDirection * Time.deltaTime);
     }
 }
