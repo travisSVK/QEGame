@@ -23,7 +23,10 @@ public class SomeClass
   
     private float _width;
 
-    public float Width;
+    /**
+     * @brief Width of something.
+     */
+    public float width;
     {
         get { return _width; }
         set { _width = value; }
