@@ -14,6 +14,7 @@ Additionally, we follow the following script organization rules for classes:
 1. Member variables, organized in the following order: `public`, `protected`, `private`.
 2. Methods, including getters and setters, organized in the following order: `public`, `protected`, `private`. Additionally, within each set of methods corresponding to a particular modifier, methods are ordered alphabetically.
 3. The identifiers of _private_ memeber variable begin with `_`.
+4. Comments are used for every public method, using JavaDoc style as one of the options provided by Doxygen documentation generator.
 
 Example:
 ```csharp
