@@ -167,17 +167,21 @@ public class CameraControllerInspector : Editor
             if (_mode == Mode.Translate)
             {
                 EditorGUI.BeginChangeCheck();
-                Vector3 newTargetPosition = Handles.PositionHandle(cameraController.controlPoints[i].position, Quaternion.identity);
+                Vector3 newTargetPosition = Handles.PositionHandle(
+                    cameraController.controlPoints[i].position, Quaternion.identity);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    cameraController.controlPoints[i] = new CameraController.ControlPoint(cameraController.controlPoints[i].name, newTargetPosition, cameraController.controlPoints[i].rotation);
+                    cameraController.controlPoints[i] = new CameraController.ControlPoint(
+                        cameraController.controlPoints[i].name, newTargetPosition, cameraController.controlPoints[i].rotation);
                 }
             }
             else
             {
                 EditorGUI.BeginChangeCheck();
-                Quaternion rotation = Handles.RotationHandle(cameraController.controlPoints[i].rotation, cameraController.controlPoints[i].position);
-                cameraController.controlPoints[i] = new CameraController.ControlPoint(cameraController.controlPoints[i].name, cameraController.controlPoints[i].position, rotation);
+                Quaternion rotation = Handles.RotationHandle(
+                    cameraController.controlPoints[i].rotation, cameraController.controlPoints[i].position);
+                cameraController.controlPoints[i] = new CameraController.ControlPoint(
+                    cameraController.controlPoints[i].name, cameraController.controlPoints[i].position, rotation);
                 cameraController.UpdateTransformations();
             }
         }
