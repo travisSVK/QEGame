@@ -10,8 +10,8 @@ public class VerticalPlayerController : MonoBehaviour
     private Vector3 _moveDirection = Vector3.zero;
 
     /**
-    * @brief Speed of the game object vertical movement.
-    */
+     * @brief Speed of the game object vertical movement.
+     */
     public float MovementSpeed
     {
         get { return _movementSpeed; }
