@@ -121,7 +121,7 @@ public class CameraController : MonoBehaviour
 
     /**
      * @brief Update the position and position in accordance to the current control point.
-     * 
+     *
      * Call this function from the editor only since the update function is not called.
      */
     public void UpdateTransformations()
