@@ -33,8 +33,20 @@ public class TutorialLevelController : MonoBehaviour
     public GameObject player;
     public GameObject goal;
     public Text centeredText, textByGoal, leftOrientedText;
+    public TutorialLevelController otherTLC; // TEMPORARY
 
     private bool isUpdating = false;
+    private bool hasPlayerMoved = false; // TEMPORARY
+
+    // TEMPORARY
+    public void NotifyMovement(bool isHorizontal)
+    {
+        if (hasPlayerMoved) { return; }
+        if (isHorizontal) { hasPlayerMoved = !isPlayerTwo; }
+        else { hasPlayerMoved = isPlayerTwo; }
+    }
+
+    public bool HasPlayerMoved() { return hasPlayerMoved; } // TEMPORARY
 
     private System.Collections.IEnumerator AsyncUpdate()
     {
@@ -51,11 +63,8 @@ public class TutorialLevelController : MonoBehaviour
         {
             while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
             centeredText.text = strings[2];
-
-            // TODO Wait until P1 has moved LEFT or RIGHT instead
-            while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
-
-            centeredText.text = "(After P1 moved)\n" + strings[3];
+            while (!hasPlayerMoved) { yield return null; } hasPlayerMoved = false;
+            centeredText.text = strings[3];
         }
 
         else // P2
@@ -75,9 +84,7 @@ public class TutorialLevelController : MonoBehaviour
         {
             while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
             centeredText.text = strings[7];
-
-            // TODO Wait until P2 has moved UP or DOWN instead
-            while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+            while (!hasPlayerMoved) { yield return null; } hasPlayerMoved = false;
             centeredText.text = strings[8];
         }
 

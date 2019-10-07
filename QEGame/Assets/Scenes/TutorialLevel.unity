@@ -267,6 +267,7 @@ MonoBehaviour:
   centeredText: {fileID: 634562413}
   textByGoal: {fileID: 1152492729}
   leftOrientedText: {fileID: 385700510}
+  otherTLC: {fileID: 412218149}
 --- !u!1 &365732135
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,6 +421,7 @@ MonoBehaviour:
   centeredText: {fileID: 520296854}
   textByGoal: {fileID: 1697979305}
   leftOrientedText: {fileID: 1736307964}
+  otherTLC: {fileID: 282064914}
 --- !u!4 &412218150
 Transform:
   m_ObjectHideFlags: 0
@@ -978,7 +980,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 2261101609846698566, guid: b2e939925209a9748bab36901cf9e7c2,
+        type: 3}
+      propertyPath: tlc
+      value: 
+      objectReference: {fileID: 412218149}
+    m_RemovedComponents:
+    - {fileID: 214039298191229932, guid: b2e939925209a9748bab36901cf9e7c2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b2e939925209a9748bab36901cf9e7c2, type: 3}
 --- !u!4 &680610364 stripped
 Transform:
@@ -3908,7 +3916,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 214039298191229932, guid: b2e939925209a9748bab36901cf9e7c2,
+        type: 3}
+      propertyPath: tlc
+      value: 
+      objectReference: {fileID: 282064914}
+    m_RemovedComponents:
+    - {fileID: 2261101609846698566, guid: b2e939925209a9748bab36901cf9e7c2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b2e939925209a9748bab36901cf9e7c2, type: 3}
 --- !u!4 &4015867192856656229 stripped
 Transform:

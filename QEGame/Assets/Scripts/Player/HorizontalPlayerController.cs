@@ -9,6 +9,8 @@ public class HorizontalPlayerController : MonoBehaviour
     private CharacterController _characterController;
     private Vector3 _moveDirection = Vector3.zero;
 
+    [SerializeField] private TutorialLevelController tlc; // TEMPORARY
+
     /**
      * @brief Speed of the game object horizontal movement.
      */
@@ -26,6 +28,13 @@ public class HorizontalPlayerController : MonoBehaviour
     private void Update()
     {
         _moveDirection = new Vector3(Input.GetAxis("Horizontal") * _movementSpeed, 0.0f, 0.0f);
+
+        // TEMPORARY
+        if (!(_moveDirection.x == 0f && _moveDirection.y == 0f && _moveDirection.z == 0f))
+        {
+            tlc.NotifyMovement(isHorizontal: true);
+        }
+
         _characterController.Move(_moveDirection * Time.deltaTime);
     }
 }
