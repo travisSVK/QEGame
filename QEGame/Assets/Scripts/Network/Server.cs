@@ -27,16 +27,17 @@ public class Server : MonoBehaviour
         StartListening();
     }
 
-    private void Update()
-    {
-        // TODO update both players values depending on values in dictionary (do it in this fashion so unity specific values are detached from our custom threads)
+    //private void Update()
+    //{
+        // TODO update both players values depending on values in dictionary (in a
+        // way which keeps Unity-specific values detached from our custom threads)
         //_positionsMutex.WaitOne();
         //foreach (KeyValuePair<int, Vector3> entry in m_positions)
         //{
         //    Debug.Log("Client id: " + entry.Key + " client position: " + entry.Value);
         //}
         //_positionsMutex.ReleaseMutex();
-    }
+    //}
 
     private void StartListening()
     {
@@ -58,7 +59,6 @@ public class Server : MonoBehaviour
 
                 // Start an asynchronous socket to listen for connections.
                 Debug.Log("Waiting for a connection...");
-                //Console.WriteLine("Waiting for a connection...");
                 listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
 
                 // Wait until a connection is made before continuing.
@@ -82,7 +82,7 @@ public class Server : MonoBehaviour
             Message msg = GetMessage();
             if (msg.isInitialized)
             {
-                // TODO have dictionary of clientIds and players locally
+                // TODO have a local dictionary of client IDs and players
                 _positionsMutex.WaitOne();
                 _positions[msg.clientId] = new Vector3(msg.x, msg.y, msg.z);
                 _positionsMutex.ReleaseMutex();
