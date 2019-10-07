@@ -9,7 +9,7 @@ using System.Threading;
 public class Server : MonoBehaviour
 {
     //private AsyncListener _asyncListener;
-    public int maxNumberOfCLients = 2;
+    public int maxNumberOfClients = 2;
 
     private int _currentNumOfClients;
     private Mutex _messageQueueMutex = new Mutex();
@@ -51,7 +51,7 @@ public class Server : MonoBehaviour
             listener.Bind(localEndPoint);
             listener.Listen(2);
 
-            while (_currentNumOfClients < maxNumberOfCLients)
+            while (_currentNumOfClients < maxNumberOfClients)
             {
                 // Set the event to nonsignaled state.
                 _allDone.Reset();
@@ -113,7 +113,7 @@ public class Server : MonoBehaviour
         // Create the state object.
         StateObject state = new StateObject();
         state.workSocket = handler;
-        handler.BeginReceive(state.buffer, 0, StateObject.BUFFER_SIZE, 0, new AsyncCallback(ReceiveAckCallback), state);
+        handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveAckCallback), state);
     }
 
     private void ReceiveAckCallback(IAsyncResult ar)
@@ -187,7 +187,7 @@ public class Server : MonoBehaviour
             // Complete sending the data to the remote device.
             int bytesSent = state.workSocket.EndSend(ar);
             Debug.Log("Sent " + bytesSent + " bytes to client.");
-            state.workSocket.BeginReceive(state.buffer, 0, StateObject.BUFFER_SIZE, 0,
+            state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 new AsyncCallback(ReadCallback), state);
         }
         catch (Exception e)

@@ -139,7 +139,7 @@ public class Client : MonoBehaviour
             state.workSocket = client;
 
             // Begin receiving the data from the remote device.
-            client.BeginReceive(state.buffer, 0, StateObject.BUFFER_SIZE, 0,
+            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 new AsyncCallback(ReceiveAckCallback), state);
         }
         catch (Exception e)
@@ -171,7 +171,7 @@ public class Client : MonoBehaviour
                     newState.workSocket = sender;
 
                     // Begin receiving the data from the remote device.
-                    sender.BeginReceive(newState.buffer, 0, StateObject.BUFFER_SIZE, 0,
+                    sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), newState);
                 }
             }
@@ -202,7 +202,7 @@ public class Client : MonoBehaviour
                 _messageQueueMutex.ReleaseMutex();
 
                 // Begin receiving the data from the remote device.
-                sender.BeginReceive(state.buffer, 0, StateObject.BUFFER_SIZE, 0,
+                sender.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
             }
         }
