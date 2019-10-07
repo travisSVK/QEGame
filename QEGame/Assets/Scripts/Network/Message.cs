@@ -13,7 +13,7 @@ public struct MessageConnected
 [Serializable]
 public struct Message
 {
-    public bool initialized;
+    public bool isInitialized;
     public float x;
     public float y;
     public float z;
