@@ -1,40 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class HorizontalPlayerController : MonoBehaviour
+public class HorizontalPlayerController : PlayerControllerBase
 {
-    [SerializeField]
-    private float _movementSpeed = 5.0f;
-    private CharacterController _characterController;
-    private Vector3 _moveDirection = Vector3.zero;
-
-    [SerializeField] private TutorialLevelController tlc; // TEMPORARY
-
-    /**
-     * @brief Speed of the game object horizontal movement.
-     */
-    public float MovementSpeed
+    // Called when the other player changed its position.
+    public override void SendDeltaXOrZ(float deltaZ)
     {
-        get { return _movementSpeed; }
-        set { _movementSpeed = value; }
+        var newPos = transform.position;
+        newPos.z += deltaZ;
+        transform.position = newPos;
     }
 
-    private void Start()
+    public override void Start() { base.Start(); }
+
+    public virtual void Update()
     {
-        _characterController = GetComponent<CharacterController>();
-    }
-
-    private void Update()
-    {
-        _moveDirection = new Vector3(Input.GetAxis("Horizontal") * _movementSpeed, 0.0f, 0.0f);
-
-        // TEMPORARY
-        if (!(_moveDirection.x == 0f && _moveDirection.y == 0f && _moveDirection.z == 0f))
-        {
-            tlc.NotifyMovement(isHorizontal: true);
-        }
-
+        Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal") * _movementSpeed, 0.0f, 0.0f);
+        float deltaX = transform.position.x;
         _characterController.Move(_moveDirection * Time.deltaTime);
+        deltaX -= transform.position.x;
+
+        if (_localConnection != null && _moveDirection.x != 0.0)
+        {
+            _localConnection.SendDeltaXOrZ(deltaX);
+        }
     }
 }
