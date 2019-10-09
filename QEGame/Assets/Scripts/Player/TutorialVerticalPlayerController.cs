@@ -63,7 +63,7 @@ public class TutorialVerticalPlayerController : VerticalPlayerController
 
         // Wait until P1 has moved so that you hit the right wall.
         while (transform.position.x < 2.8f) { yield return null; }
-        _localConnection.NotifyTargetHit();
+        if (_localConnection != null) { _localConnection.NotifyTargetHit(); }
         _leftOrientedText.text = tmm.GetString(14, isEnglish);
 
         // (Both players)
@@ -75,7 +75,7 @@ public class TutorialVerticalPlayerController : VerticalPlayerController
 
         // (Both players)
         while (!IsInGoal()) { yield return null; }
-        _localConnection.NotifyGoalReached(true);
+        if (_localConnection != null) { _localConnection.NotifyGoalReached(true); }
         _leftOrientedText.text = tmm.GetString(19, isEnglish);
     }
 

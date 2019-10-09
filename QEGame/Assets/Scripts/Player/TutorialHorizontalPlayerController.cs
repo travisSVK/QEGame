@@ -67,7 +67,7 @@ public class TutorialHorizontalPlayerController : HorizontalPlayerController
 
         // Wait until you have reached your goal.
         while (!IsInGoal()) { yield return null; }
-        _localConnection.NotifyGoalReached(true);
+        if (_localConnection != null) { _localConnection.NotifyGoalReached(true); }
         _leftOrientedText.text = tmm.GetString(17, isEnglish);
 
         bool wasPlayerInGoal = true;
@@ -80,7 +80,7 @@ public class TutorialHorizontalPlayerController : HorizontalPlayerController
                 if (!IsInGoal())
                 {
                     wasPlayerInGoal = false;
-                    _localConnection.NotifyGoalReached(false);
+                    if (_localConnection != null) { _localConnection.NotifyGoalReached(false); }
                     _leftOrientedText.text = tmm.GetString(20, isEnglish);
                 }
             }
@@ -93,7 +93,7 @@ public class TutorialHorizontalPlayerController : HorizontalPlayerController
                 {
                     wasPlayerInGoal = true;
                     _leftOrientedText.text = tmm.GetString(17, isEnglish);
-                    _localConnection.NotifyGoalReached(true);
+                    if (_localConnection != null) { _localConnection.NotifyGoalReached(true); }
                 }
             }
 
