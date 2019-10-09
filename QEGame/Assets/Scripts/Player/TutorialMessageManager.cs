@@ -19,8 +19,9 @@ public class TutorialMessageManager
         "You walked into the left wall for a while, but what happened for your friend?", // 15, P1
         "To reach the goal, you need to cooperate.", // 16
         "You've reached the goal! But what about your friend?", // 17, P1
-        "Your friend has also reached the goal!", // 18, P2
-        "You win!" // 19
+        "Your friend has reached the goal!", // 18, P2
+        "You win!", // 19
+        "You have left the goal. Remember to communicate!" // 20, P1
     };
 
     public readonly string[] _stringsSwedish = {
@@ -43,7 +44,8 @@ public class TutorialMessageManager
         "För att nå målet måste ni samarbeta.", // 16
         "Du har nått målet! Men hur går det för din vän?", // 17, P1
         "Din vän har också nått målet!", // 18, P2
-        "Ni vann!" // 19
+        "Ni vann!", // 19
+        "Du har lämnat målet. Kom ihåg att kommunicera!" // 20, P1
     };
 
     private static readonly TutorialMessageManager _instance = new TutorialMessageManager();

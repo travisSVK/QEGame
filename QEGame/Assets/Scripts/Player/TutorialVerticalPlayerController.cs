@@ -1,97 +1,102 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TutorialVerticalPlayerController : VerticalPlayerController
 {
-    [SerializeField] private GameObject _level;
+    [SerializeField] private GameObject _terrain, _goal;
     [SerializeField] private Text _centeredText, _textByGoal, _leftOrientedText;
     private bool _hasTutorialStarted = false;
+    private Vector3 _startPosition;
 
-    private System.Collections.IEnumerator AsyncUpdate()
+    private IEnumerator AsyncUpdate()
     {
         bool isEnglish = true;
         var tmm = TutorialMessageManager.GetInstance();
 
-        // Both players
+        // (Both players)
         _centeredText.text = tmm.GetString(0, isEnglish);
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        yield return Wait();
         _centeredText.enabled = false;
         _centeredText.text = tmm.GetString(1, isEnglish);
         _centeredText.enabled = true;
         float currentX = transform.position.x;
 
-        // P2
         while (transform.position.x == currentX) { yield return null; }
         _centeredText.text = tmm.GetString(4, isEnglish);
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        yield return Wait();
         _centeredText.text = tmm.GetString(5, isEnglish);
 
-        // Both players
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        // (Both players)
+        yield return Wait();
         _centeredText.text = tmm.GetString(6, isEnglish);
 
-        // P2
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        yield return Wait();
         _centeredText.text = tmm.GetString(7, isEnglish);
         float currentZ = transform.position.z;
         while (transform.position.z == currentZ) { yield return null; }
         _centeredText.text = tmm.GetString(8, isEnglish);
 
-        // Both players
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        // (Both players)
+        yield return Wait();
         _centeredText.text = tmm.GetString(10, isEnglish);
 
-        // Both players
-        _level.transform.position += transform.position;
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
-        _level.SetActive(true);
+        // (Both players)
+        yield return Wait();
+        // TODO Fade out the player
+        transform.position = _startPosition;
+        // TODO Fade in everything, including the player
+        _terrain.SetActive(true);
+        _goal.SetActive(true);
         _centeredText.enabled = false;
         _textByGoal.text = tmm.GetString(11, isEnglish);
         _textByGoal.enabled = true;
 
-        // Both players
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        // (Both players)
+        yield return Wait();
         _textByGoal.enabled = false;
         _leftOrientedText.text = tmm.GetString(12, isEnglish);
         _leftOrientedText.enabled = true;
 
-        // P2
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        yield return Wait();
         _leftOrientedText.text = tmm.GetString(13, isEnglish);
-        // TODO Wait until P1 has moved until P2 has hit the right wall
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+
+        // Wait until P1 has moved so that you hit the right wall.
+        while (transform.position.x < 2.8f) { yield return null; }
+        _localConnection.NotifyTargetHit();
         _leftOrientedText.text = tmm.GetString(14, isEnglish);
 
-        // Both players
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        // (Both players)
+        yield return Wait();
         _leftOrientedText.text = tmm.GetString(16, isEnglish);
 
-        // P2
-        // TODO Wait until P1 has reached the goal
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        while (!_hasOtherPlayerReachedGoal) { yield return null; }
         _leftOrientedText.text = tmm.GetString(18, isEnglish);
 
-        // If P1 leaves the goal, show for P1: "You have left the goal. Remember to communicate!"
-
-        // Both players
-        // TODO Wait until P2 has also reached the goal
-        while (!Input.GetKeyUp(KeyCode.Return)) { yield return null; } yield return new WaitForSeconds(0.1f);
+        // (Both players)
+        while (!IsInGoal()) { yield return null; }
+        _localConnection.NotifyGoalReached(true);
         _leftOrientedText.text = tmm.GetString(19, isEnglish);
+    }
+
+    private IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(3f);
+    }
+
+    private bool IsInGoal()
+    {
+        return (transform.position.z >= 6.8f);
     }
 
     public override void Start()
     {
         base.Start();
-        //_terrain.SetActive(false);
-        //_goal.SetActive(false);
+        _startPosition = transform.position;
+        _terrain.SetActive(false);
+        _goal.SetActive(false);
         _textByGoal.enabled = false;
         _leftOrientedText.enabled = false;
-    }
-
-    // Called when the other player changed its position.
-    public override void SendDeltaXOrZ(float deltaX)
-    {
-        base.SendDeltaXOrZ(deltaX);
     }
 
     public override void Update()
