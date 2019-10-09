@@ -4,7 +4,7 @@ public class LocalViewController : MonoBehaviour
 {
     public GameObject[] players;
     public GameObject[] levels;
-    public GameObject[] textCanvases;
+    public GameObject[] textCanvases = null; // Only set for the tutorial level
 
     private uint currentVisibleLevelIndex;
 
@@ -27,7 +27,11 @@ public class LocalViewController : MonoBehaviour
 
     private void SetLevelVisibility(bool isVisible)
     {
-        textCanvases[currentVisibleLevelIndex].SetActive(isVisible);
+        if (textCanvases != null && textCanvases.Length == levels.Length)
+        {
+            textCanvases[currentVisibleLevelIndex].SetActive(isVisible);
+        }
+
         Renderer[] array = levels[currentVisibleLevelIndex].GetComponentsInChildren<Renderer>();
         foreach (var renderer in array)
         {
