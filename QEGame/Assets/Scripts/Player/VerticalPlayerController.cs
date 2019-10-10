@@ -1,19 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class VerticalPlayerController : MonoBehaviour
+public class VerticalPlayerController : PlayerControllerBase
 {
-    [SerializeField]
-    private float _movementSpeed = 5.0f;
-    private Rigidbody _rigidBody;
-    private Vector3 _input = Vector3.zero;
+    public override void Start() { base.Start(); }
 
-    /**
-     * @brief Speed of the game object vertical movement.
-     */
-    public float MovementSpeed
+    public virtual void Update()
     {
+<<<<<<< HEAD
         get { return _movementSpeed; }
         set { _movementSpeed = value; }
     }
@@ -33,8 +26,17 @@ public class VerticalPlayerController : MonoBehaviour
         _input = Vector3.zero;
         _input.z = Input.GetAxis("Vertical");
         if (_input != Vector3.zero)
+=======
+        Vector3 _moveDirection = new Vector3(0.0f, 0.0f, Input.GetAxis("Vertical"));
+        if (_moveDirection.z != 0.0)
+>>>>>>> Added a tutorial level which works locally
         {
-            transform.forward = _input;
+            int dir = System.Math.Sign(_moveDirection.z);
+            MoveZ(dir, Time.deltaTime);
+            if (_localConnection != null)
+            {
+                _localConnection.MoveZ(dir, Time.deltaTime);
+            }
         }
     }
 }

@@ -1,40 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class HorizontalPlayerController : MonoBehaviour
+public class HorizontalPlayerController : PlayerControllerBase
 {
-    [SerializeField]
-    private float _movementSpeed = 5.0f;
-    private Rigidbody _rigidBody;
-    private Vector3 _input = Vector3.zero;
+    public override void Start() { base.Start(); }
 
-    /**
-     * @brief Speed of the game object horizontal movement.
-     */
-    public float MovementSpeed
+    public virtual void Update()
     {
-        get { return _movementSpeed; }
-        set { _movementSpeed = value; }
-    }
-
-    private void FixedUpdate()
-    {
-        _rigidBody.MovePosition(_rigidBody.position + _input * _movementSpeed * Time.fixedDeltaTime);
-    }
-
-    private void Start()
-    {
-        _rigidBody = GetComponent<Rigidbody>();
-    }
-
-    private void Update()
-    {
-        _input = Vector3.zero;
-        _input.x = Input.GetAxis("Horizontal");
-        if (_input != Vector3.zero)
+        Vector3 _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, 0.0f);
+        if (_moveDirection.x != 0.0)
         {
-            transform.forward = _input;
+            int dir = System.Math.Sign(_moveDirection.x);
+            MoveX(dir, Time.deltaTime);
+            if (_localConnection != null)
+            {
+                _localConnection.MoveX(dir, Time.deltaTime);
+            }
         }
     }
 }
