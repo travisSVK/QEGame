@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class MenuManager : MonoBehaviour
         swedishButton.gameObject.SetActive(false);
         englishButton.gameObject.SetActive(false);
         waitingForPlayersEnglish.SetActive(true);
+        StartFirstScene();
     }
 
     private void PressedSwedish()
@@ -36,5 +38,20 @@ public class MenuManager : MonoBehaviour
         swedishButton.gameObject.SetActive(false);
         englishButton.gameObject.SetActive(false);
         waitingForPlayersSwedish.SetActive(true);
+        StartFirstScene();
+    }
+
+    private void StartClientConnection()
+    {
+        Client clientScript = FindObjectOfType<Client>();
+        if (clientScript)
+        {
+            clientScript.ConnectToServer();
+        }
+    }
+
+    public void StartFirstScene()
+    {
+        SceneManager.LoadScene("TutorialLevel");
     }
 }
