@@ -5,6 +5,11 @@ using UnityEngine;
 // Tag for the player
 public class PlayerTag : MonoBehaviour
 {
+    public void OnPlayerDeath()
+    {
+
+    }
+
     public void Start()
     {
         
