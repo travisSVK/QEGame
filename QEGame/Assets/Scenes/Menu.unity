@@ -167,6 +167,8 @@ MonoBehaviour:
   englishButton: {fileID: 1331448302}
   waitingForPlayersSwedish: {fileID: 893307247}
   waitingForPlayersEnglish: {fileID: 868026697}
+  clientObject: {fileID: 8192527954582488953, guid: 34572da236e91d545b69582ba8019e1f,
+    type: 3}
 --- !u!1 &384401625
 GameObject:
   m_ObjectHideFlags: 0

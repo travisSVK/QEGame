@@ -10,8 +10,8 @@ public class Server : MonoBehaviour
 {
     //private AsyncListener _asyncListener;
     public int maxNumberOfClients = 2;
-
     private int _currentNumOfClients;
+    private bool _gameFinished;
     private Mutex _messageQueueMutex = new Mutex();
     private Mutex _positionsMutex = new Mutex();
     private Socket _listener;
@@ -23,12 +23,8 @@ public class Server : MonoBehaviour
 
     private void Start()
     {
+        _gameFinished = false;
         _currentNumOfClients = 0;
-        
-    }
-
-    public void StartServer()
-    {
         _messageProcessingThread = new Thread(StartListening);
         _messageProcessingThread.Start();
     }
@@ -40,9 +36,18 @@ public class Server : MonoBehaviour
         _positionsMutex.WaitOne();
         foreach (KeyValuePair<int, Vector3> entry in _positions)
         {
-            Debug.Log("Client id: " + entry.Key + " client position: " + entry.Value);
+            //Debug.Log("Client id: " + entry.Key + " client position: " + entry.Value);
         }
         _positionsMutex.ReleaseMutex();
+        if (_gameFinished)
+        {
+            _messageProcessingThread.Join();
+            SpectatorView spectatorView = FindObjectOfType<SpectatorView>();
+            if (spectatorView)
+            {
+                spectatorView.Restart();
+            }
+        }
     }
 
     private void StartListening()
@@ -50,13 +55,13 @@ public class Server : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
-        Socket listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        _listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         // Bind the socket to the local endpoint and listen for incoming connections.
         try
         {
-            listener.Bind(localEndPoint);
-            listener.Listen(2);
+            _listener.Bind(localEndPoint);
+            _listener.Listen(2);
 
             while (_currentNumOfClients < maxNumberOfClients)
             {
@@ -65,17 +70,27 @@ public class Server : MonoBehaviour
 
                 // Start an asynchronous socket to listen for connections.
                 Debug.Log("Waiting for a connection...");
-                listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+                _listener.BeginAccept(new AsyncCallback(AcceptCallback), _listener);
 
                 // Wait until a connection is made before continuing.
                 ++_currentNumOfClients;
-                Debug.Log("Player connected.");
                 _allDone.WaitOne();
+                Debug.Log("Player connected.");
             }
         }
         catch (Exception e)
         {
             Debug.Log(e.ToString());
+        }
+        foreach (KeyValuePair<int, StateObject> entry in _states)
+        {
+            OtherPlayerConnected opc = new OtherPlayerConnected();
+            opc.connected = true;
+            Message msg = new Message();
+            msg.messageType = MessageType.OtherPlayerConnected;
+            msg.otherPlayerConnected = opc;
+            Debug.Log("Sending otherplayer connected.");
+            Send<Message>(entry.Value, msg, true);
         }
         ProcessMessages();
     }
@@ -85,12 +100,28 @@ public class Server : MonoBehaviour
         while (true)
         {
             Message msg = GetMessage();
-            if (msg.isInitialized)
+            switch (msg.messageType)
             {
-                // TODO have a local dictionary of client IDs and players
-                _positionsMutex.WaitOne();
-                _positions[msg.clientId] = new Vector3(msg.x, msg.y, msg.z);
-                _positionsMutex.ReleaseMutex();
+                case MessageType.Move:
+                    _positionsMutex.WaitOne();
+                    _positions[msg.move.clientId] = new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                    _positionsMutex.ReleaseMutex();
+                    break;
+                case MessageType.Disconnect:
+                    Socket socket = _states[msg.disconnect.clientId].workSocket;
+                    socket.Shutdown(SocketShutdown.Both);
+                    socket.Close();
+                    --_currentNumOfClients;
+                    break;
+                case MessageType.Uninitialized:
+                default:
+                    break;
+            }
+            if (_currentNumOfClients == 0)
+            {
+                _listener.Close();
+                _gameFinished = true;
+                break;
             }
         }
     }
@@ -98,12 +129,11 @@ public class Server : MonoBehaviour
     private Message GetMessage()
     {
         Message msg = new Message();
-        msg.isInitialized = false;
+        msg.messageType = MessageType.Uninitialized;
         _messageQueueMutex.WaitOne();
         if (_messageQueue.Count != 0)
         {
             msg = _messageQueue.Dequeue();
-            msg.isInitialized = true;
         }
         _messageQueueMutex.ReleaseMutex();
         return msg;
@@ -129,15 +159,17 @@ public class Server : MonoBehaviour
 
         if (bytesRead > 0)
         {
-            MessageConnected msg = MessageUtils.Deserialize<MessageConnected>(state.buffer);
-            if (msg.connected)
+            Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+            if (msg.messageType == MessageType.Connected)
             {
-                _positions.Add(msg.clientId, Vector3.zero);
-                _states.Add(msg.clientId, state);
+                _positionsMutex.WaitOne();
+                _positions.Add(msg.messageConnected.clientId, Vector3.zero);
+                _positionsMutex.ReleaseMutex();
+                _states.Add(msg.messageConnected.clientId, state);
                 // Signal the main thread to continue.
                 _allDone.Set();
                 state.sendSocket = state.workSocket;
-                Send(state, msg);
+                Send(state, msg, false);
             }
         }
     }
@@ -158,32 +190,30 @@ public class Server : MonoBehaviour
             _messageQueueMutex.WaitOne();
             _messageQueue.Enqueue(msg);
             _messageQueueMutex.ReleaseMutex();
-            int clientId = msg.clientId;
-            _positionsMutex.WaitOne();
-            foreach (KeyValuePair<int, Vector3> entry in _positions)
-            {
-                if (entry.Key != msg.clientId)
-                {
-                    clientId = entry.Key;
-                    break;
-                }
-            }
-            _positionsMutex.ReleaseMutex();
-            state.sendSocket = _states[clientId].workSocket;
-            Send(state, msg);
+
+            state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                new AsyncCallback(ReadCallback), state);
         }
     }
 
-    private void Send<MessageType>(StateObject state, MessageType message)
+    private void Send<MessageType>(StateObject state, MessageType message, bool startListening)
     {
         byte[] byteData = MessageUtils.Serialize<MessageType>(message);
-
+        
         // Begin sending the data to the remote device.
-        state.sendSocket.BeginSend(byteData, 0, byteData.Length, 0,
+        if (startListening)
+        {
+            state.sendSocket.BeginSend(byteData, 0, byteData.Length, 0,
+            new AsyncCallback(SendCallbackAndListen), state);
+        }
+        else
+        {
+            state.sendSocket.BeginSend(byteData, 0, byteData.Length, 0,
             new AsyncCallback(SendCallback), state);
+        }
     }
 
-    private void SendCallback(IAsyncResult ar)
+    private void SendCallbackAndListen(IAsyncResult ar)
     {
         try
         {
@@ -201,30 +231,15 @@ public class Server : MonoBehaviour
         }
     }
 
-    private void SendAndClose(Socket handler, String data)
-    {
-        // Convert the string data to byte data using ASCII encoding.
-        byte[] byteData = Encoding.ASCII.GetBytes(data);
-
-        // Begin sending the data to the remote device.
-        handler.BeginSend(byteData, 0, byteData.Length, 0,
-            new AsyncCallback(SendAndCloseCallback), handler);
-    }
-
-    private void SendAndCloseCallback(IAsyncResult ar)
+    private void SendCallback(IAsyncResult ar)
     {
         try
         {
             // Retrieve the socket from the state object.
-            Socket handler = (Socket)ar.AsyncState;
-
+            StateObject state = (StateObject)ar.AsyncState;
             // Complete sending the data to the remote device.
-            int bytesSent = handler.EndSend(ar);
-            Debug.Log("Sent " + bytesSent + " bytes to client. Closing connection.");
-
-            handler.Shutdown(SocketShutdown.Both);
-            handler.Close();
-
+            int bytesSent = state.workSocket.EndSend(ar);
+            Debug.Log("Sent " + bytesSent + " bytes to client.");
         }
         catch (Exception e)
         {

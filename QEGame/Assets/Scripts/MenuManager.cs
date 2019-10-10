@@ -14,6 +14,8 @@ public class MenuManager : MonoBehaviour
 
     public GameObject waitingForPlayersEnglish = null;
 
+    
+
     private void Awake()
     {
         swedishButton.gameObject.SetActive(true);
@@ -59,5 +61,9 @@ public class MenuManager : MonoBehaviour
     public void StartFirstScene()
     {
         SceneManager.LoadScene("EndScene");
+    }
+
+    private void Update()
+    {
     }
 }

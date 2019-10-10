@@ -8,6 +8,7 @@ using System.Threading;
 public class Client : MonoBehaviour
 {
     public int clientId;
+    private bool _gameFinished;
     private IPHostEntry _ipHost;
     private IPAddress _ipAddr;
     private IPEndPoint _localEndPoint;
@@ -22,6 +23,7 @@ public class Client : MonoBehaviour
 
     private void Start()
     {
+        _gameFinished = false;
     }
 
     private void Update()
@@ -32,7 +34,9 @@ public class Client : MonoBehaviour
             if (menuManager)
             {
                 menuManager.StartFirstScene();
+                GameFinished();
             }
+            _otherClientConnected = false;
         }
 
         //if (_lastPosition != transform.position)
@@ -51,6 +55,29 @@ public class Client : MonoBehaviour
         //}
     }
 
+    public void GameFinished()
+    {
+        Message message = new Message();
+        message.messageType = MessageType.Disconnect;
+        message.disconnect = new Disconnect();
+        message.disconnect.clientId = clientId;
+        StateObject state = new StateObject();
+        state.workSocket = _sender;
+        _sendDone.Reset();
+        Debug.Log("Game finished.");
+        Send<Message>(state, message);
+        _sendDone.WaitOne();
+        _sender.Shutdown(SocketShutdown.Both);
+        _sender.Close();
+        _gameFinished = true;
+        _messageProcessingThread.Join();
+        EndSceneManager endSceneManager = FindObjectOfType<EndSceneManager>();
+        if (endSceneManager)
+        {
+            endSceneManager.Restart();
+        }
+    }
+
     public void ConnectToServer()
     {
         _messageProcessingThread = new Thread(Connect);
@@ -66,6 +93,7 @@ public class Client : MonoBehaviour
 
         try
         {
+            _connectDone.Reset();
             // Connect to the remote endpoint.
             _sender.BeginConnect(remoteEndPoint,
                 new AsyncCallback(ConnectCallback), _sender);
@@ -79,7 +107,10 @@ public class Client : MonoBehaviour
             msg.clientId = clientId;
             StateObject state = new StateObject();
             state.workSocket = _sender;
-            Send(state, msg);
+            Message message = new Message();
+            message.messageType = MessageType.Connected;
+            message.messageConnected = msg;
+            Send(state, message);
             _sendDone.WaitOne();
 
             // Receive the ACK from the remote device.
@@ -90,36 +121,44 @@ public class Client : MonoBehaviour
         {
             Debug.Log(e.ToString());
         }
+        ProcessMessages();
     }
 
     private void ProcessMessages()
     {
         while (true)
         {
-            // TODO add other message types processing here (that probably means adding wrappers around the
-            // generic message stating which type of message it is (using enum) and adding a switch here).
             Message msg = GetMessage();
-            if (msg.isInitialized)
+            switch (msg.messageType)
             {
-                if (!_otherClientConnected)
-                {
-                    _otherClientConnected = true;
-                }
-                
-                Debug.Log("Client id: " + msg.clientId + " client position: " + new Vector3(msg.x, msg.y, msg.z));
+                case MessageType.OtherPlayerConnected:
+                    Debug.Log("Other player connected received.");
+                    if (!_otherClientConnected)
+                    {
+                        _otherClientConnected = true;
+                    }
+                    break;
+                case MessageType.Uninitialized:
+                default:
+                    break;
+            }
+            if (_gameFinished)
+            {
+                break;
             }
         }
     }
 
+
+
     private Message GetMessage()
     {
         Message msg = new Message();
-        msg.isInitialized = false;
+        msg.messageType = MessageType.Uninitialized;
         _messageQueueMutex.WaitOne();
         if (_messageQueue.Count != 0)
         {
             msg = _messageQueue.Dequeue();
-            msg.isInitialized = true;
         }
         _messageQueueMutex.ReleaseMutex();
         return msg;
@@ -179,9 +218,10 @@ public class Client : MonoBehaviour
 
             if (bytesRead > 0)
             {
-                MessageConnected msg = MessageUtils.Deserialize<MessageConnected>(state.buffer);
-                if (msg.connected && (msg.clientId == clientId))
+                Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+                if ((msg.messageType == MessageType.Connected) && (msg.messageConnected.clientId == clientId))
                 {
+                    Debug.Log("ACK received.");
                     _receiveDone.Set();
                     StateObject newState = new StateObject();
                     newState.workSocket = sender;
@@ -208,18 +248,21 @@ public class Client : MonoBehaviour
             Socket sender = state.workSocket;
 
             // Read data from the remote device.
-            int bytesRead = sender.EndReceive(ar);
-
-            if (bytesRead > 0)
+            if (sender.Connected)
             {
-                Message msg = MessageUtils.Deserialize<Message>(state.buffer);
-                _messageQueueMutex.WaitOne();
-                _messageQueue.Enqueue(msg);
-                _messageQueueMutex.ReleaseMutex();
+                int bytesRead = sender.EndReceive(ar);
 
-                // Begin receiving the data from the remote device.
-                sender.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                if (bytesRead > 0)
+                {
+                    Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+                    _messageQueueMutex.WaitOne();
+                    _messageQueue.Enqueue(msg);
+                    _messageQueueMutex.ReleaseMutex();
+
+                    // Begin receiving the data from the remote device.
+                    sender.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
+                }
             }
         }
         catch (Exception e)

@@ -43,7 +43,7 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     {
         _rigidBody = GetComponent<Rigidbody>();
 
-        if (_rigidBody)
+        if (_otherPlayerController)
         {
             _localConnection = _otherPlayerController.GetComponent(typeof(ILocalConnection)) as ILocalConnection;
         }

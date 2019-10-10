@@ -2,6 +2,15 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
+public enum MessageType
+{
+    Connected,
+    Move,
+    OtherPlayerConnected,
+    Disconnect,
+    Uninitialized
+}
+
 [Serializable]
 public struct MessageConnected
 {
@@ -10,13 +19,34 @@ public struct MessageConnected
 }
 
 [Serializable]
-public struct Message
+public struct Move
 {
-    public bool isInitialized;
+    public int clientId;
     public float x;
     public float y;
     public float z;
+}
+
+[Serializable]
+public struct OtherPlayerConnected
+{
+    public bool connected;
+}
+
+[Serializable]
+public struct Disconnect
+{
     public int clientId;
+}
+
+[Serializable]
+public struct Message
+{
+    public MessageType messageType;
+    public MessageConnected messageConnected;
+    public OtherPlayerConnected otherPlayerConnected;
+    public Move move;
+    public Disconnect disconnect;
 }
 
 public class MessageUtils
