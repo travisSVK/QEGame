@@ -31,7 +31,7 @@ public class VerticalPlayerController : MonoBehaviour
     private void Update()
     {
         _input = Vector3.zero;
-        _input.x = Input.GetAxis("Vertical");
+        _input.z = Input.GetAxis("Vertical");
         if (_input != Vector3.zero)
         {
             transform.forward = _input;
