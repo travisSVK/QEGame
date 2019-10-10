@@ -23,7 +23,6 @@ public class Client : MonoBehaviour
     private void Start()
     {
         _lastPosition = transform.position;
-        Connect();
     }
 
     private void Update()
@@ -44,7 +43,13 @@ public class Client : MonoBehaviour
         }
     }
 
-    public void Connect()
+    public void ConnectToServer()
+    {
+        _messageProcessingThread = new Thread(Connect);
+        _messageProcessingThread.Start();
+    }
+
+    private void Connect()
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
@@ -77,8 +82,6 @@ public class Client : MonoBehaviour
         {
             Debug.Log(e.ToString());
         }
-        _messageProcessingThread = new Thread(ProcessMessages);
-        _messageProcessingThread.Start();
     }
 
     private void ProcessMessages()

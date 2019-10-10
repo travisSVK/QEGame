@@ -3,32 +3,24 @@ using UnityEngine;
 public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
 {
     // This field should only be assigned to if the game is played on one computer, without networking.
-    [SerializeField] private GameObject _otherPlayerController;
+    [SerializeField]
+    private GameObject _otherPlayerController;
 
-    [SerializeField] protected float _movementSpeed = 2.0f;
-
+    [SerializeField]
+    protected float _movementSpeed = 2.0f;
     protected bool _hasHitTarget = false;
     protected bool _hasOtherPlayerReachedGoal = false;
+    protected Vector3 _input;
 
     // For local connections only
     protected ILocalConnection _localConnection = null;
 
-    private CharacterController _characterController;
+    private Rigidbody _rigidBody;
 
     public float MovementSpeed
     {
         get { return _movementSpeed; }
         set { _movementSpeed = value; }
-    }
-
-    public virtual void MoveX(int direction, float deltaTime) // From 'ILocalConnection'
-    {
-        _characterController.Move(new Vector3(direction * _movementSpeed * deltaTime, 0.0f, 0.0f));
-    }
-
-    public virtual void MoveZ(int direction, float deltaTime) // From 'ILocalConnection'
-    {
-        _characterController.Move(new Vector3(0.0f, 0.0f, direction * _movementSpeed * deltaTime));
     }
 
     public void NotifyTargetHit() // From 'ILocalConnection'
@@ -47,14 +39,18 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
         _hasOtherPlayerReachedGoal = hasGoalBeenReached;
     }
 
-    public virtual void Start()
+    private void Start()
     {
-        _characterController = GetComponent<CharacterController>();
+        _rigidBody = GetComponent<Rigidbody>();
 
-        if (_otherPlayerController != null)
+        if (_rigidBody)
         {
-            _localConnection = _otherPlayerController.
-                GetComponent(typeof(ILocalConnection)) as ILocalConnection;
+            _localConnection = _otherPlayerController.GetComponent(typeof(ILocalConnection)) as ILocalConnection;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        _rigidBody.MovePosition(_rigidBody.position + _input * _movementSpeed * Time.fixedDeltaTime);
     }
 }

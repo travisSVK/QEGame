@@ -24,6 +24,11 @@ public class Server : MonoBehaviour
     private void Start()
     {
         _currentNumOfClients = 0;
+        
+    }
+
+    public void StartServer()
+    {
         _messageProcessingThread = new Thread(StartListening);
         _messageProcessingThread.Start();
     }
@@ -64,6 +69,7 @@ public class Server : MonoBehaviour
 
                 // Wait until a connection is made before continuing.
                 ++_currentNumOfClients;
+                Debug.Log("Player connected.");
                 _allDone.WaitOne();
             }
         }
