@@ -4,13 +4,5 @@ using UnityEngine;
 
 public class SpectatorView : MonoBehaviour
 {
-    private void Start()
-    {
-        
-    }
 
-    private void Update()
-    {
-        
-    }
 }

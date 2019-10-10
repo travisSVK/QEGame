@@ -12,10 +12,10 @@ public class FactTrigger : MonoBehaviour
 
     public TextCrossfade englishTextUI = null;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        VerticalPlayerController verticalPlayer = collision.collider.GetComponent<VerticalPlayerController>();
-        HorizontalPlayerController horizontalPlayer = collision.collider.GetComponent<HorizontalPlayerController>();
+        VerticalPlayerController verticalPlayer = other.GetComponent<VerticalPlayerController>();
+        HorizontalPlayerController horizontalPlayer = other.GetComponent<HorizontalPlayerController>();
         if (verticalPlayer || horizontalPlayer)
         {
             swedishTextUI.SetText(swedishText);
