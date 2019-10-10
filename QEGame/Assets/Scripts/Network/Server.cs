@@ -24,20 +24,21 @@ public class Server : MonoBehaviour
     private void Start()
     {
         _currentNumOfClients = 0;
-        StartListening();
+        _messageProcessingThread = new Thread(StartListening);
+        _messageProcessingThread.Start();
     }
 
-    //private void Update()
-    //{
+    private void Update()
+    {
         // TODO update both players values depending on values in dictionary (in a
         // way which keeps Unity-specific values detached from our custom threads)
-        //_positionsMutex.WaitOne();
-        //foreach (KeyValuePair<int, Vector3> entry in m_positions)
-        //{
-        //    Debug.Log("Client id: " + entry.Key + " client position: " + entry.Value);
-        //}
-        //_positionsMutex.ReleaseMutex();
-    //}
+        _positionsMutex.WaitOne();
+        foreach (KeyValuePair<int, Vector3> entry in _positions)
+        {
+            Debug.Log("Client id: " + entry.Key + " client position: " + entry.Value);
+        }
+        _positionsMutex.ReleaseMutex();
+    }
 
     private void StartListening()
     {
@@ -70,9 +71,7 @@ public class Server : MonoBehaviour
         {
             Debug.Log(e.ToString());
         }
-
-        _messageProcessingThread = new Thread(ProcessMessages);
-        _messageProcessingThread.Start();
+        ProcessMessages();
     }
 
     private void ProcessMessages()

@@ -90,7 +90,7 @@ public class Client : MonoBehaviour
             Message msg = GetMessage();
             if (msg.isInitialized)
             {
-                transform.position = new Vector3(msg.x, msg.y, msg.z);
+                Debug.Log("Client id: " + msg.clientId + " client position: " + new Vector3(msg.x, msg.y, msg.z));
             }
         }
     }
