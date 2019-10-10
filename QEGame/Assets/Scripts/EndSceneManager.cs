@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EndSceneManager : MonoBehaviour
 {
@@ -24,10 +25,8 @@ public class EndSceneManager : MonoBehaviour
                 clientId = client.clientId;
                 DestroyImmediate(client.gameObject);
             }
-            Instantiate(clientObject);
-            Client clientScript = clientObject.GetComponent<Client>();
-            clientScript.clientId = clientId;
             _finished = false;
+            SceneManager.LoadScene("StartScene" + clientId);
         }
     }
 

@@ -40,7 +40,7 @@ public class SpectatorView : MonoBehaviour
             Server server = FindObjectOfType<Server>();
             if (server)
             {
-                Destroy(server.gameObject);
+                DestroyImmediate(server.gameObject);
             }
             Instantiate(serverObject);
             _finished = false;

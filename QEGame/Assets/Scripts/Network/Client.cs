@@ -8,7 +8,7 @@ using System.Threading;
 public class Client : MonoBehaviour
 {
     public int clientId;
-    private bool _gameFinished;
+    private bool _gameFinished = false;
     private IPHostEntry _ipHost;
     private IPAddress _ipAddr;
     private IPEndPoint _localEndPoint;
@@ -20,24 +20,29 @@ public class Client : MonoBehaviour
     private Socket _sender;
     private Thread _messageProcessingThread = null;
     private bool _otherClientConnected = false;
+    private bool _endSceneLoaded = false;
 
     private void Start()
     {
-        _gameFinished = false;
     }
 
     private void Update()
     {
+        if (_endSceneLoaded)
+        {
+            GameFinished();
+        }
         if (_otherClientConnected)
         {
             MenuManager menuManager = FindObjectOfType<MenuManager>();
             if (menuManager)
             {
                 menuManager.StartFirstScene();
-                GameFinished();
+                _endSceneLoaded = true;
             }
             _otherClientConnected = false;
         }
+        
 
         //if (_lastPosition != transform.position)
         //{
@@ -74,7 +79,13 @@ public class Client : MonoBehaviour
         EndSceneManager endSceneManager = FindObjectOfType<EndSceneManager>();
         if (endSceneManager)
         {
+            Debug.Log("Endscene manager called.");
+            _gameFinished = false;
             endSceneManager.Restart();
+        }
+        else
+        {
+            Debug.Log("Endscene manager not called.");
         }
     }
 
@@ -116,6 +127,7 @@ public class Client : MonoBehaviour
             // Receive the ACK from the remote device.
             ReceiveAck(_sender);
             _receiveDone.WaitOne();
+            Debug.Log("ACK received.");
         }
         catch (Exception e)
         {
@@ -139,17 +151,17 @@ public class Client : MonoBehaviour
                     }
                     break;
                 case MessageType.Uninitialized:
+                    break;
                 default:
                     break;
             }
             if (_gameFinished)
             {
+                Debug.Log("Thread finished.");
                 break;
             }
         }
     }
-
-
 
     private Message GetMessage()
     {
@@ -221,7 +233,6 @@ public class Client : MonoBehaviour
                 Message msg = MessageUtils.Deserialize<Message>(state.buffer);
                 if ((msg.messageType == MessageType.Connected) && (msg.messageConnected.clientId == clientId))
                 {
-                    Debug.Log("ACK received.");
                     _receiveDone.Set();
                     StateObject newState = new StateObject();
                     newState.workSocket = sender;
@@ -256,6 +267,7 @@ public class Client : MonoBehaviour
                 {
                     Message msg = MessageUtils.Deserialize<Message>(state.buffer);
                     _messageQueueMutex.WaitOne();
+                    Debug.Log(msg.messageType);
                     _messageQueue.Enqueue(msg);
                     _messageQueueMutex.ReleaseMutex();
 

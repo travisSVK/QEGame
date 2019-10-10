@@ -89,7 +89,7 @@ public class Server : MonoBehaviour
             Message msg = new Message();
             msg.messageType = MessageType.OtherPlayerConnected;
             msg.otherPlayerConnected = opc;
-            Debug.Log("Sending otherplayer connected.");
+            Debug.Log("Sending otherplayer connected: " + entry.Key);
             Send<Message>(entry.Value, msg, true);
         }
         ProcessMessages();
