@@ -214,6 +214,7 @@ GameObject:
   - component: {fileID: 2075045255}
   - component: {fileID: 2075045257}
   - component: {fileID: 2075045256}
+  - component: {fileID: 2075045258}
   m_Layer: 0
   m_Name: Client
   m_TagString: Untagged
@@ -260,6 +261,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clientId: 0
+--- !u!114 &2075045258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075045254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c33114771d2a8334caa1234858472a53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeLanguage: 0
 --- !u!1 &2103153541
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,3 +318,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nameOfScene: Menu
+  delay: 0
