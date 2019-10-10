@@ -7,8 +7,15 @@ public class GoToScene : MonoBehaviour
 {
     public string nameOfScene = "";
 
-    private void Start()
+    public float delay = 0.0f;
+
+    private void Update()
     {
-        SceneManager.LoadScene(nameOfScene);
+        delay -= Time.deltaTime;
+
+        if (delay <= 0.0f)
+        {
+            SceneManager.LoadScene(nameOfScene);
+        }
     }
 }
