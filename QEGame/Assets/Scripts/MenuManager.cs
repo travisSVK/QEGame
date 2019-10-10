@@ -58,6 +58,6 @@ public class MenuManager : MonoBehaviour
 
     public void StartFirstScene()
     {
-        SceneManager.LoadScene("TutorialLevel");
+        SceneManager.LoadScene("EndScene");
     }
 }
