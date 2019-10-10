@@ -8,8 +8,10 @@ public class FactTrigger : MonoBehaviour
 
     public string englishText = "";
 
+    [HideInInspector]
     public TextCrossfade swedishTextUI = null;
 
+    [HideInInspector]
     public TextCrossfade englishTextUI = null;
 
     private void OnTriggerEnter(Collider other)
