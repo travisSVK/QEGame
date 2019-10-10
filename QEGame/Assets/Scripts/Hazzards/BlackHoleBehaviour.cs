@@ -18,18 +18,18 @@ public class BlackHoleBehaviour : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        PlayerTag playerTag = collision.collider.GetComponent<PlayerTag>();
+        PlayerTag playerTag = collision.GetComponent<PlayerTag>();
         if (playerTag)
         {
             _playerRigidBody = playerTag.GetComponent<Rigidbody>();
         }
     }
 
-    private void OnTriggerExit(Collision collision)
+    private void OnTriggerExit(Collider collision)
     {
-        PlayerTag playerTag = collision.collider.GetComponent<PlayerTag>();
+        PlayerTag playerTag = collision.GetComponent<PlayerTag>();
         if (playerTag)
         {
             _playerRigidBody = null;
