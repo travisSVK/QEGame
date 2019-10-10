@@ -18,29 +18,37 @@ public class Client : MonoBehaviour
     private Queue<Message> _messageQueue = new Queue<Message>();
     private Socket _sender;
     private Thread _messageProcessingThread = null;
-    private Vector3 _lastPosition;
+    private bool _otherClientConnected = false;
 
     private void Start()
     {
-        _lastPosition = transform.position;
     }
 
     private void Update()
     {
-        if (_lastPosition != transform.position)
+        if (_otherClientConnected)
         {
-            Message msg = new Message();
-            msg.clientId = clientId;
-            _lastPosition = transform.position;
-            msg.x = transform.position.x;
-            msg.y = transform.position.y;
-            msg.z = transform.position.z;
-            msg.isInitialized = true;
-            StateObject state = new StateObject();
-            state.workSocket = _sender;
-            Send<Message>(state, msg);
-            _sendDone.WaitOne();
+            MenuManager menuManager = FindObjectOfType<MenuManager>();
+            if (menuManager)
+            {
+                menuManager.StartFirstScene();
+            }
         }
+
+        //if (_lastPosition != transform.position)
+        //{
+        //    Message msg = new Message();
+        //    msg.clientId = clientId;
+        //    _lastPosition = transform.position;
+        //    msg.x = transform.position.x;
+        //    msg.y = transform.position.y;
+        //    msg.z = transform.position.z;
+        //    msg.isInitialized = true;
+        //    StateObject state = new StateObject();
+        //    state.workSocket = _sender;
+        //    Send<Message>(state, msg);
+        //    _sendDone.WaitOne();
+        //}
     }
 
     public void ConnectToServer()
@@ -93,6 +101,11 @@ public class Client : MonoBehaviour
             Message msg = GetMessage();
             if (msg.isInitialized)
             {
+                if (!_otherClientConnected)
+                {
+                    _otherClientConnected = true;
+                }
+                
                 Debug.Log("Client id: " + msg.clientId + " client position: " + new Vector3(msg.x, msg.y, msg.z));
             }
         }
