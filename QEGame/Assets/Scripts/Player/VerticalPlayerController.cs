@@ -6,8 +6,8 @@ public class VerticalPlayerController : MonoBehaviour
 {
     [SerializeField]
     private float _movementSpeed = 5.0f;
-    private CharacterController _characterController;
-    private Vector3 _moveDirection = Vector3.zero;
+    private Rigidbody _rigidBody;
+    private Vector3 _input = Vector3.zero;
 
     /**
      * @brief Speed of the game object vertical movement.
@@ -18,14 +18,23 @@ public class VerticalPlayerController : MonoBehaviour
         set { _movementSpeed = value; }
     }
 
+    private void FixedUpdate()
+    {
+        _rigidBody.MovePosition(_rigidBody.position + _input * _movementSpeed * Time.fixedDeltaTime);
+    }
+
     private void Start()
     {
-        _characterController = GetComponent<CharacterController>();
+        _rigidBody = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        _moveDirection = new Vector3(0.0f, 0.0f, Input.GetAxis("Vertical") * _movementSpeed);
-        _characterController.Move(_moveDirection * Time.deltaTime);
+        _input = Vector3.zero;
+        _input.x = Input.GetAxis("Vertical");
+        if (_input != Vector3.zero)
+        {
+            transform.forward = _input;
+        }
     }
 }
