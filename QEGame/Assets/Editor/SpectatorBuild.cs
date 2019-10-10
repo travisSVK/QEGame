@@ -7,7 +7,7 @@ public class SpectatorBuild
     public static void BuildGame()
     {
         string path = EditorUtility.SaveFolderPanel("Choose Location of Built Game", "", "");
-        string[] levels = new string[] { "Assets/Spectator.unity" };
+        string[] levels = new string[] { "Assets/Scenes/Spectator.unity" };
 
         BuildPipeline.BuildPlayer(levels, path + "/Spectator.exe", BuildTarget.StandaloneWindows, BuildOptions.None);
 
