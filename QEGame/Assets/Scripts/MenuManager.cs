@@ -30,7 +30,10 @@ public class MenuManager : MonoBehaviour
         swedishButton.gameObject.SetActive(false);
         englishButton.gameObject.SetActive(false);
         waitingForPlayersEnglish.SetActive(true);
-        StartFirstScene();
+
+        FindObjectOfType<LanguageManager>().activeLanguage = Language.English;
+
+        StartClientConnection();
     }
 
     private void PressedSwedish()
@@ -38,7 +41,10 @@ public class MenuManager : MonoBehaviour
         swedishButton.gameObject.SetActive(false);
         englishButton.gameObject.SetActive(false);
         waitingForPlayersSwedish.SetActive(true);
-        StartFirstScene();
+
+        FindObjectOfType<LanguageManager>().activeLanguage = Language.Swedish;
+
+        StartClientConnection();
     }
 
     private void StartClientConnection()
