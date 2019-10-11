@@ -13,10 +13,8 @@ TagManager:
   - UI
   - 
   - 
-  - Player
-  - Wall
-  - Goal
-  - Floor
+  - Player1
+  - Player2
   - 
   - 
   - 
@@ -25,10 +23,12 @@ TagManager:
   - 
   - 
   - 
-  - Player (P2)
-  - Wall (P2)
-  - Goal (P2)
-  - Floor (P2)
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
