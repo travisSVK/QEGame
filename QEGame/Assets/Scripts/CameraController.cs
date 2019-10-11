@@ -10,12 +10,16 @@ public class CameraController : MonoBehaviour
         public string name;
         public Vector3 position;
         public Quaternion rotation;
+        public bool callSpawnerOnArrival;
+        public string spawnerObjectName;
 
-        public ControlPoint(string name, Vector3 position, Quaternion rotation)
+        public ControlPoint(string name, Vector3 position, Quaternion rotation, bool callSpawnerOnArrival, string spawnerObjectName)
         {
             this.name = name;
             this.position = position;
             this.rotation = rotation;
+            this.callSpawnerOnArrival = callSpawnerOnArrival;
+            this.spawnerObjectName = spawnerObjectName;
         }
     }
 
@@ -154,6 +158,19 @@ public class CameraController : MonoBehaviour
             if (_movementProgress >= 1.0f)
             {
                 ++_currentControlPoint;
+                if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
+                {
+                    GameObject spawnerObject = GameObject.Find(_controlPoints[_currentControlPoint].spawnerObjectName);
+                    if (spawnerObject)
+                    {
+                        Spawner spawner = spawnerObject.GetComponent<Spawner>();
+                        if (spawner)
+                        {
+                            spawner.Spawn();
+                        }
+                    }
+                }
+
                 enabled = false;
                 transform.position = _controlPoints[_currentControlPoint].position;
                 transform.rotation = _controlPoints[_currentControlPoint].rotation;
@@ -171,6 +188,19 @@ public class CameraController : MonoBehaviour
             if (_movementProgress >= 1.0f)
             {
                 --_currentControlPoint;
+                if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
+                {
+                    GameObject spawnerObject = GameObject.Find(_controlPoints[_currentControlPoint].spawnerObjectName);
+                    if (spawnerObject)
+                    {
+                        Spawner spawner = spawnerObject.GetComponent<Spawner>();
+                        if (spawner)
+                        {
+                            spawner.Spawn();
+                        }
+                    }
+                }
+
                 enabled = false;
                 transform.position = _controlPoints[_currentControlPoint].position;
                 transform.rotation = _controlPoints[_currentControlPoint].rotation;

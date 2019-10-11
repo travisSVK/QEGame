@@ -44,7 +44,13 @@ public class CameraControllerInspector : Editor
                 string name = EditorGUILayout.TextField("Name", cameraController.controlPoints[i].name);
                 Vector3 position = EditorGUILayout.Vector3Field("Position", cameraController.controlPoints[i].position);
                 Quaternion rotation = Quaternion.Euler(EditorGUILayout.Vector3Field("Rotation", cameraController.controlPoints[i].rotation.eulerAngles));
-                cameraController.controlPoints[i] = new CameraController.ControlPoint(name, position, rotation);
+                bool spawnOnArrival = EditorGUILayout.Toggle("Call Spawn On Arrival", cameraController.controlPoints[i].callSpawnerOnArrival);
+                string spawnObjectName = "";
+                if (spawnOnArrival)
+                {
+                    spawnObjectName = EditorGUILayout.TextField("Spawn Object Name", spawnObjectName);
+                }
+                cameraController.controlPoints[i] = new CameraController.ControlPoint(name, position, rotation, spawnOnArrival, spawnObjectName);
 
                 GUILayout.BeginHorizontal();
                 {
@@ -92,16 +98,16 @@ public class CameraControllerInspector : Editor
         {
             if (cameraController.controlPoints.Count <= 0)
             {
-                cameraController.controlPoints.Add(new CameraController.ControlPoint("New Control Point", Vector3.zero, Quaternion.identity));
+                cameraController.controlPoints.Add(new CameraController.ControlPoint("New Control Point", Vector3.zero, Quaternion.identity, false, ""));
             }
             else if (cameraController.controlPoints.Count == 1)
             {
-                cameraController.controlPoints.Add(new CameraController.ControlPoint("New Control Point", new Vector3(0.0f, 0.0f, 5.0f), Quaternion.identity));
+                cameraController.controlPoints.Add(new CameraController.ControlPoint("New Control Point", new Vector3(0.0f, 0.0f, 5.0f), Quaternion.identity, false, ""));
             }
             else
             {
                 Vector3 normal = cameraController.controlPoints[cameraController.controlPoints.Count - 1].position - cameraController.controlPoints[cameraController.controlPoints.Count - 2].position;
-                cameraController.controlPoints.Add(new CameraController.ControlPoint("New Control Point", cameraController.controlPoints[cameraController.controlPoints.Count - 1].position + normal.normalized * 5.0f, Quaternion.identity));
+                cameraController.controlPoints.Add(new CameraController.ControlPoint("New Control Point", cameraController.controlPoints[cameraController.controlPoints.Count - 1].position + normal.normalized * 5.0f, Quaternion.identity, false, ""));
             }
             _foldouts.Add(true);
         }
@@ -172,7 +178,8 @@ public class CameraControllerInspector : Editor
                 if (EditorGUI.EndChangeCheck())
                 {
                     cameraController.controlPoints[i] = new CameraController.ControlPoint(
-                        cameraController.controlPoints[i].name, newTargetPosition, cameraController.controlPoints[i].rotation);
+                        cameraController.controlPoints[i].name, newTargetPosition, cameraController.controlPoints[i].rotation,
+                        cameraController.controlPoints[i].callSpawnerOnArrival, cameraController.controlPoints[i].spawnerObjectName);
                 }
             }
             else
@@ -181,7 +188,9 @@ public class CameraControllerInspector : Editor
                 Quaternion rotation = Handles.RotationHandle(
                     cameraController.controlPoints[i].rotation, cameraController.controlPoints[i].position);
                 cameraController.controlPoints[i] = new CameraController.ControlPoint(
-                    cameraController.controlPoints[i].name, cameraController.controlPoints[i].position, rotation);
+                    cameraController.controlPoints[i].name, cameraController.controlPoints[i].position, rotation,
+                    cameraController.controlPoints[i].callSpawnerOnArrival,
+                    cameraController.controlPoints[i].spawnerObjectName);
                 cameraController.UpdateTransformations();
             }
         }
