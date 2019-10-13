@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rooms:
-  - Room01a
+  - Room01b
 --- !u!4 &754250466
 Transform:
   m_ObjectHideFlags: 0

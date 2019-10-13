@@ -4,60 +4,94 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour
 {
     public int clientId;
-    private bool _gameFinished = false;
     private IPHostEntry _ipHost;
     private IPAddress _ipAddr;
     private IPEndPoint _localEndPoint;
     private ManualResetEvent _connectDone = new ManualResetEvent(false);
     private ManualResetEvent _sendDone = new ManualResetEvent(false);
     private ManualResetEvent _receiveDone = new ManualResetEvent(false);
+    private ManualResetEvent _disconnectDone = new ManualResetEvent(false);
     private Mutex _messageQueueMutex = new Mutex();
     private Queue<Message> _messageQueue = new Queue<Message>();
     private Socket _sender;
     private Thread _messageProcessingThread = null;
-    private bool _otherClientConnected = false;
-    private bool _endSceneLoaded = false;
+    private bool _endSceneLoading = false;
+    private bool _gameFinished = false;
+    private Vector3 _lastPosition;
+    private Rigidbody _rigidbody;
+    private Vector3 _otherPlayerInput = Vector3.zero;
+    private PlayerControllerBase _playerBase;
 
     private void Start()
     {
+        _lastPosition = transform.position;
     }
 
     private void Update()
     {
-        if (_endSceneLoaded)
+        ProcessMessage();
+
+        if (!_gameFinished && _rigidbody && (_playerBase.input != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
+        {
+            Message msg = new Message();
+            msg.messageType = MessageType.Move;
+            msg.move.clientId = clientId;
+            //_lastPosition = _rigidbody.transform.position;
+            //PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
+            msg.move.x = _playerBase.input.x;
+            msg.move.y = _playerBase.input.y;
+            msg.move.z = _playerBase.input.z;
+            StateObject state = new StateObject();
+            state.workSocket = _sender;
+            Send<Message>(state, msg, false);
+            _sendDone.WaitOne();
+        }
+
+        if (_gameFinished && !_endSceneLoading)
         {
             GameFinished();
         }
-        if (_otherClientConnected)
-        {
-            MenuManager menuManager = FindObjectOfType<MenuManager>();
-            if (menuManager)
-            {
-                menuManager.StartFirstScene();
-                _endSceneLoaded = true;
-            }
-            _otherClientConnected = false;
-        }
-        
+    }
 
-        //if (_lastPosition != transform.position)
+    private void FixedUpdate()
+    {
+        //if (!_gameFinished && _rigidbody && (_lastPosition != _rigidbody.transform.position))
         //{
         //    Message msg = new Message();
-        //    msg.clientId = clientId;
-        //    _lastPosition = transform.position;
-        //    msg.x = transform.position.x;
-        //    msg.y = transform.position.y;
-        //    msg.z = transform.position.z;
-        //    msg.isInitialized = true;
+        //    msg.messageType = MessageType.Move;
+        //    msg.move.clientId = clientId;
+        //    _lastPosition = _rigidbody.transform.position;
+        //    PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
+        //    msg.move.x = playerBase.input.x;
+        //    msg.move.y = playerBase.input.y;
+        //    msg.move.z = playerBase.input.z;
         //    StateObject state = new StateObject();
         //    state.workSocket = _sender;
-        //    Send<Message>(state, msg);
+        //    Send<Message>(state, msg, false);
         //    _sendDone.WaitOne();
         //}
+
+        if (_rigidbody && (_otherPlayerInput != Vector3.zero))
+        {
+            PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
+            _rigidbody.MovePosition(_rigidbody.position + _otherPlayerInput * playerBase.MovementSpeed * Time.fixedDeltaTime);
+            _otherPlayerInput = Vector3.zero;
+        }
+    }
+
+    public Rigidbody rb
+    {
+        set
+        {
+            _rigidbody = value;
+            _playerBase = FindObjectOfType<PlayerControllerBase>();
+            _lastPosition = _rigidbody.position;
+        }
     }
 
     public void GameFinished()
@@ -68,19 +102,24 @@ public class Client : MonoBehaviour
         message.disconnect.clientId = clientId;
         StateObject state = new StateObject();
         state.workSocket = _sender;
-        _sendDone.Reset();
-        Debug.Log("Game finished.");
-        Send<Message>(state, message);
-        _sendDone.WaitOne();
+        _disconnectDone.Reset();
+        Send(state, message, true);
+        _disconnectDone.WaitOne();
+        Debug.Log("Disconnect request sent.");
+        _endSceneLoading = true;
+        SceneManager.LoadScene("EndScene");
+    }
+
+    public void Restart()
+    {
         _sender.Shutdown(SocketShutdown.Both);
         _sender.Close();
-        _gameFinished = true;
-        _messageProcessingThread.Join();
+        Debug.Log("Game finished.");
+
         EndSceneManager endSceneManager = FindObjectOfType<EndSceneManager>();
         if (endSceneManager)
         {
             Debug.Log("Endscene manager called.");
-            _gameFinished = false;
             endSceneManager.Restart();
         }
         else
@@ -121,7 +160,7 @@ public class Client : MonoBehaviour
             Message message = new Message();
             message.messageType = MessageType.Connected;
             message.messageConnected = msg;
-            Send(state, message);
+            Send(state, message, false);
             _sendDone.WaitOne();
 
             // Receive the ACK from the remote device.
@@ -133,33 +172,53 @@ public class Client : MonoBehaviour
         {
             Debug.Log(e.ToString());
         }
-        ProcessMessages();
     }
 
-    private void ProcessMessages()
+    private void ProcessMessage()
     {
-        while (true)
+        Message msg = GetMessage();
+        switch (msg.messageType)
         {
-            Message msg = GetMessage();
-            switch (msg.messageType)
-            {
-                case MessageType.OtherPlayerConnected:
-                    Debug.Log("Other player connected received.");
-                    if (!_otherClientConnected)
-                    {
-                        _otherClientConnected = true;
-                    }
-                    break;
-                case MessageType.Uninitialized:
-                    break;
-                default:
-                    break;
-            }
-            if (_gameFinished)
-            {
-                Debug.Log("Thread finished.");
+            case MessageType.Move:
+                _otherPlayerInput = new Vector3(msg.move.x, msg.move.y, msg.move.z);
                 break;
-            }
+            case MessageType.OtherPlayerConnected:
+                Debug.Log("Other player connected received.");
+                _messageProcessingThread.Join();
+                MenuManager menuManager = FindObjectOfType<MenuManager>();
+                if (menuManager)
+                {
+                    menuManager.StartFirstScene();
+                }
+                break;
+            case MessageType.NextLevel:
+                _otherPlayerInput = Vector3.zero;
+                _rigidbody = null;
+                CameraController cameraControlller = FindObjectOfType<CameraController>();
+                if (cameraControlller)
+                {
+                    if (cameraControlller.canMoveForward)
+                    {
+                        cameraControlller.MoveForward();
+                    }
+                    else
+                    {
+                        _gameFinished = true;
+                    }
+                }
+                break;
+            case MessageType.Disconnect:
+                Debug.Log("Disconnect response received.");
+                if (msg.disconnect.clientId == clientId)
+                {
+                    Debug.Log("Disconnect response received.");
+                    Restart();
+                }
+                break;
+            case MessageType.Uninitialized:
+                break;
+            default:
+                break;
         }
     }
 
@@ -187,6 +246,27 @@ public class Client : MonoBehaviour
             sender.EndConnect(ar);
 
             Debug.Log("Socket connected to " + sender.RemoteEndPoint.ToString());
+
+            // Signal that the connection has been made.
+            _connectDone.Set();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
+    }
+
+    private void DisconnectCallback(IAsyncResult ar)
+    {
+        try
+        {
+            // Retrieve the socket from the state object.
+            Socket sender = (Socket)ar.AsyncState;
+
+            // Complete the disconnection.
+            sender.EndDisconnect(ar);
+
+            Debug.Log("Socket disconnected from " + sender.RemoteEndPoint.ToString());
 
             // Signal that the connection has been made.
             _connectDone.Set();
@@ -241,6 +321,17 @@ public class Client : MonoBehaviour
                     sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), newState);
                 }
+                else if ((msg.messageType == MessageType.Disconnect) && (msg.disconnect.clientId == clientId))
+                {
+                    _receiveDone.Set();
+                }
+                else
+                {
+                    StateObject newState = new StateObject();
+                    newState.workSocket = sender;
+                    sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
+                        new AsyncCallback(ReceiveAckCallback), newState);
+                }
             }
         }
         catch (Exception e)
@@ -267,7 +358,6 @@ public class Client : MonoBehaviour
                 {
                     Message msg = MessageUtils.Deserialize<Message>(state.buffer);
                     _messageQueueMutex.WaitOne();
-                    Debug.Log(msg.messageType);
                     _messageQueue.Enqueue(msg);
                     _messageQueueMutex.ReleaseMutex();
 
@@ -283,13 +373,42 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void Send<MessageType>(StateObject state, MessageType message)
+    private void Send<MessageType>(StateObject state, MessageType message, bool disconnect)
     {
         byte[] byteData = MessageUtils.Serialize<MessageType>(message);
 
-        // Begin sending the data to the remote device.
-        state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
-            new AsyncCallback(SendCallback), state);
+        if (state.workSocket.Connected)
+        {
+            if (disconnect)
+            {
+                state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
+                   new AsyncCallback(SendDisconnectCallback), state);
+            }
+            else
+            {
+                state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
+                   new AsyncCallback(SendCallback), state);
+            }
+        }
+    }
+
+    private void SendDisconnectCallback(IAsyncResult ar)
+    {
+        try
+        {
+            StateObject state = (StateObject)ar.AsyncState;
+
+            // Complete sending the data to the remote device.
+            int bytesSent = state.workSocket.EndSend(ar);
+            Debug.Log("Sent " + bytesSent + " bytes to server.");
+
+            // Signal that all bytes have been sent.
+            _disconnectDone.Set();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
     }
 
     private void SendCallback(IAsyncResult ar)

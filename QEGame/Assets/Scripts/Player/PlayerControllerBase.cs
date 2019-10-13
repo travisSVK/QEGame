@@ -7,6 +7,9 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     private GameObject _otherPlayerController;
 
     [SerializeField]
+    private int _clientId;
+
+    [SerializeField]
     protected float _movementSpeed = 2.0f;
     protected bool _hasHitTarget = false;
     protected bool _hasOtherPlayerReachedGoal = false;
@@ -16,6 +19,16 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     protected ILocalConnection _localConnection = null;
 
     private Rigidbody _rigidBody;
+
+    public int ClientId
+    {
+        get { return _clientId; }
+    }
+
+    public Vector3 input
+    {
+        get { return _input; }
+    }
 
     public float MovementSpeed
     {
@@ -39,9 +52,19 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
         _hasOtherPlayerReachedGoal = hasGoalBeenReached;
     }
 
+    public void OnPlayerDeath()
+    {
+        //TODO
+    }
+
     private void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
+        Client client = FindObjectOfType<Client>();
+        if (_rigidBody && client)
+        {
+            client.rb = _rigidBody;
+        }
 
         if (_otherPlayerController)
         {

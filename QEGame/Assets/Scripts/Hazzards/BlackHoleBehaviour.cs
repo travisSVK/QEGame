@@ -18,8 +18,8 @@ public class BlackHoleBehaviour : MonoBehaviour
             float distance = Vector3.Distance(transform.position, _playerRigidBody.transform.position);
             if (distance <= 0.5f)
             {
-                PlayerTag playerTag = _playerRigidBody.GetComponent<PlayerTag>();
-                playerTag.OnPlayerDeath();
+                PlayerControllerBase playerControllerBase = _playerRigidBody.GetComponent<PlayerControllerBase>();
+                playerControllerBase.OnPlayerDeath();
             }
             Vector3 direction = transform.position - _playerRigidBody.transform.position;
             float gravitationalPull = Mathf.Clamp(_pullFactor - distance, 0.0f, _pullFactor);
@@ -29,17 +29,17 @@ public class BlackHoleBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        PlayerTag playerTag = collider.GetComponent<PlayerTag>();
-        if (playerTag)
+        PlayerControllerBase playerControllerBase = collider.GetComponent<PlayerControllerBase>();
+        if (playerControllerBase)
         {
-            _playerRigidBody = playerTag.GetComponent<Rigidbody>();
+            _playerRigidBody = playerControllerBase.GetComponent<Rigidbody>();
         }
     }
 
     private void OnTriggerExit(Collider collider)
     {
-        PlayerTag playerTag = collider.GetComponent<PlayerTag>();
-        if (playerTag)
+        PlayerControllerBase playerControllerBase = collider.GetComponent<PlayerControllerBase>();
+        if (playerControllerBase)
         {
             _playerRigidBody = null;
         }

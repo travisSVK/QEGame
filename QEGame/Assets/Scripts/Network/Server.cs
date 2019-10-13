@@ -11,19 +11,22 @@ public class Server : MonoBehaviour
     //private AsyncListener _asyncListener;
     public int maxNumberOfClients = 2;
     private int _currentNumOfClients;
-    private bool _gameFinished;
     private Mutex _messageQueueMutex = new Mutex();
-    private Mutex _positionsMutex = new Mutex();
     private Socket _listener;
     private Queue<Message> _messageQueue = new Queue<Message>();
     private ManualResetEvent _allDone = new ManualResetEvent(false);
+    private ManualResetEvent _disconnected = new ManualResetEvent(false);
     private Thread _messageProcessingThread = null;
     private Dictionary<int, Vector3> _positions = new Dictionary<int, Vector3>();
     private Dictionary<int, StateObject> _states = new Dictionary<int, StateObject>();
+    private Dictionary<int, Rigidbody> _rigidBodies = new Dictionary<int, Rigidbody>();
+    private bool _rigidBodiesLoaded = false;
+    private bool _clientsConnected = false;
+    private int _numberOfFinishedPlayers = 0;
+    private bool _joined = false;
 
     private void Start()
     {
-        _gameFinished = false;
         _currentNumOfClients = 0;
         _messageProcessingThread = new Thread(StartListening);
         _messageProcessingThread.Start();
@@ -33,23 +36,67 @@ public class Server : MonoBehaviour
     {
         // TODO update both players values depending on values in dictionary (in a
         // way which keeps Unity-specific values detached from our custom threads)
-        _positionsMutex.WaitOne();
-        foreach (KeyValuePair<int, Vector3> entry in _positions)
+        if (!_clientsConnected)
         {
-            //Debug.Log("Client id: " + entry.Key + " client position: " + entry.Value);
+            return;
         }
-        _positionsMutex.ReleaseMutex();
-        if (_gameFinished)
+        if (!_joined)
         {
             _messageProcessingThread.Join();
-            SpectatorView spectatorView = FindObjectOfType<SpectatorView>();
-            if (spectatorView)
+            _joined = true;
+        }
+        if (!_rigidBodiesLoaded)
+        {
+            Rigidbody[] rigidBodies = FindObjectsOfType<Rigidbody>();
+            foreach (Rigidbody r in rigidBodies)
             {
-                spectatorView.Restart();
+                PlayerControllerBase playerBase = r.GetComponent<PlayerControllerBase>();
+                if (playerBase)
+                {
+                    _rigidBodies.Add(playerBase.ClientId, r);
+                }
+            }
+            _rigidBodiesLoaded = true;
+        }
+
+        ProcessMessage();
+    }
+
+    private void FixedUpdate()
+    {
+        if (_rigidBodiesLoaded)
+        {
+            List<int> keys = new List<int>(_positions.Keys);
+            foreach (int key in keys)
+            {
+                PlayerControllerBase playerBase = _rigidBodies[key].GetComponent<PlayerControllerBase>();
+                _rigidBodies[key].MovePosition(_rigidBodies[key].position + _positions[key] * playerBase.MovementSpeed * Time.fixedDeltaTime);
+                _positions[key] = Vector3.zero;
             }
         }
     }
 
+    public void LevelFinishedRetracted()
+    {
+        --_numberOfFinishedPlayers;
+    }
+
+    public bool LevelFinished()
+    {
+        if (++_numberOfFinishedPlayers == _currentNumOfClients)
+        {
+            foreach (KeyValuePair<int, StateObject> entry in _states)
+            {
+                Message msg = new Message();
+                msg.messageType = MessageType.NextLevel;
+                Send(entry.Value, msg, false);
+            }
+            _numberOfFinishedPlayers = 0;
+            return true;
+        }
+        return false;
+    }
+    
     private void StartListening()
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
@@ -73,10 +120,11 @@ public class Server : MonoBehaviour
                 _listener.BeginAccept(new AsyncCallback(AcceptCallback), _listener);
 
                 // Wait until a connection is made before continuing.
-                ++_currentNumOfClients;
                 _allDone.WaitOne();
+                ++_currentNumOfClients;
                 Debug.Log("Player connected.");
             }
+            _clientsConnected = true;
         }
         catch (Exception e)
         {
@@ -92,37 +140,74 @@ public class Server : MonoBehaviour
             Debug.Log("Sending otherplayer connected: " + entry.Key);
             Send<Message>(entry.Value, msg, true);
         }
-        ProcessMessages();
     }
 
-    private void ProcessMessages()
+    private void ProcessMessage()
     {
-        while (true)
+        Message msg = GetMessage();
+        switch (msg.messageType)
         {
-            Message msg = GetMessage();
-            switch (msg.messageType)
-            {
-                case MessageType.Move:
-                    _positionsMutex.WaitOne();
-                    _positions[msg.move.clientId] = new Vector3(msg.move.x, msg.move.y, msg.move.z);
-                    _positionsMutex.ReleaseMutex();
-                    break;
-                case MessageType.Disconnect:
-                    Socket socket = _states[msg.disconnect.clientId].workSocket;
-                    socket.Shutdown(SocketShutdown.Both);
-                    socket.Close();
-                    --_currentNumOfClients;
-                    break;
-                case MessageType.Uninitialized:
-                default:
-                    break;
-            }
-            if (_currentNumOfClients == 0)
-            {
-                _listener.Close();
-                _gameFinished = true;
+            case MessageType.Move:
+                if (_currentNumOfClients == maxNumberOfClients)
+                {
+                    _positions[msg.move.clientId] += new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                    foreach (KeyValuePair<int, StateObject> entry in _states)
+                    {
+                        if (entry.Key != msg.move.clientId)
+                        {
+                            Send<Message>(entry.Value, msg, false);
+                            _positions[entry.Key] += new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                        }
+                    }
+                }
                 break;
-            }
+            case MessageType.Disconnect:
+                if (--_currentNumOfClients == 0)
+                {
+                    foreach (KeyValuePair<int, StateObject> entry in _states)
+                    {
+                        _disconnected.Reset();
+                        Message message = new Message();
+                        message.messageType = MessageType.Disconnect;
+                        message.disconnect = new Disconnect();
+                        message.disconnect.clientId = entry.Key;
+                        Debug.Log("Sending disconnect: " + entry.Key);
+                        SendDisconnect(entry.Value, message);
+                        _disconnected.WaitOne();
+                    }
+                    
+                    SpectatorView spectatorView = FindObjectOfType<SpectatorView>();
+                    if (spectatorView)
+                    {
+                        spectatorView.Restart();
+                        _listener.Close();
+                    }
+                }
+                break;
+            case MessageType.Uninitialized:
+            default:
+                break;
+        }
+    }
+
+    private void DisconnectCallback(IAsyncResult ar)
+    {
+        try
+        {
+            // Retrieve the socket from the state object.
+            Socket sender = (Socket)ar.AsyncState;
+
+            // Complete the disconnection.
+            sender.EndDisconnect(ar);
+
+            Debug.Log("Socket disconnected from " + sender.RemoteEndPoint.ToString());
+
+            // Signal that the connection has been made.
+            _disconnected.Set();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
         }
     }
 
@@ -162,13 +247,10 @@ public class Server : MonoBehaviour
             Message msg = MessageUtils.Deserialize<Message>(state.buffer);
             if (msg.messageType == MessageType.Connected)
             {
-                _positionsMutex.WaitOne();
                 _positions.Add(msg.messageConnected.clientId, Vector3.zero);
-                _positionsMutex.ReleaseMutex();
                 _states.Add(msg.messageConnected.clientId, state);
                 // Signal the main thread to continue.
                 _allDone.Set();
-                state.sendSocket = state.workSocket;
                 Send(state, msg, false);
             }
         }
@@ -182,34 +264,40 @@ public class Server : MonoBehaviour
         Socket handler = state.workSocket;
 
         // Read data from the client socket.
-        int bytesRead = handler.EndReceive(ar);
-
-        if (bytesRead > 0)
+        if (handler.Connected)
         {
-            Message msg = MessageUtils.Deserialize<Message>(state.buffer);
-            _messageQueueMutex.WaitOne();
-            _messageQueue.Enqueue(msg);
-            _messageQueueMutex.ReleaseMutex();
+            int bytesRead = handler.EndReceive(ar);
 
-            state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+            if (bytesRead > 0)
+            {
+                Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+                _messageQueueMutex.WaitOne();
+                _messageQueue.Enqueue(msg);
+                _messageQueueMutex.ReleaseMutex();
+
+                state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReadCallback), state);
+            }
         }
     }
 
     private void Send<MessageType>(StateObject state, MessageType message, bool startListening)
     {
         byte[] byteData = MessageUtils.Serialize<MessageType>(message);
-        
-        // Begin sending the data to the remote device.
-        if (startListening)
+
+        if (state.workSocket.Connected)
         {
-            state.sendSocket.BeginSend(byteData, 0, byteData.Length, 0,
-            new AsyncCallback(SendCallbackAndListen), state);
-        }
-        else
-        {
-            state.sendSocket.BeginSend(byteData, 0, byteData.Length, 0,
-            new AsyncCallback(SendCallback), state);
+            // Begin sending the data to the remote device.
+            if (startListening)
+            {
+                state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallbackAndListen), state);
+            }
+            else
+            {
+                state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallback), state);
+            }
         }
     }
 
@@ -240,6 +328,36 @@ public class Server : MonoBehaviour
             // Complete sending the data to the remote device.
             int bytesSent = state.workSocket.EndSend(ar);
             Debug.Log("Sent " + bytesSent + " bytes to client.");
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
+    }
+
+    private void SendDisconnect(StateObject state, Message message)
+    {
+        byte[] byteData = MessageUtils.Serialize<Message>(message);
+
+        if (state.workSocket.Connected)
+        {
+            state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallbackAndShutDown), state);
+        }
+    }
+
+    private void SendCallbackAndShutDown(IAsyncResult ar)
+    {
+        try
+        {
+            // Retrieve the socket from the state object.
+            StateObject state = (StateObject)ar.AsyncState;
+            // Complete sending the data to the remote device.
+            int bytesSent = state.workSocket.EndSend(ar);
+            Debug.Log("Closing client socket.");
+            state.workSocket.Shutdown(SocketShutdown.Both);
+            state.workSocket.Close();
+            _disconnected.Set();
         }
         catch (Exception e)
         {

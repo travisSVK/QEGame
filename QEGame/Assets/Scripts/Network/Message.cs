@@ -8,7 +8,8 @@ public enum MessageType
     Move,
     OtherPlayerConnected,
     Disconnect,
-    Uninitialized
+    Uninitialized,
+    NextLevel
 }
 
 [Serializable]
@@ -38,6 +39,7 @@ public struct Disconnect
 {
     public int clientId;
 }
+
 
 [Serializable]
 public struct Message

@@ -9,10 +9,10 @@ public class WormHoleBehaviour : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        PlayerTag playerTag = collider.GetComponent<PlayerTag>();
-        if (playerTag)
+        PlayerControllerBase playerBase = collider.GetComponent<PlayerControllerBase>();
+        if (playerBase)
         {
-            playerTag.transform.position = _wormHoleSpouse.transform.position;
+            playerBase.transform.position = _wormHoleSpouse.transform.position;
         }
     }
 

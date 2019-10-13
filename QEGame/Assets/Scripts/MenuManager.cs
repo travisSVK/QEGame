@@ -60,7 +60,7 @@ public class MenuManager : MonoBehaviour
 
     public void StartFirstScene()
     {
-        SceneManager.LoadScene("EndScene");
+        SceneManager.LoadScene("GameScene");
     }
 
     private void Update()

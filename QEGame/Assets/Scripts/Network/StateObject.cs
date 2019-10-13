@@ -3,7 +3,6 @@
 public class StateObject
 {
     public Socket workSocket = null;
-    public Socket sendSocket = null;
 
     public const int BufferSize = 1024;
 
