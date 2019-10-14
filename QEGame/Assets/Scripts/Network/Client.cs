@@ -51,7 +51,7 @@ public class Client : MonoBehaviour
             Message msg = new Message();
             msg.messageType = MessageType.Move;
             msg.move.clientId = clientId;
-            msg.timestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            //msg.timestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             //_lastPosition = _rigidbody.transform.position;
             //PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
             msg.move.x = _playerBase.movementIncrement.x;

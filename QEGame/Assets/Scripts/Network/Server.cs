@@ -312,7 +312,7 @@ public class Server : MonoBehaviour
                 Message msg = MessageUtils.Deserialize(state.buffer);
                 _messageQueueMutex.WaitOne();
                 _messageQueue.Add(msg);
-                _messageQueue.Sort((x, y) => x.timestamp.CompareTo(y.timestamp));
+                //_messageQueue.Sort((x, y) => x.timestamp.CompareTo(y.timestamp));
                 _messageQueueMutex.ReleaseMutex();
 
                 state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
