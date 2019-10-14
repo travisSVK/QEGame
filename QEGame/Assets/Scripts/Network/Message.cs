@@ -53,12 +53,14 @@ public struct Message
     public Disconnect disconnect;
 }
 
-public class MessageUtils
+public static class MessageUtils
 {
     public static Message Deserialize(byte[] buffer)
     {
-        MemoryStream ms = new MemoryStream(buffer);
+        MemoryStream ms = new MemoryStream();
         BinaryFormatter bf = new BinaryFormatter();
+        ms.Write(buffer, 0, buffer.Length);
+        ms.Seek(0, SeekOrigin.Begin);
         return (Message)bf.Deserialize(ms);
         //using (var ms = new MemoryStream())
         //{

@@ -37,16 +37,16 @@ public class Client : MonoBehaviour
     {
         ProcessMessage();
 
-        if (_inputSent)
-        {
-            _inputSent = false;
-        }
-        else
-        {
-            _inputSent = true;
-        }
+        //if (_inputSent)
+        //{
+        //    _inputSent = false;
+        //}
+        //else
+        //{
+        //    _inputSent = true;
+        //}
 
-        if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
+        if (/*!_inputSent &&*/ !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
         {
             Message msg = new Message();
             msg.messageType = MessageType.Move;
@@ -61,7 +61,7 @@ public class Client : MonoBehaviour
             StateObject state = new StateObject();
             state.workSocket = _sender;
             Send(state, msg, false);
-            _sendDone.WaitOne();
+            //_sendDone.WaitOne();
         }
 
         if (_rigidbody && (_otherPlayerInput != Vector3.zero))
