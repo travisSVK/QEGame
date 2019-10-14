@@ -213,6 +213,7 @@ public class Client : MonoBehaviour
                 break;
             case MessageType.NextLevel:
                 _otherPlayerInput = Vector3.zero;
+                Destroy(_rigidbody.gameObject);
                 _rigidbody = null;
                 CameraController cameraControlller = FindObjectOfType<CameraController>();
                 if (cameraControlller)

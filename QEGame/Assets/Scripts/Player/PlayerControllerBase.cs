@@ -62,7 +62,12 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
 
     public void OnPlayerDeath()
     {
-        //TODO
+        // TODO trigger animation before
+        Server server = FindObjectOfType<Server>();
+        if (server)
+        {
+            server.RestartLevel();
+        }
     }
 
     private void Start()

@@ -3,7 +3,6 @@ using UnityEngine;
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections.Generic;
 using System.Threading;
 
 public class Server : MonoBehaviour
@@ -115,6 +114,25 @@ public class Server : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void RestartLevel()
+    {
+        Debug.Log("fuck");
+        foreach (KeyValuePair<int, StateObject> entry in _states)
+        {
+            Message msg = new Message();
+            msg.messageType = MessageType.RestartLevel;
+            Send(entry.Value, msg, false);
+        }
+        _rigidBodiesLoaded = false;
+        _rigidBodies.Clear();
+        _numberOfFinishedPlayers = 0;
+        CameraController cameraControlller = FindObjectOfType<CameraController>();
+        if (cameraControlller)
+        {
+            cameraControlller.RestartLevel();
+        }
     }
     
     private void StartListening()

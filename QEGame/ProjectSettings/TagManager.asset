@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Blackhole
+  - Spawner01
+  - Spawner02
+  - Spawner03
+  - Spawner04
+  - Spawner05
   layers:
   - Default
   - TransparentFX

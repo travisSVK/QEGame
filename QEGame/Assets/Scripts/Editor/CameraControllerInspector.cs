@@ -48,7 +48,7 @@ public class CameraControllerInspector : Editor
                 string spawnObjectName = "";
                 if (spawnOnArrival)
                 {
-                    spawnObjectName = EditorGUILayout.TextField("Spawn Object Name", spawnObjectName);
+                    spawnObjectName = EditorGUILayout.TextField("Spawn Object Tag", cameraController.controlPoints[i].spawnerObjectName);
                 }
                 cameraController.controlPoints[i] = new CameraController.ControlPoint(name, position, rotation, spawnOnArrival, spawnObjectName);
 

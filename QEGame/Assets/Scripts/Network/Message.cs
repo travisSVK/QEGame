@@ -7,6 +7,7 @@ public enum MessageType
     Connected,
     Move,
     OtherPlayerConnected,
+    RestartLevel,
     Disconnect,
     Uninitialized,
     NextLevel

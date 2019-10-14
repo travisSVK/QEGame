@@ -1833,8 +1833,8 @@ GameObject:
   - component: {fileID: 1191788934}
   - component: {fileID: 1191788935}
   m_Layer: 8
-  m_Name: Spawner
-  m_TagString: Untagged
+  m_Name: SpawnerRoom01a
+  m_TagString: Spawner01
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

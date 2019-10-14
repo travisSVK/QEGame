@@ -317,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rooms:
   - Room01b
+  - Room02b
 --- !u!4 &754250466
 Transform:
   m_ObjectHideFlags: 0
@@ -467,6 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rooms:
   - Room01a
+  - Room02a
 --- !u!4 &1405602161
 Transform:
   m_ObjectHideFlags: 0
@@ -687,3 +689,8 @@ MonoBehaviour:
     rotation: {x: 0.5735765, y: 0, z: 0, w: 0.819152}
     callSpawnerOnArrival: 0
     spawnerObjectName: 
+  - name: Room02
+    position: {x: 0, y: 7, z: 20}
+    rotation: {x: 0.5735765, y: 0, z: 0, w: 0.819152}
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner02

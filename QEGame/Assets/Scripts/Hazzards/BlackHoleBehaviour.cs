@@ -16,13 +16,15 @@ public class BlackHoleBehaviour : MonoBehaviour
         if (_playerRigidBody)
         {
             float distance = Vector3.Distance(transform.position, _playerRigidBody.transform.position);
-            if (distance <= 0.5f)
+            PlayerControllerBase _playerController = _playerRigidBody.GetComponent<PlayerControllerBase>();
+            if (distance <= 0.005f)
             {
-                PlayerControllerBase playerControllerBase = _playerRigidBody.GetComponent<PlayerControllerBase>();
-                playerControllerBase.OnPlayerDeath();
+                //_playerController.OnPlayerDeath();
             }
             Vector3 direction = transform.position - _playerRigidBody.transform.position;
             float gravitationalPull = Mathf.Clamp(_pullFactor - distance, 0.0f, _pullFactor);
+
+            _playerController.movementIncrement += direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant;
             _playerRigidBody.MovePosition(_playerRigidBody.position + direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant);
         }
     }
@@ -52,6 +54,5 @@ public class BlackHoleBehaviour : MonoBehaviour
         {
             _pullFactor = sphereCollider.radius;
         }
-        
     }
 }

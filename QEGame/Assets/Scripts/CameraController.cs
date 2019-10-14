@@ -99,6 +99,28 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public void RestartLevel()
+    {
+        if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
+        {
+            foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(_controlPoints[_currentControlPoint].spawnerObjectName))
+            {
+                if (spawnerObject)
+                {
+                    Spawner spawner = spawnerObject.GetComponent<Spawner>();
+                    if (spawner)
+                    {
+                        spawner.Spawn();
+                    }
+                    else
+                    {
+                        Debug.LogError("No spawner found at control point " + _currentControlPoint);
+                    }
+                }
+            }
+        }
+    }
+
     public void Restart()
     {
         _currentControlPoint = 0;
@@ -158,22 +180,24 @@ public class CameraController : MonoBehaviour
             if (_movementProgress >= 1.0f)
             {
                 ++_currentControlPoint;
-                if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
-                {
-                    GameObject spawnerObject = GameObject.Find(_controlPoints[_currentControlPoint].spawnerObjectName);
-                    if (spawnerObject)
-                    {
-                        Spawner spawner = spawnerObject.GetComponent<Spawner>();
-                        if (spawner)
-                        {
-                            spawner.Spawn();
-                        }
-                    }
-                }
-
                 enabled = false;
                 transform.position = _controlPoints[_currentControlPoint].position;
                 transform.rotation = _controlPoints[_currentControlPoint].rotation;
+
+                if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
+                {
+                    foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(_controlPoints[_currentControlPoint].spawnerObjectName))
+                    {
+                        if (spawnerObject)
+                        {
+                            Spawner spawner = spawnerObject.GetComponent<Spawner>();
+                            if (spawner)
+                            {
+                                spawner.Spawn();
+                            }
+                        }
+                    }
+                }
             }
             else
             {
@@ -190,13 +214,15 @@ public class CameraController : MonoBehaviour
                 --_currentControlPoint;
                 if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
                 {
-                    GameObject spawnerObject = GameObject.Find(_controlPoints[_currentControlPoint].spawnerObjectName);
-                    if (spawnerObject)
+                    foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(_controlPoints[_currentControlPoint].spawnerObjectName))
                     {
-                        Spawner spawner = spawnerObject.GetComponent<Spawner>();
-                        if (spawner)
+                        if (spawnerObject)
                         {
-                            spawner.Spawn();
+                            Spawner spawner = spawnerObject.GetComponent<Spawner>();
+                            if (spawner)
+                            {
+                                spawner.Spawn();
+                            }
                         }
                     }
                 }
