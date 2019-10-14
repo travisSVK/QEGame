@@ -1865,6 +1865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7905049469288540612, guid: 27650b0696c90b64d9ccce6bca8a50de, type: 3}
+  spawnEffect: {fileID: 100002, guid: 43cd9440a6b0f644dbf500837634ced5, type: 3}
   spawnOnStart: 1
 --- !u!1 &1226367070
 GameObject:

@@ -1991,6 +1991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7905049469288540612, guid: e070cd2787889de48844271660842c0e, type: 3}
+  spawnEffect: {fileID: 100002, guid: 43cd9440a6b0f644dbf500837634ced5, type: 3}
   spawnOnStart: 1
 --- !u!1001 &1199729252
 PrefabInstance:
