@@ -26,6 +26,7 @@ public class Client : MonoBehaviour
     private Rigidbody _rigidbody;
     private Vector3 _otherPlayerInput = Vector3.zero;
     private PlayerControllerBase _playerBase;
+    private bool _inputSent = false;
 
     private void Start()
     {
@@ -36,7 +37,16 @@ public class Client : MonoBehaviour
     {
         ProcessMessage();
 
-        if (!_gameFinished && _rigidbody && (_playerBase.input != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
+        if (_inputSent)
+        {
+            _inputSent = false;
+        }
+        else
+        {
+            _inputSent = true;
+        }
+
+        if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.input != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
         {
             Message msg = new Message();
             msg.messageType = MessageType.Move;
@@ -138,6 +148,7 @@ public class Client : MonoBehaviour
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
+        Debug.Log(ipAddr.ToString());
         IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
         _sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
