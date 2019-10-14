@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 313871210668825966}
   - component: {fileID: 313871210668825965}
-  m_Layer: 9
+  m_Layer: 26
   m_Name: WindForce
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 313871210806407957}
   - component: {fileID: 313871210806407955}
   - component: {fileID: 313871210806407956}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Stars_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4818,7 +4818,7 @@ GameObject:
   - component: {fileID: 313871210958498091}
   - component: {fileID: 313871210958498089}
   - component: {fileID: 313871210958498090}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Waves_Horizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9571,7 +9571,7 @@ GameObject:
   - component: {fileID: 313871211121954819}
   - component: {fileID: 313871211121954817}
   - component: {fileID: 313871211121954818}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Dark_Orb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14382,7 +14382,7 @@ GameObject:
   - component: {fileID: 313871211735509399}
   - component: {fileID: 313871211735509397}
   - component: {fileID: 313871211735509398}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Stars_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14397,7 +14397,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313871211735509416}
   m_LocalRotation: {x: 0.49999848, y: 0.5000002, z: -0.5000002, w: 0.5000013}
-  m_LocalPosition: {x: -0.17, y: 1.05, z: 0.46}
+  m_LocalPosition: {x: 0, y: -1.08, z: 0}
   m_LocalScale: {x: 0.13352986, y: 0.13352986, z: 0.12269128}
   m_Children: []
   m_Father: {fileID: 313871211799558378}
@@ -16727,7 +16727,7 @@ ParticleSystem:
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
-      m_Bits: 512
+      m_Bits: 67109376
     influenceList: []
   ClampVelocityModule:
     enabled: 0
@@ -19146,7 +19146,7 @@ GameObject:
   - component: {fileID: 313871211799558380}
   - component: {fileID: 6574886207938837209}
   - component: {fileID: 616420808}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Blackhole_Main
   m_TagString: Blackhole
   m_Icon: {fileID: 0}
@@ -23921,7 +23921,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gravitationalPullConstant: 0.5
-  _deadlyDistance: 0.5
 --- !u!1 &313871211843035330
 GameObject:
   m_ObjectHideFlags: 0
@@ -23933,7 +23932,7 @@ GameObject:
   - component: {fileID: 313871211843035329}
   - component: {fileID: 313871211843035343}
   - component: {fileID: 313871211843035328}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28744,7 +28743,7 @@ GameObject:
   - component: {fileID: 313871211916190400}
   - component: {fileID: 313871211916190414}
   - component: {fileID: 313871211916190415}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Waves_Billboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
