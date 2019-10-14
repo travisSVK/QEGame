@@ -176,7 +176,7 @@ public class Server : MonoBehaviour
             msg.messageType = MessageType.OtherPlayerConnected;
             msg.otherPlayerConnected = opc;
             Debug.Log("Sending otherplayer connected: " + entry.Key);
-            Send<Message>(entry.Value, msg, true);
+            Send(entry.Value, msg, true);
         }
     }
 
@@ -193,7 +193,7 @@ public class Server : MonoBehaviour
                     {
                         if (entry.Key != msg.move.clientId)
                         {
-                            Send<Message>(entry.Value, msg, false);
+                            Send(entry.Value, msg, false);
                             _positions[entry.Key] = new Vector3(msg.move.x, msg.move.y, msg.move.z);
                         }
                     }
@@ -283,7 +283,7 @@ public class Server : MonoBehaviour
 
         if (bytesRead > 0)
         {
-            Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+            Message msg = MessageUtils.Deserialize(state.buffer);
             if (msg.messageType == MessageType.Connected)
             {
                 _positions.Add(msg.messageConnected.clientId, Vector3.zero);
@@ -309,7 +309,7 @@ public class Server : MonoBehaviour
 
             if (bytesRead > 0)
             {
-                Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+                Message msg = MessageUtils.Deserialize(state.buffer);
                 _messageQueueMutex.WaitOne();
                 _messageQueue.Add(msg);
                 _messageQueue.Sort((x, y) => x.timestamp.CompareTo(y.timestamp));
@@ -321,9 +321,9 @@ public class Server : MonoBehaviour
         }
     }
 
-    private void Send<MessageType>(StateObject state, MessageType message, bool startListening)
+    private void Send(StateObject state, Message message, bool startListening)
     {
-        byte[] byteData = MessageUtils.Serialize<MessageType>(message);
+        byte[] byteData = MessageUtils.Serialize(message);
 
         if (state.workSocket.Connected)
         {
@@ -377,7 +377,7 @@ public class Server : MonoBehaviour
 
     private void SendDisconnect(StateObject state, Message message)
     {
-        byte[] byteData = MessageUtils.Serialize<Message>(message);
+        byte[] byteData = MessageUtils.Serialize(message);
 
         if (state.workSocket.Connected)
         {

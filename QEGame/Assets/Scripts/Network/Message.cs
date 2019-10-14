@@ -55,25 +55,32 @@ public struct Message
 
 public class MessageUtils
 {
-    public static MessageType Deserialize<MessageType>(byte[] buffer)
+    public static Message Deserialize(byte[] buffer)
     {
-        using (var memStream = new MemoryStream())
+        using (var ms = new MemoryStream())
         {
             var binForm = new BinaryFormatter();
-            memStream.Write(buffer, 0, buffer.Length);
-            memStream.Seek(0, SeekOrigin.Begin);
-            MessageType message = (MessageType)binForm.Deserialize(memStream);
+            ms.Write(buffer, 0, buffer.Length);
+            ms.Seek(0, SeekOrigin.Begin);
+            Message message = (Message)binForm.Deserialize(ms);
+            ms.Flush();
+            ms.Close();
+            ms.Dispose();
             return message;
         }
     }
 
-    public static byte[] Serialize<MessageType>(MessageType message)
+    public static byte[] Serialize(Message message)
     {
         BinaryFormatter bf = new BinaryFormatter();
         using (var ms = new MemoryStream())
         {
             bf.Serialize(ms, message);
-            return ms.ToArray();
+            byte[] array = ms.ToArray();
+            ms.Flush();
+            ms.Close();
+            ms.Dispose();
+            return array;
         }
     }
 }

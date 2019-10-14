@@ -60,7 +60,7 @@ public class Client : MonoBehaviour
             _playerBase.movementIncrement = Vector3.zero;
             StateObject state = new StateObject();
             state.workSocket = _sender;
-            Send<Message>(state, msg, false);
+            Send(state, msg, false);
             _sendDone.WaitOne();
         }
 
@@ -331,7 +331,7 @@ public class Client : MonoBehaviour
 
             if (bytesRead > 0)
             {
-                Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+                Message msg = MessageUtils.Deserialize(state.buffer);
                 if ((msg.messageType == MessageType.Connected) && (msg.messageConnected.clientId == clientId))
                 {
                     _receiveDone.Set();
@@ -377,7 +377,7 @@ public class Client : MonoBehaviour
 
                 if (bytesRead > 0)
                 {
-                    Message msg = MessageUtils.Deserialize<Message>(state.buffer);
+                    Message msg = MessageUtils.Deserialize(state.buffer);
                     _messageQueueMutex.WaitOne();
                     _messageQueue.Enqueue(msg);
                     _messageQueueMutex.ReleaseMutex();
@@ -394,9 +394,9 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void Send<MessageType>(StateObject state, MessageType message, bool disconnect)
+    private void Send(StateObject state, Message message, bool disconnect)
     {
-        byte[] byteData = MessageUtils.Serialize<MessageType>(message);
+        byte[] byteData = MessageUtils.Serialize(message);
 
         if (state.workSocket.Connected)
         {
