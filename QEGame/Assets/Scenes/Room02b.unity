@@ -1831,7 +1831,7 @@ PrefabInstance:
     - target: {fileID: 313871211799558378, guid: 061abbb342d59b64f8309fa04ed726a7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.01
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 313871211799558378, guid: 061abbb342d59b64f8309fa04ed726a7,
         type: 3}
@@ -1934,7 +1934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79b6c6454e873f42a33bdd60aa819a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gravitationalPullConstant: 0.5
+  _gravitationalPullConstant: 1
 --- !u!1001 &573553815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2647,7 +2647,7 @@ PrefabInstance:
     - target: {fileID: 313871211799558378, guid: 061abbb342d59b64f8309fa04ed726a7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.01
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 313871211799558378, guid: 061abbb342d59b64f8309fa04ed726a7,
         type: 3}
@@ -2750,7 +2750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79b6c6454e873f42a33bdd60aa819a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gravitationalPullConstant: 0.5
+  _gravitationalPullConstant: 1
 --- !u!1 &1231649122
 GameObject:
   m_ObjectHideFlags: 0
