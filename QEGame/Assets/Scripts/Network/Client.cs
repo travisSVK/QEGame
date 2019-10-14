@@ -46,20 +46,29 @@ public class Client : MonoBehaviour
             _inputSent = true;
         }
 
-        if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.input != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
+        if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
         {
             Message msg = new Message();
             msg.messageType = MessageType.Move;
             msg.move.clientId = clientId;
+            msg.timestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             //_lastPosition = _rigidbody.transform.position;
             //PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
-            msg.move.x = _playerBase.input.x;
-            msg.move.y = _playerBase.input.y;
-            msg.move.z = _playerBase.input.z;
+            msg.move.x = _playerBase.movementIncrement.x;
+            msg.move.y = _playerBase.movementIncrement.y;
+            msg.move.z = _playerBase.movementIncrement.z;
+            _playerBase.movementIncrement = Vector3.zero;
             StateObject state = new StateObject();
             state.workSocket = _sender;
             Send<Message>(state, msg, false);
             _sendDone.WaitOne();
+        }
+
+        if (_rigidbody && (_otherPlayerInput != Vector3.zero))
+        {
+            //PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
+            _rigidbody.MovePosition(_rigidbody.position + _otherPlayerInput);
+            _otherPlayerInput = Vector3.zero;
         }
 
         if (_gameFinished && !_endSceneLoading)
@@ -86,12 +95,12 @@ public class Client : MonoBehaviour
         //    _sendDone.WaitOne();
         //}
 
-        if (_rigidbody && (_otherPlayerInput != Vector3.zero))
-        {
-            PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
-            _rigidbody.MovePosition(_rigidbody.position + _otherPlayerInput * playerBase.MovementSpeed * Time.fixedDeltaTime);
-            _otherPlayerInput = Vector3.zero;
-        }
+        //if (_rigidbody && (_otherPlayerInput != Vector3.zero))
+        //{
+        //    //PlayerControllerBase playerBase = _rigidbody.GetComponent<PlayerControllerBase>();
+        //    _rigidbody.MovePosition(_rigidbody.position + _otherPlayerInput);
+        //    _otherPlayerInput = Vector3.zero;
+        //}
     }
 
     public Rigidbody rb

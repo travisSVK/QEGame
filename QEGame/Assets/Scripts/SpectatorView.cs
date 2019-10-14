@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpectatorView : MonoBehaviour
 {
@@ -12,7 +13,6 @@ public class SpectatorView : MonoBehaviour
     private void Start()
     {
         _finished = false;
-
         AudioListener audioListener0 = player1Camera.GetComponent<AudioListener>();
         AudioListener audioListener1 = player1Camera.GetComponent<AudioListener>();
 
@@ -37,13 +37,14 @@ public class SpectatorView : MonoBehaviour
     {
         if (_finished)
         {
-            Server server = FindObjectOfType<Server>();
-            if (server)
-            {
-                DestroyImmediate(server.gameObject);
-            }
-            Instantiate(serverObject);
-            _finished = false;
+            //Server server = FindObjectOfType<Server>();
+            //if (server)
+            //{
+            //    DestroyImmediate(server.gameObject);
+            //}
+            //Instantiate(serverObject);
+            //_finished = false;
+            SceneManager.LoadScene("Spectator");
         }
     }
 

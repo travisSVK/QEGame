@@ -15,6 +15,8 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     protected bool _hasOtherPlayerReachedGoal = false;
     protected Vector3 _input;
 
+    private Vector3 _movementIncrement = Vector3.zero;
+
     // For local connections only
     protected ILocalConnection _localConnection = null;
 
@@ -23,6 +25,12 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     public int ClientId
     {
         get { return _clientId; }
+    }
+
+    public Vector3 movementIncrement
+    {
+        get { return _movementIncrement; }
+        set { _movementIncrement = value; }
     }
 
     public Vector3 input
@@ -74,6 +82,7 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
 
     private void FixedUpdate()
     {
+        _movementIncrement += _input * _movementSpeed * Time.fixedDeltaTime;
         _rigidBody.MovePosition(_rigidBody.position + _input * _movementSpeed * Time.fixedDeltaTime);
     }
 }

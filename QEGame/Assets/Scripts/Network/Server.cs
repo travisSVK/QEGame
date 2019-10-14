@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
+using System.Collections.Generic;
 using System.Threading;
 
 public class Server : MonoBehaviour
@@ -13,7 +13,7 @@ public class Server : MonoBehaviour
     private int _currentNumOfClients;
     private Mutex _messageQueueMutex = new Mutex();
     private Socket _listener;
-    private Queue<Message> _messageQueue = new Queue<Message>();
+    private List<Message> _messageQueue = new List<Message>();
     private ManualResetEvent _allDone = new ManualResetEvent(false);
     private ManualResetEvent _disconnected = new ManualResetEvent(false);
     private Thread _messageProcessingThread = null;
@@ -50,6 +50,7 @@ public class Server : MonoBehaviour
             Rigidbody[] rigidBodies = FindObjectsOfType<Rigidbody>();
             foreach (Rigidbody r in rigidBodies)
             {
+                r.useGravity = false;
                 PlayerControllerBase playerBase = r.GetComponent<PlayerControllerBase>();
                 if (playerBase)
                 {
@@ -59,21 +60,32 @@ public class Server : MonoBehaviour
             _rigidBodiesLoaded = true;
         }
 
-        ProcessMessage();
-    }
-
-    private void FixedUpdate()
-    {
         if (_rigidBodiesLoaded)
         {
             List<int> keys = new List<int>(_positions.Keys);
             foreach (int key in keys)
             {
                 PlayerControllerBase playerBase = _rigidBodies[key].GetComponent<PlayerControllerBase>();
-                _rigidBodies[key].MovePosition(_rigidBodies[key].position + _positions[key] * playerBase.MovementSpeed * Time.fixedDeltaTime);
+                _rigidBodies[key].MovePosition(_rigidBodies[key].position + _positions[key]);
                 _positions[key] = Vector3.zero;
             }
         }
+
+        ProcessMessage();
+    }
+
+    private void FixedUpdate()
+    {
+        //if (_rigidBodiesLoaded)
+        //{
+        //    List<int> keys = new List<int>(_positions.Keys);
+        //    foreach (int key in keys)
+        //    {
+        //        PlayerControllerBase playerBase = _rigidBodies[key].GetComponent<PlayerControllerBase>();
+        //        _rigidBodies[key].MovePosition(_rigidBodies[key].position + _positions[key] * playerBase.MovementSpeed * Time.fixedDeltaTime);
+        //        _positions[key] = Vector3.zero;
+        //    }
+        //}
     }
 
     public void LevelFinishedRetracted()
@@ -158,13 +170,13 @@ public class Server : MonoBehaviour
             case MessageType.Move:
                 if (_currentNumOfClients == maxNumberOfClients)
                 {
-                    _positions[msg.move.clientId] += new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                    _positions[msg.move.clientId] = new Vector3(msg.move.x, msg.move.y, msg.move.z);
                     foreach (KeyValuePair<int, StateObject> entry in _states)
                     {
                         if (entry.Key != msg.move.clientId)
                         {
                             Send<Message>(entry.Value, msg, false);
-                            _positions[entry.Key] += new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                            _positions[entry.Key] = new Vector3(msg.move.x, msg.move.y, msg.move.z);
                         }
                     }
                 }
@@ -226,7 +238,8 @@ public class Server : MonoBehaviour
         _messageQueueMutex.WaitOne();
         if (_messageQueue.Count != 0)
         {
-            msg = _messageQueue.Dequeue();
+            msg = _messageQueue[0];
+            _messageQueue.RemoveAt(0);
         }
         _messageQueueMutex.ReleaseMutex();
         return msg;
@@ -280,7 +293,8 @@ public class Server : MonoBehaviour
             {
                 Message msg = MessageUtils.Deserialize<Message>(state.buffer);
                 _messageQueueMutex.WaitOne();
-                _messageQueue.Enqueue(msg);
+                _messageQueue.Add(msg);
+                _messageQueue.Sort((x, y) => x.timestamp.CompareTo(y.timestamp));
                 _messageQueueMutex.ReleaseMutex();
 
                 state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
