@@ -1063,12 +1063,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0339bb8f4fe9c9c46bbe5c07d160c95f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swedishText: "Du kan r\xF6ra dig H\xD6GER och V\xC4NSTER Den andra spelaren kan
-    r\xF6ra sig FRAM\xC5T och BAK\xC5T F\xF6r att komma ut ur denna knipan m\xE5ste
-    du be den andra spelaren att r\xF6ra sig NER Era inmatning p\xE5verkar varandra"
-  englishText: You can move LEFT and RIGHT The other player can move FORWARD and BACKWARD
-    To escape this trap you must ask the other player to move down Your inputs affect
-    each other
+  swedishText: "Du kan r\xF6ra dig H\xD6GER och V\xC4NSTER\nDen andra spelaren kan
+    r\xF6ra sig FRAM\xC5T och BAK\xC5T\nF\xF6r att komma ut ur denna knipan m\xE5ste
+    du be den andra spelaren att r\xF6ra sig NER\nEra inmatning p\xE5verkar varandra"
+  englishText: 'You can move LEFT and RIGHT
+
+    The other player can move FORWARD and BACKWARD
+
+    To escape this trap you must ask the other player to move DOWN
+
+    Your inputs affect each other'
 --- !u!135 &646926131
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class TutorialTrigger : MonoBehaviour
 {
+    [TextArea(5, 10)]
     public string swedishText = "";
 
+    [TextArea(5, 10)]
     public string englishText = "";
 
     private Text _text = null;
