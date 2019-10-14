@@ -9551,8 +9551,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7905049469288540611}
   - component: {fileID: -6888666350496269352}
-  - component: {fileID: 309492744290212157}
   - component: {fileID: 2847756157629086826}
+  - component: {fileID: 6734001910232932864}
   m_Layer: 9
   m_Name: PlayerVertical
   m_TagString: Untagged
@@ -9590,20 +9590,6 @@ MonoBehaviour:
   _otherPlayerController: {fileID: 0}
   _clientId: 1
   _movementSpeed: 2
---- !u!136 &309492744290212157
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7905049469288540612}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2847756157629086826
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9615,11 +9601,24 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!135 &6734001910232932864
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7905049469288540612}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7905049469729404949
 GameObject:
   m_ObjectHideFlags: 0

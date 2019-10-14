@@ -9552,7 +9552,7 @@ GameObject:
   - component: {fileID: 7905049469288540611}
   - component: {fileID: -1298436985918805581}
   - component: {fileID: 6125414440105232953}
-  - component: {fileID: -3192577026398668318}
+  - component: {fileID: 7762137201390387211}
   m_Layer: 8
   m_Name: PlayerHorizontal
   m_TagString: Untagged
@@ -9601,13 +9601,13 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!136 &-3192577026398668318
-CapsuleCollider:
+--- !u!135 &7762137201390387211
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -9616,9 +9616,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
+  serializedVersion: 2
+  m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7905049469729404949
 GameObject:
