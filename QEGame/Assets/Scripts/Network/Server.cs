@@ -73,20 +73,6 @@ public class Server : MonoBehaviour
         ProcessMessage();
     }
 
-    private void FixedUpdate()
-    {
-        //if (_rigidBodiesLoaded)
-        //{
-        //    List<int> keys = new List<int>(_positions.Keys);
-        //    foreach (int key in keys)
-        //    {
-        //        PlayerControllerBase playerBase = _rigidBodies[key].GetComponent<PlayerControllerBase>();
-        //        _rigidBodies[key].MovePosition(_rigidBodies[key].position + _positions[key] * playerBase.MovementSpeed * Time.fixedDeltaTime);
-        //        _positions[key] = Vector3.zero;
-        //    }
-        //}
-    }
-
     public void LevelFinishedRetracted()
     {
         --_numberOfFinishedPlayers;
@@ -116,9 +102,9 @@ public class Server : MonoBehaviour
         return false;
     }
 
+    // TODO
     public void RestartLevel()
     {
-        Debug.Log("fuck");
         foreach (KeyValuePair<int, StateObject> entry in _states)
         {
             Message msg = new Message();
