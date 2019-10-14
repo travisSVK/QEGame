@@ -57,23 +57,28 @@ public class MessageUtils
 {
     public static Message Deserialize(byte[] buffer)
     {
-        using (var ms = new MemoryStream())
-        {
-            var binForm = new BinaryFormatter();
-            ms.Seek(0, SeekOrigin.Begin);
-            return (Message)binForm.Deserialize(ms);
-        }
+        MemoryStream ms = new MemoryStream(buffer);
+        BinaryFormatter bf = new BinaryFormatter();
+        return (Message)bf.Deserialize(ms);
+        //using (var ms = new MemoryStream())
+        //{
+        //    var binForm = new BinaryFormatter();
+        //    //ms.Seek(0, SeekOrigin.Begin);
+        //    Message message = (Message)binForm.Deserialize(ms);
+        //    return message;
+        //}
     }
 
     public static byte[] Serialize(Message message)
     {
+        MemoryStream ms = new MemoryStream();
         BinaryFormatter bf = new BinaryFormatter();
-        using (var ms = new MemoryStream())
-        {
-            bf.Serialize(ms, message);
-            ms.Flush();
-            ms.Position = 0;
-            return ms.ToArray();
-        }
+        bf.Serialize(ms, message);
+        return ms.ToArray();
+        //using (var ms = new MemoryStream())
+        //{
+        //    bf.Serialize(ms, message);
+        //    return ms.ToArray();
+        //}
     }
 }
