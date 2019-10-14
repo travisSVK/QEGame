@@ -6,7 +6,6 @@ public class TutorialVerticalPlayerController : VerticalPlayerController
 {
     [SerializeField] private GameObject _terrain, _goal;
     [SerializeField] private Text _centeredText, _textByGoal, _leftOrientedText;
-    private bool _hasTutorialStarted = false;
     private Vector3 _startPosition;
 
     //private IEnumerator AsyncUpdate()

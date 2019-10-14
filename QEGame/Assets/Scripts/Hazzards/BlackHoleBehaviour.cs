@@ -6,9 +6,9 @@ public class BlackHoleBehaviour : MonoBehaviour
 {
     [SerializeField]
     private float _gravitationalPullConstant = 0.5f;
-    [SerializeField]
-    private float _deadlyDistance = 0.5f;
+
     private float _pullFactor = 0.0f;
+
     private Rigidbody _playerRigidBody;
 
     public void FixedUpdate()

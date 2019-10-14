@@ -5,7 +5,7 @@ using UnityEngine;
 public class WormHoleBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _wormHoleSpouse;
+    private GameObject _wormHoleSpouse = null;
 
     private void OnTriggerEnter(Collider collider)
     {

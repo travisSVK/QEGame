@@ -4,10 +4,10 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
 {
     // This field should only be assigned to if the game is played on one computer, without networking.
     [SerializeField]
-    private GameObject _otherPlayerController;
+    private GameObject _otherPlayerController = null;
 
     [SerializeField]
-    private int _clientId;
+    private int _clientId = 0;
 
     [SerializeField]
     protected float _movementSpeed = 2.0f;
