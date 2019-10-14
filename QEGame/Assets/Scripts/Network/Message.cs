@@ -60,13 +60,8 @@ public class MessageUtils
         using (var ms = new MemoryStream())
         {
             var binForm = new BinaryFormatter();
-            ms.Write(buffer, 0, buffer.Length);
             ms.Seek(0, SeekOrigin.Begin);
-            Message message = (Message)binForm.Deserialize(ms);
-            ms.Flush();
-            ms.Close();
-            ms.Dispose();
-            return message;
+            return (Message)binForm.Deserialize(ms);
         }
     }
 
@@ -76,11 +71,9 @@ public class MessageUtils
         using (var ms = new MemoryStream())
         {
             bf.Serialize(ms, message);
-            byte[] array = ms.ToArray();
             ms.Flush();
-            ms.Close();
-            ms.Dispose();
-            return array;
+            ms.Position = 0;
+            return ms.ToArray();
         }
     }
 }
