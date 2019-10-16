@@ -44,6 +44,7 @@ public class Server : MonoBehaviour
             _messageProcessingThread.Join();
             _joined = true;
         }
+
         if (!_rigidBodiesLoaded)
         {
             Rigidbody[] rigidBodies = FindObjectsOfType<Rigidbody>();
@@ -56,7 +57,10 @@ public class Server : MonoBehaviour
                     _rigidBodies.Add(playerBase.ClientId, r);
                 }
             }
-            _rigidBodiesLoaded = true;
+            if (rigidBodies.Length == maxNumberOfClients)
+            {
+                _rigidBodiesLoaded = true;
+            }
         }
 
         if (_rigidBodiesLoaded)
@@ -64,7 +68,6 @@ public class Server : MonoBehaviour
             List<int> keys = new List<int>(_positions.Keys);
             foreach (int key in keys)
             {
-                PlayerControllerBase playerBase = _rigidBodies[key].GetComponent<PlayerControllerBase>();
                 _rigidBodies[key].MovePosition(_rigidBodies[key].position + _positions[key]);
                 _positions[key] = Vector3.zero;
             }
@@ -88,15 +91,26 @@ public class Server : MonoBehaviour
                 msg.messageType = MessageType.NextLevel;
                 Send(entry.Value, msg, false);
             }
-            CameraController cameraControlller = FindObjectOfType<CameraController>();
-            if (cameraControlller)
+            _rigidBodiesLoaded = false;
+            foreach (Rigidbody rigidbody in _rigidBodies.Values)
             {
-                if (cameraControlller.canMoveForward)
+                Destroy(rigidbody.gameObject);
+            }
+            _rigidBodies.Clear();
+            _numberOfFinishedPlayers = 0;
+            CameraController[] cameraControlllers = FindObjectsOfType<CameraController>();
+            foreach (CameraController cameraController in cameraControlllers)
+            {
+                if (cameraController.canMoveForward)
                 {
-                    cameraControlller.MoveForward();
+                    cameraController.MoveForward();
                 }
             }
-            _numberOfFinishedPlayers = 0;
+            _messageQueueMutex.WaitOne();
+            {
+                _messageQueue.Clear();
+            }
+            _messageQueueMutex.ReleaseMutex();
             return true;
         }
         return false;
@@ -112,20 +126,36 @@ public class Server : MonoBehaviour
             Send(entry.Value, msg, false);
         }
         _rigidBodiesLoaded = false;
+        foreach (Rigidbody rigidbody in _rigidBodies.Values)
+        {
+            Destroy(rigidbody.gameObject);
+        }
         _rigidBodies.Clear();
         _numberOfFinishedPlayers = 0;
-        CameraController cameraControlller = FindObjectOfType<CameraController>();
-        if (cameraControlller)
+
+        List<int> keys = new List<int>(_positions.Keys);
+        foreach (int key in keys)
         {
-            cameraControlller.RestartLevel();
+            _positions[key] = Vector3.zero;
         }
+        CameraController[] cameraControlllers = FindObjectsOfType<CameraController>();
+        foreach (CameraController cameraController in cameraControlllers)
+        {
+            cameraController.RestartLevel();
+        }
+        _messageQueueMutex.WaitOne();
+        {
+            _messageQueue.Clear();
+        }
+        _messageQueueMutex.ReleaseMutex();
     }
-    
+
     private void StartListening()
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
-        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
+        //IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
+        IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
         _listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         // Bind the socket to the local endpoint and listen for incoming connections.
@@ -199,7 +229,7 @@ public class Server : MonoBehaviour
                         SendDisconnect(entry.Value, message);
                         _disconnected.WaitOne();
                     }
-                    
+
                     SpectatorView spectatorView = FindObjectOfType<SpectatorView>();
                     if (spectatorView)
                     {

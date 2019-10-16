@@ -17,9 +17,9 @@ public class BlackHoleBehaviour : MonoBehaviour
         {
             float distance = Vector3.Distance(transform.position, _playerRigidBody.transform.position);
             PlayerControllerBase _playerController = _playerRigidBody.GetComponent<PlayerControllerBase>();
-            if (distance <= 0.005f)
+            if (distance <= 0.05f)
             {
-                //_playerController.OnPlayerDeath();
+                _playerController.OnPlayerDeath();
             }
             Vector3 direction = transform.position - _playerRigidBody.transform.position;
             float gravitationalPull = Mathf.Clamp(_pullFactor - distance, 0.0f, _pullFactor);

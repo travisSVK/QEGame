@@ -46,7 +46,7 @@ public struct Disconnect
 public struct Message
 {
     public MessageType messageType;
-    //public int timestamp;
+    //public double timestamp;
     public MessageConnected messageConnected;
     public OtherPlayerConnected otherPlayerConnected;
     public Move move;

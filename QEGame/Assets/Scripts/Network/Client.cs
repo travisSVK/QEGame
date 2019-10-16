@@ -51,7 +51,7 @@ public class Client : MonoBehaviour
             Message msg = new Message();
             msg.messageType = MessageType.Move;
             msg.move.clientId = clientId;
-            //msg.timestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            //msg.timestamp = (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             msg.move.x = _playerBase.movementIncrement.x;
             msg.move.y = _playerBase.movementIncrement.y;
             msg.move.z = _playerBase.movementIncrement.z;
@@ -128,8 +128,9 @@ public class Client : MonoBehaviour
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
-        Debug.Log(ipAddr.ToString());
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
+        //Debug.Log(ipAddr.ToString());
+        //IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
+        IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
         _sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         try
@@ -183,12 +184,12 @@ public class Client : MonoBehaviour
                 }
                 break;
             case MessageType.NextLevel:
-                _otherPlayerInput = Vector3.zero;
-                Destroy(_rigidbody.gameObject);
-                _rigidbody = null;
                 CameraController cameraControlller = FindObjectOfType<CameraController>();
                 if (cameraControlller)
                 {
+                    _otherPlayerInput = Vector3.zero;
+                    Destroy(_rigidbody.gameObject);
+                    _rigidbody = null;
                     if (cameraControlller.canMoveForward)
                     {
                         cameraControlller.MoveForward();
@@ -197,6 +198,16 @@ public class Client : MonoBehaviour
                     {
                         _gameFinished = true;
                     }
+                }
+                break;
+            case MessageType.RestartLevel:
+                CameraController cc = FindObjectOfType<CameraController>();
+                if (cc)
+                {
+                    _otherPlayerInput = Vector3.zero;
+                    Destroy(_rigidbody.gameObject);
+                    _rigidbody = null;
+                    cc.RestartLevel();
                 }
                 break;
             case MessageType.Disconnect:

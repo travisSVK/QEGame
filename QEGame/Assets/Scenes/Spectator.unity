@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 81f714daf7144784b8a2f42f1cd30927, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -584,8 +584,8 @@ MonoBehaviour:
   - name: Room02b
     position: {x: 0, y: 9, z: 20}
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
-    callSpawnerOnArrival: 0
-    spawnerObjectName: 
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner02
 --- !u!20 &952063257
 Camera:
   m_ObjectHideFlags: 0
@@ -1312,6 +1312,8 @@ MonoBehaviour:
   _rooms:
   - Room01a
   - Room01b
+  - Room02a
+  - Room02b
 --- !u!1 &1818868011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352,8 +1354,8 @@ MonoBehaviour:
   - name: Room02a
     position: {x: 0, y: 9, z: 20}
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
-    callSpawnerOnArrival: 0
-    spawnerObjectName: 
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner02
 --- !u!20 &1818868013
 Camera:
   m_ObjectHideFlags: 0

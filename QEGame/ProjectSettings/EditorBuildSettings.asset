@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Spectator.unity
+    guid: d6c9d419653977841ab4456cf2d3ad92
+  - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: 1801db046b9769f46a211f1e0274e0ef
   - enabled: 1
@@ -32,15 +35,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/Spectator.unity
-    guid: d6c9d419653977841ab4456cf2d3ad92
-  - enabled: 1
-    path: Assets/Scenes/StartScene0.unity
-    guid: 1af0ba9de5d650d4c9dfe00c1b25509d
-  - enabled: 1
-    path: Assets/Scenes/StartScene1.unity
-    guid: c1baa5b3531a0c2459836dd10b3f6c7a
   - enabled: 1
     path: Assets/Scenes/TestScene.unity
     guid: 4ca011f47d045044da1d344c40366f36
