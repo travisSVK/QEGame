@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.Events;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +23,8 @@ public class CameraController : MonoBehaviour
             this.spawnerObjectName = spawnerObjectName;
         }
     }
+
+    public UnityEvent onArrival = new UnityEvent();
 
     [SerializeField]
     private float _speed = 5.0f;
@@ -198,6 +201,8 @@ public class CameraController : MonoBehaviour
                         }
                     }
                 }
+
+                onArrival.Invoke();
             }
             else
             {
@@ -212,6 +217,10 @@ public class CameraController : MonoBehaviour
             if (_movementProgress >= 1.0f)
             {
                 --_currentControlPoint;
+                enabled = false;
+                transform.position = _controlPoints[_currentControlPoint].position;
+                transform.rotation = _controlPoints[_currentControlPoint].rotation;
+
                 if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
                 {
                     foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(_controlPoints[_currentControlPoint].spawnerObjectName))
@@ -227,9 +236,7 @@ public class CameraController : MonoBehaviour
                     }
                 }
 
-                enabled = false;
-                transform.position = _controlPoints[_currentControlPoint].position;
-                transform.rotation = _controlPoints[_currentControlPoint].rotation;
+                onArrival.Invoke();
             }
             else
             {
