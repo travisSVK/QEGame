@@ -11,43 +11,61 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: 1801db046b9769f46a211f1e0274e0ef
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameScene.unity
     guid: 8ef05445f2f99e64cb6070e120796704
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GraphicsScene.unity
     guid: 92b0708d18f94e64f9a1cb1840b8f785
   - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: 98350ad175aa4cd45aac993040ae940f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room01a.unity
     guid: 71cf2caeaab637f4ea391e69a8f843cf
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room01b.unity
     guid: a18339b48559e4f49a621e3aa1f257e4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room02a.unity
     guid: 9d4280f79f91f0d4197ac0f77e3c446c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room02b.unity
     guid: 0d38da119dae79a459d6fb78494eccfc
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/TestScene.unity
     guid: 4ca011f47d045044da1d344c40366f36
   - enabled: 1
+    path: Assets/Scenes/Spectator.unity
+    guid: d6c9d419653977841ab4456cf2d3ad92
+  - enabled: 0
+    path: Assets/Scenes/StartScene0.unity
+    guid: 1af0ba9de5d650d4c9dfe00c1b25509d
+  - enabled: 0
+    path: Assets/Scenes/StartScene1.unity
+    guid: c1baa5b3531a0c2459836dd10b3f6c7a
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: Assets/Scenes/TutorialLevel.unity
     guid: ab5a357fe4df2214682dba40bb5d748e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TutorialLevel-P1.unity
     guid: 06909a6eb840948448fa88553b9fbf11
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TutorialLevel-P1_Alt.unity
     guid: f32956f802b4bf94d88517a83c96ba8a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TutorialLevel-P2.unity
     guid: 68e4d24e319d92049bf585e4bbd0cb0f
+  - enabled: 1
+    path: Assets/Scenes/Scoreboard.unity
+    guid: c21b878a96ae8d741a4e1bfb73b917c0
+  - enabled: 1
+    path: Assets/Scenes/FirstScene.unity
+    guid: 770627f15dda1b949b6ae1f3c1077667
   m_configObjects: {}
