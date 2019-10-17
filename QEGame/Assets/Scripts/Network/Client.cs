@@ -177,7 +177,7 @@ public class Client : MonoBehaviour
             case MessageType.OtherPlayerConnected:
                 Debug.Log("Other player connected received.");
                 _messageProcessingThread.Join();
-                MenuManager menuManager = FindObjectOfType<MenuManager>();
+                LoadLevel menuManager = FindObjectOfType<LoadLevel>();
                 if (menuManager)
                 {
                     menuManager.StartFirstScene();
@@ -187,6 +187,7 @@ public class Client : MonoBehaviour
                 CameraController cameraControlller = FindObjectOfType<CameraController>();
                 if (cameraControlller)
                 {
+                    _playerBase.OnPlayerWin();
                     _otherPlayerInput = Vector3.zero;
                     Destroy(_rigidbody.gameObject);
                     _rigidbody = null;
@@ -204,6 +205,7 @@ public class Client : MonoBehaviour
                 CameraController cc = FindObjectOfType<CameraController>();
                 if (cc)
                 {
+                    _playerBase.InstantiateDeath();
                     _otherPlayerInput = Vector3.zero;
                     Destroy(_rigidbody.gameObject);
                     _rigidbody = null;

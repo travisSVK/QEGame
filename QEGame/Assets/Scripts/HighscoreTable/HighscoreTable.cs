@@ -14,7 +14,6 @@ public class HighscoreTable : MonoBehaviour
     {
         _entryContainer = transform.Find("highscoreEntryContainer");
         _entryTemplate = _entryContainer.Find("ContainerAnimation");
-        Debug.Log("sup");
         _entryTemplate.gameObject.SetActive(false);
 
         //_containerAnimator = transform.Find("highscoreEntryTemplate").GetComponent<Animator>();

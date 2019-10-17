@@ -5,7 +5,10 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     // This field should only be assigned to if the game is played on one computer, without networking.
     [SerializeField]
     private GameObject _otherPlayerController = null;
-
+    [SerializeField]
+    private GameObject _deathEffect = null;
+    [SerializeField]
+    private GameObject _winEffect = null;
     [SerializeField]
     private int _clientId = 0;
 
@@ -60,14 +63,24 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
         _hasOtherPlayerReachedGoal = hasGoalBeenReached;
     }
 
+    public void OnPlayerWin()
+    {
+        Instantiate(_winEffect, transform.position, transform.rotation, transform.parent);
+    }
+
     public void OnPlayerDeath()
     {
-        // TODO trigger animation before
         Server server = FindObjectOfType<Server>();
         if (server)
         {
+            InstantiateDeath();
             server.RestartLevel();
         }
+    }
+
+    public void InstantiateDeath()
+    {
+        Instantiate(_deathEffect, transform.position, transform.rotation, transform.parent);
     }
 
     private void Start()

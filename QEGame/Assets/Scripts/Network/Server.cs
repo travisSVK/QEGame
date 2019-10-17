@@ -94,6 +94,11 @@ public class Server : MonoBehaviour
             _rigidBodiesLoaded = false;
             foreach (Rigidbody rigidbody in _rigidBodies.Values)
             {
+                PlayerControllerBase playerBase = rigidbody.GetComponent<PlayerControllerBase>();
+                if (playerBase)
+                {
+                    playerBase.OnPlayerWin();
+                }
                 Destroy(rigidbody.gameObject);
             }
             _rigidBodies.Clear();

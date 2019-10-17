@@ -320,5 +320,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439de52a8dba44e4eae3e4df27fd83b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameOfScene: Menu
+  nameOfScene: FirstScene
   delay: 0

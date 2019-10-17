@@ -9588,6 +9588,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _otherPlayerController: {fileID: 0}
+  _deathEffect: {fileID: 100004, guid: 96536afb634b32043bb988d4576053d3, type: 3}
+  _winEffect: {fileID: 2134316520975929416, guid: f1972afe6b6cf3f4dbb7189ca271e7f8,
+    type: 3}
   _clientId: 1
   _movementSpeed: 2
 --- !u!54 &2847756157629086826
