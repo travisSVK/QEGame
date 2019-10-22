@@ -318,6 +318,7 @@ MonoBehaviour:
   _rooms:
   - Room01b
   - Room02b
+  - Room03b
 --- !u!4 &754250466
 Transform:
   m_ObjectHideFlags: 0
@@ -469,6 +470,7 @@ MonoBehaviour:
   _rooms:
   - Room01a
   - Room02a
+  - Room03a
 --- !u!4 &1405602161
 Transform:
   m_ObjectHideFlags: 0
@@ -682,15 +684,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b32085ae6cbe4141a1ab319a6ec854f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onArrival:
+    m_PersistentCalls:
+      m_Calls: []
   _speed: 5
   _controlPoints:
   - name: Room01
-    position: {x: 0, y: 7, z: 0}
+    position: {x: 0, y: 9, z: 0}
     rotation: {x: 0.5735765, y: 0, z: 0, w: 0.819152}
     callSpawnerOnArrival: 0
     spawnerObjectName: 
   - name: Room02
-    position: {x: 0, y: 7, z: 20}
+    position: {x: 0, y: 9, z: 20}
     rotation: {x: 0.5735765, y: 0, z: 0, w: 0.819152}
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner02
+  - name: Room03
+    position: {x: 0, y: 14, z: 40}
+    rotation: {x: 0.57357657, y: 0, z: 0, w: 0.81915194}
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner03
