@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TextCrossfade : MonoBehaviour
+public class ImageCrossfade : MonoBehaviour
 {
     public float minimumTimeForTextDisplay = 30.0f;
 
@@ -13,17 +13,17 @@ public class TextCrossfade : MonoBehaviour
 
     private bool _isTransitioning = false;
 
-    private string _currentText = "";
+    private Sprite _currentText = null;
 
-    private string _nextText = "";
+    private Sprite _nextSprite = null;
 
-    private Text _text = null;
+    private Image _image = null;
 
-    public void SetText(string text)
+    public void SetSprite(Sprite sprite)
     {
         if (_textDisplayProgress > minimumTimeForTextDisplay)
         {
-            _nextText = text;
+            _nextSprite = sprite;
             _textDisplayProgress = 0.0f;
             _transitionProgress = 0.0f;
             _isTransitioning = true;
@@ -32,8 +32,8 @@ public class TextCrossfade : MonoBehaviour
 
     private void Awake()
     {
-        _text = GetComponent<Text>();
-        if (!_text)
+        _image = GetComponent<Image>();
+        if (!_image)
         {
             Debug.LogError("Missing Text Component.");
         }
@@ -52,21 +52,21 @@ public class TextCrossfade : MonoBehaviour
         float progress = (_transitionProgress / transitionTime) * 2.0f;
         if (progress >= 2.0f)
         {
-            _currentText = _nextText;
-            _nextText = null;
-            _text.color = new Color(_text.color.r, _text.color.g, _text.color.b, 1.0f);
+            _currentText = _nextSprite;
+            _nextSprite = null;
+            _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 1.0f);
             _isTransitioning = false;
         }
         else if (progress > 1.0f)
         {
             progress -= 1.0f;
-            _text.text = _nextText;
-            _text.color = new Color(_text.color.r, _text.color.g, _text.color.b, Mathf.SmoothStep(0.0f, 1.0f, progress));
+            _image.sprite = _nextSprite;
+            _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, Mathf.SmoothStep(0.0f, 1.0f, progress));
         }
         else
         {
-            _text.text = _currentText;
-            _text.color = new Color(_text.color.r, _text.color.g, _text.color.b, Mathf.SmoothStep(1.0f, 0.0f, progress));
+            _image.sprite = _currentText;
+            _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, Mathf.SmoothStep(1.0f, 0.0f, progress));
         }
     }
 }

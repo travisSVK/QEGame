@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FactTrigger : MonoBehaviour
 {
@@ -8,11 +9,16 @@ public class FactTrigger : MonoBehaviour
 
     public string englishText = "";
 
+    public Sprite sprite = null;
+
     [HideInInspector]
     public TextCrossfade swedishTextUI = null;
 
     [HideInInspector]
     public TextCrossfade englishTextUI = null;
+
+    [HideInInspector]
+    public ImageCrossfade image = null;
 
     private void Start()
     {
@@ -26,6 +32,12 @@ public class FactTrigger : MonoBehaviour
         if (engFact)
         {
             englishTextUI = engFact.GetComponent<TextCrossfade>();
+        }
+
+        FactImageTag imgTag = FindObjectOfType<FactImageTag>();
+        if (imgTag)
+        {
+            image = imgTag.GetComponent<ImageCrossfade>();
         }
     }
 
@@ -43,6 +55,11 @@ public class FactTrigger : MonoBehaviour
             if (englishTextUI)
             {
                 englishTextUI.SetText(englishText);
+            }
+
+            if (image)
+            {
+                image.SetSprite(sprite);
             }
         }
     }
