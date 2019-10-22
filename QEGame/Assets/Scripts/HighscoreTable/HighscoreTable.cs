@@ -22,32 +22,20 @@ public class HighscoreTable : MonoBehaviour
         string jsonString = PlayerPrefs.GetString("highscoreTable");
         Highscores highscores = JsonUtility.FromJson<Highscores>(jsonString);
 
-        //Sort entry list by score
-        for (int i = 0; i < highscores._highscoreEntryList.Count; ++i)
-        {
-            for (int j = i + 1; j < highscores._highscoreEntryList.Count; ++j)
-            {
-                if (highscores._highscoreEntryList[j].score > highscores._highscoreEntryList[i].score)
-                {
-                    //Swap
-                    HighscoreEntry tmp = highscores._highscoreEntryList[i];
-                    highscores._highscoreEntryList[i] = highscores._highscoreEntryList[j];
-                    highscores._highscoreEntryList[j] = tmp;
-                }
-            }
-        }
+        if (highscores.highscoreEntryList.Count > 0)
+            SortList(highscores);
 
         // Keep only top 8
-        if (highscores._highscoreEntryList.Count > 8)
+        if (highscores.highscoreEntryList.Count > 8)
         {
-            int limit = highscores._highscoreEntryList.Count;
+            int limit = highscores.highscoreEntryList.Count;
             for (int i = limit; i > 8; --i)
             {
-                highscores._highscoreEntryList.RemoveAt(i - 1);
+                highscores.highscoreEntryList.RemoveAt(i - 1);
             }
         }
 
-        StartCoroutine(WaitForAppearing(highscores._highscoreEntryList));
+        StartCoroutine(WaitForAppearing(highscores.highscoreEntryList));
 
     }
 
@@ -113,7 +101,7 @@ public class HighscoreTable : MonoBehaviour
 
     }
 
-    private void AddHighscoreEntry (int score, string name)
+    public void AddHighscoreEntry(int score, string name)
     {
         //Create HighscoreEntry
         HighscoreEntry highscoreEntry = new HighscoreEntry { score = score, name = name };
@@ -123,11 +111,54 @@ public class HighscoreTable : MonoBehaviour
         Highscores highscores = JsonUtility.FromJson<Highscores>(jsonString);
 
         //Add new entry to Highscores
-        highscores._highscoreEntryList.Add(highscoreEntry);
+        highscores.highscoreEntryList.Add(highscoreEntry);
 
         //Save updated Highscores
         string json = JsonUtility.ToJson(highscores);
         PlayerPrefs.SetString("highscoreTable", json);
+        PlayerPrefs.Save();
+        
+    }
+
+    public int GetLastScore()
+    {
+        //Load saved Highscores
+        string jsonString = PlayerPrefs.GetString("highscoreTable");
+        Highscores highscores = JsonUtility.FromJson<Highscores>(jsonString);
+
+        
+
+        if (highscores.highscoreEntryList.Count > 8)
+        {
+            SortList(highscores);
+            return highscores.highscoreEntryList[highscores.highscoreEntryList.Count - 1].score;            
+        }
+
+        return -1;
+
+    }
+
+    private void SortList(Highscores highscores)
+    {
+        //Sort entry list by score
+        for (int i = 0; i < highscores.highscoreEntryList.Count; ++i)
+        {
+            for (int j = i + 1; j < highscores.highscoreEntryList.Count; ++j)
+            {
+                if (highscores.highscoreEntryList[j].score > highscores.highscoreEntryList[i].score)
+                {
+                    //Swap
+                    HighscoreEntry tmp = highscores.highscoreEntryList[i];
+                    highscores.highscoreEntryList[i] = highscores.highscoreEntryList[j];
+                    highscores.highscoreEntryList[j] = tmp;
+                }
+            }
+        }
+    }
+
+    public void SetDefaultValues()
+    {
+        PlayerPrefs.SetString("highscoreTable", JsonUtility.ToJson(new Highscores()));
         PlayerPrefs.Save();
     }
 
@@ -143,7 +174,7 @@ public class HighscoreTable : MonoBehaviour
 
     private class Highscores
     {
-        public List<HighscoreEntry> _highscoreEntryList;
+        public List<HighscoreEntry> highscoreEntryList = new List<HighscoreEntry>();
     }
 
     /*
