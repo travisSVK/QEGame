@@ -319,6 +319,7 @@ MonoBehaviour:
   - Room01b
   - Room02b
   - Room03b
+  - Room04b
 --- !u!4 &754250466
 Transform:
   m_ObjectHideFlags: 0
@@ -471,6 +472,7 @@ MonoBehaviour:
   - Room01a
   - Room02a
   - Room03a
+  - Room04a
 --- !u!4 &1405602161
 Transform:
   m_ObjectHideFlags: 0
@@ -666,7 +668,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1994538035}
   m_LocalRotation: {x: 0.5735765, y: 0, z: 0, w: 0.819152}
-  m_LocalPosition: {x: 0, y: 7, z: 0}
+  m_LocalPosition: {x: 0, y: 9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -700,7 +702,12 @@ MonoBehaviour:
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner02
   - name: Room03
-    position: {x: 0, y: 14, z: 40}
+    position: {x: 20, y: 14, z: 40}
     rotation: {x: 0.57357657, y: 0, z: 0, w: 0.81915194}
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner03
+  - name: Room04
+    position: {x: 20, y: 16, z: 40}
+    rotation: {x: 0.5735765, y: 0, z: 0, w: 0.819152}
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner04
