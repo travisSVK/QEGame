@@ -2478,6 +2478,81 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 899024370}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &953489069
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1191788934}
+    m_Modifications:
+    - target: {fileID: 2459065192017672241, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_Name
+      value: FactSolarFlare
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0341f7c5426cc1745a1611a1ddd26e90, type: 3}
+--- !u!4 &953489070 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2459065192017672242, guid: 0341f7c5426cc1745a1611a1ddd26e90,
+    type: 3}
+  m_PrefabInstance: {fileID: 953489069}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &962060048
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3139,9 +3214,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1191788933}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 953489070}
   m_Father: {fileID: 1958533597}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4606,12 +4682,11 @@ Transform:
   - {fileID: 1697108687}
   - {fileID: 769321537}
   - {fileID: 1675943532}
-  - {fileID: 632155179}
   - {fileID: 201084962}
   - {fileID: 1497810355}
   - {fileID: 2105710817}
   - {fileID: 1804760376}
-  - {fileID: 1223422085}
+  - {fileID: 632155179}
   - {fileID: 353446736}
   - {fileID: 1897045283}
   - {fileID: 1038708920}
@@ -4622,8 +4697,9 @@ Transform:
   - {fileID: 1817093840}
   - {fileID: 344068416}
   - {fileID: 1977391443}
-  - {fileID: 1597697210}
+  - {fileID: 1053224196}
   - {fileID: 420299652}
+  - {fileID: 1223422085}
   - {fileID: 351982012}
   - {fileID: 1577103758}
   - {fileID: 1738242469}
@@ -4659,7 +4735,7 @@ Transform:
   - {fileID: 83572848}
   - {fileID: 748245252}
   - {fileID: 1540812829}
-  - {fileID: 1053224196}
+  - {fileID: 1597697210}
   - {fileID: 1718122943}
   m_Father: {fileID: 595281081}
   m_RootOrder: 0
