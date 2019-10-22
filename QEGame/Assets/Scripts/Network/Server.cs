@@ -63,6 +63,16 @@ public class Server : MonoBehaviour
                 _rigidBodiesLoaded = true;
             }
         }
+        //else
+        //{
+        //    ProcessMessage();
+        //    List<int> keys = new List<int>(_positions.Keys);
+        //    foreach (int key in keys)
+        //    {
+        //        _rigidBodies[key].MovePosition(_rigidBodies[key].position + _positions[key]);
+        //        _positions[key] = Vector3.zero;
+        //    }
+        //}
 
         if (_rigidBodiesLoaded)
         {
@@ -73,7 +83,6 @@ public class Server : MonoBehaviour
                 _positions[key] = Vector3.zero;
             }
         }
-
         ProcessMessage();
     }
 

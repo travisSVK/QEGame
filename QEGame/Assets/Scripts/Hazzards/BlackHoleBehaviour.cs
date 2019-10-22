@@ -27,8 +27,16 @@ public class BlackHoleBehaviour : MonoBehaviour
             }
             Vector3 direction = transform.position - _playerRigidBody.transform.position;
             float gravitationalPull = Mathf.Clamp(_pullFactor - distance, 0.0f, _pullFactor);
-            //_playerController.movementIncrement += direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant;
+
+            _playerController.movementIncrement += direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant;
             _playerRigidBody.MovePosition(_playerRigidBody.position + direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant);
+
+            //Server server = FindObjectOfType<Server>();
+            //if (!server)
+            //{
+            //    _playerController.movementIncrement += direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant;
+            //    _playerRigidBody.MovePosition(_playerRigidBody.position + direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant);
+            //}
         }
     }
 
