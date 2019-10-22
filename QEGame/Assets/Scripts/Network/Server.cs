@@ -48,17 +48,18 @@ public class Server : MonoBehaviour
         if (!_rigidBodiesLoaded)
         {
             Rigidbody[] rigidBodies = FindObjectsOfType<Rigidbody>();
-            foreach (Rigidbody r in rigidBodies)
-            {
-                r.useGravity = false;
-                PlayerControllerBase playerBase = r.GetComponent<PlayerControllerBase>();
-                if (playerBase)
-                {
-                    _rigidBodies.Add(playerBase.ClientId, r);
-                }
-            }
+            Debug.Log(rigidBodies.Length);
             if (rigidBodies.Length == maxNumberOfClients)
             {
+                foreach (Rigidbody r in rigidBodies)
+                {
+                    r.useGravity = false;
+                    PlayerControllerBase playerBase = r.GetComponent<PlayerControllerBase>();
+                    if (playerBase)
+                    {
+                        _rigidBodies.Add(playerBase.ClientId, r);
+                    }
+                }
                 _rigidBodiesLoaded = true;
             }
         }

@@ -574,6 +574,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b32085ae6cbe4141a1ab319a6ec854f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onArrival:
+    m_PersistentCalls:
+      m_Calls: []
   _speed: 5
   _controlPoints:
   - name: Room01b
@@ -586,6 +589,11 @@ MonoBehaviour:
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner02
+  - name: Room03b
+    position: {x: 0, y: 16, z: 40}
+    rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner03
 --- !u!20 &952063257
 Camera:
   m_ObjectHideFlags: 0
@@ -1314,6 +1322,8 @@ MonoBehaviour:
   - Room01b
   - Room02a
   - Room02b
+  - Room03a
+  - Room03b
 --- !u!1 &1818868011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,6 +1354,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b32085ae6cbe4141a1ab319a6ec854f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onArrival:
+    m_PersistentCalls:
+      m_Calls: []
   _speed: 5
   _controlPoints:
   - name: Room01a
@@ -1356,6 +1369,11 @@ MonoBehaviour:
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner02
+  - name: Room03a
+    position: {x: 0, y: 16, z: 40}
+    rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner03
 --- !u!20 &1818868013
 Camera:
   m_ObjectHideFlags: 0

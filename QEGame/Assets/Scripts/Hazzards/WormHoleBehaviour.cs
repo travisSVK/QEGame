@@ -12,7 +12,7 @@ public class WormHoleBehaviour : MonoBehaviour
         PlayerControllerBase playerBase = collider.GetComponent<PlayerControllerBase>();
         if (playerBase)
         {
-            playerBase.transform.position = _wormHoleSpouse.transform.position;
+            playerBase.transform.position = new Vector3(_wormHoleSpouse.transform.position.x, playerBase.transform.position.y, _wormHoleSpouse.transform.position.z);
         }
     }
 
