@@ -1325,6 +1325,8 @@ MonoBehaviour:
   - Room02b
   - Room03a
   - Room03b
+  - Room04a
+  - Room04b
 --- !u!1 &1818868011
 GameObject:
   m_ObjectHideFlags: 0
