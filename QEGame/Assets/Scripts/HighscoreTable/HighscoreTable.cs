@@ -8,15 +8,13 @@ public class HighscoreTable : MonoBehaviour
     private Transform _entryContainer;
     private Transform _entryTemplate;
     private List<Transform> _highscoreEntryTransformList;
-    private Animator _containerAnimator;
+    public Animator _containerAnimator;
 
     private void Awake()
     {
         _entryContainer = transform.Find("highscoreEntryContainer");
         _entryTemplate = _entryContainer.Find("ContainerAnimation");
         _entryTemplate.gameObject.SetActive(false);
-
-        //_containerAnimator = transform.Find("highscoreEntryTemplate").GetComponent<Animator>();
 
         //Load saved Highscores
         string jsonString = PlayerPrefs.GetString("highscoreTable");
@@ -36,7 +34,7 @@ public class HighscoreTable : MonoBehaviour
         }
 
         StartCoroutine(WaitForAppearing(highscores.highscoreEntryList));
-
+        StartCoroutine(closeWindowDelay());
     }
 
     private void CreateHighscoreEntryTransform(HighscoreEntry hightscoreEntry, Transform container, List<Transform> transformList)
@@ -170,6 +168,12 @@ public class HighscoreTable : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
             CreateHighscoreEntryTransform(highscoreEntry, _entryContainer, _highscoreEntryTransformList);
         }
+    }
+
+    IEnumerator closeWindowDelay()
+    {
+        yield return new WaitForSeconds(8.0f);
+        _containerAnimator.SetTrigger("AutoCloseTrigger");
     }
 
     private class Highscores

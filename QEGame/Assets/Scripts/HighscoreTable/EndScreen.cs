@@ -159,13 +159,15 @@ public class EndScreen : MonoBehaviour
         numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesClearedTimes100"));
 
         animator = gameObject.GetComponent<Animator>();
-
+        StartCoroutine(closeWindowDelay());
         //===========
         //FOR TESTING
         //===========
+        
         SetRemainingTime(260000f);
         SetCompletedStages(3);
         ActivateScreen();
+        
     }
 
     private void Update()
@@ -232,5 +234,11 @@ public class EndScreen : MonoBehaviour
             }
             _stagesCompletedUIText.text = _currentStagesCompletedNumber.ToString("0");
         }
+    }
+
+    IEnumerator closeWindowDelay()
+    {
+        yield return new WaitForSeconds(11.0f);
+        animator.SetTrigger("AutoCloseTrigger");
     }
 }
