@@ -70,7 +70,11 @@ public class Client : MonoBehaviour
 
         if (_gameFinished && !_endSceneLoading)
         {
-            GameFinished();
+            HighscoreTable highscoreTable = FindObjectOfType<HighscoreTable>();
+            if (highscoreTable && highscoreTable.isHighScoreClosed)
+            {
+                GameFinished(highscoreTable.lastName, highscoreTable.lastScore);
+            }
         }
     }
 
@@ -84,12 +88,27 @@ public class Client : MonoBehaviour
         }
     }
 
-    public void GameFinished()
+    public void ShowHighScore()
+    {
+        EndScreen endScreen = FindObjectOfType<EndScreen>();
+        if (endScreen)
+        {
+            endScreen.gameObject.SetActive(true);
+            // TODO implement this
+            endScreen.SetCompletedStages(1);
+            endScreen.SetRemainingTime(2.0f);
+            endScreen.ActivateScreen();
+        }
+    }
+
+    public void GameFinished(string playerName, int lastScore)
     {
         Message message = new Message();
         message.messageType = MessageType.Disconnect;
         message.disconnect = new Disconnect();
         message.disconnect.clientId = clientId;
+        message.disconnect.playerName = playerName;
+        message.disconnect.score = lastScore;
         StateObject state = new StateObject();
         state.workSocket = _sender;
         _disconnectDone.Reset();
@@ -191,14 +210,17 @@ public class Client : MonoBehaviour
                     _otherPlayerInput = Vector3.zero;
                     Destroy(_rigidbody.gameObject);
                     _rigidbody = null;
-                    if (cameraControlller.canMoveForward)
-                    {
-                        cameraControlller.MoveForward();
-                    }
-                    else
-                    {
-                        _gameFinished = true;
-                    }
+                    //TEST
+                    _gameFinished = true;
+                    ShowHighScore();
+                    //if (cameraControlller.canMoveForward)
+                    //{
+                    //    cameraControlller.MoveForward();
+                    //}
+                    //else
+                    //{
+                    //    _gameFinished = true;
+                    //}
                 }
                 break;
             case MessageType.RestartLevel:

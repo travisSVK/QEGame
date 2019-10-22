@@ -77,10 +77,33 @@ public class EndScreen : MonoBehaviour
 
     public void ActivateScreen()
     {
+        CanvasGroup canvas = GetComponent<CanvasGroup>();
+        if (canvas)
+        {
+            canvas.alpha = 1.0f;
+        }
+
+        animator = gameObject.GetComponent<Animator>();
+        if (animator)
+        {
+            animator.SetTrigger("StartAnimTrigger");
+        }
+        
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("pointsText"));
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("points"));
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeText"));
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeRemaining"));
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeRemainingTimes100"));
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesClearedText"));
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesCleared"));
+        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesClearedTimes100"));
+
+        
+
         _pointsUIText = numberUIElements[1].Find("ContainerAnimation").Find("Content").Find("Text Mask").Find("Content").Find("Text").GetComponent<Text>();
         _timeRemainingUIText = numberUIElements[3].Find("ContainerAnimation").Find("Content").Find("Text Mask").Find("Content").Find("Text").GetComponent<Text>();
         _stagesCompletedUIText = numberUIElements[6].Find("ContainerAnimation").Find("Content").Find("Text Mask").Find("Content").Find("Text").GetComponent<Text>();
-
+        _score = (int)(_remainingTime * 100) + (_stagesCompleted * 100);
         StartCoroutine(WaitForAppearing(numberUIElements));
     }
 
@@ -138,7 +161,7 @@ public class EndScreen : MonoBehaviour
                     AnimationSetStagesCompleted(_stagesCompleted * 100);
                     break;
                 case 13:
-                    _score = (int)(_remainingTime * 100) + (_stagesCompleted * 100);
+                    //_score = (int)(_remainingTime * 100) + (_stagesCompleted * 100);
                     AnimationSetRemainingTime(0);
                     AnimationSetStagesCompleted(0);
                     AnimationSetScoreNumber(_score);
@@ -149,29 +172,34 @@ public class EndScreen : MonoBehaviour
 
     private void Awake()
     {
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("pointsText"));
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("points"));
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeText"));
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeRemaining"));
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeRemainingTimes100"));
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesClearedText"));
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesCleared"));
-        numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesClearedTimes100"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("pointsText"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("points"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeText"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeRemaining"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("timeRemainingTimes100"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesClearedText"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesCleared"));
+        //numberUIElements.Add(gameObject.transform.Find("Content").Find("Text Mask").Find("EndScreen").Find("stagesClearedTimes100"));
 
-        animator = gameObject.GetComponent<Animator>();
-        StartCoroutine(closeWindowDelay());
+        //animator = gameObject.GetComponent<Animator>();
+        //StartCoroutine(closeWindowDelay());
         //===========
         //FOR TESTING
         //===========
         
-        SetRemainingTime(260000f);
-        SetCompletedStages(3);
-        ActivateScreen();
+        //SetRemainingTime(260000f);
+        //SetCompletedStages(3);
+        //ActivateScreen();
         
     }
 
     private void Update()
     {
+        if (animator && (Input.GetKeyDown("joystick button 0") || Input.GetKeyDown("joystick button 1") || Input.GetKeyDown("joystick button 2") || Input.GetKeyDown("joystick button 3")))
+        {
+            animator.SetTrigger("AutoCloseTrigger");
+        }
+
         if (_currentScoreNumber != _desiredScoreNumber)
         {
             if (_initialScoreNumber < _desiredScoreNumber)

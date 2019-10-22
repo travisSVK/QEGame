@@ -24,6 +24,9 @@ public class Server : MonoBehaviour
     private int _numberOfFinishedPlayers = 0;
     private bool _joined = false;
 
+    private string _playerNames = "";
+    private int _score = 0;
+
     private void Start()
     {
         _currentNumOfClients = 0;
@@ -231,6 +234,16 @@ public class Server : MonoBehaviour
                 }
                 break;
             case MessageType.Disconnect:
+                if (_playerNames.Length == 0)
+                {
+                    _playerNames += msg.disconnect.playerName;
+                }
+                else
+                {
+                    _playerNames += "+" + msg.disconnect.playerName;
+                }
+                _score = msg.disconnect.score;
+                
                 if (--_currentNumOfClients == 0)
                 {
                     foreach (KeyValuePair<int, StateObject> entry in _states)
@@ -243,6 +256,12 @@ public class Server : MonoBehaviour
                         Debug.Log("Sending disconnect: " + entry.Key);
                         SendDisconnect(entry.Value, message);
                         _disconnected.WaitOne();
+                    }
+
+                    HighscoreTable highscoreTable = FindObjectOfType<HighscoreTable>();
+                    if (highscoreTable)
+                    {
+                        highscoreTable.AddHighscoreEntry(_score, _playerNames);
                     }
 
                     SpectatorView spectatorView = FindObjectOfType<SpectatorView>();

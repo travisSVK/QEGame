@@ -9,6 +9,9 @@ public class HighscoreTable : MonoBehaviour
     private Transform _entryTemplate;
     private List<Transform> _highscoreEntryTransformList;
     public Animator _containerAnimator;
+    public bool isHighScoreClosed = false;
+    public string lastName = "";
+    public int lastScore = 0;
 
     private void Awake()
     {
@@ -34,7 +37,24 @@ public class HighscoreTable : MonoBehaviour
         }
 
         StartCoroutine(WaitForAppearing(highscores.highscoreEntryList));
-        StartCoroutine(closeWindowDelay());
+        //StartCoroutine(closeWindowDelay());
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown("joystick button 0") || Input.GetKeyDown("joystick button 1") || Input.GetKeyDown("joystick button 2") || Input.GetKeyDown("joystick button 3"))
+        {
+            isHighScoreClosed = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            CanvasGroup canvasGroup = GetComponentInParent<CanvasGroup>();
+            if (canvasGroup)
+            {
+                canvasGroup.alpha = canvasGroup.alpha == 1.0f ? 0.0f : 1.0f;
+            }
+        }
     }
 
     private void CreateHighscoreEntryTransform(HighscoreEntry hightscoreEntry, Transform container, List<Transform> transformList)
@@ -101,6 +121,8 @@ public class HighscoreTable : MonoBehaviour
 
     public void AddHighscoreEntry(int score, string name)
     {
+        lastName = name;
+        lastScore = score;
         //Create HighscoreEntry
         HighscoreEntry highscoreEntry = new HighscoreEntry { score = score, name = name };
         

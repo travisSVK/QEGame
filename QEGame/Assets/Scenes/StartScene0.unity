@@ -192,6 +192,12 @@ PrefabInstance:
       propertyPath: clientId
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8192527954582488950, guid: 34572da236e91d545b69582ba8019e1f,
+        type: 3}
+      propertyPath: _uiEndSceneSequence
+      value: 
+      objectReference: {fileID: 1915045220030687921, guid: fafc3e34303dedb4a9238f7301f253d2,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34572da236e91d545b69582ba8019e1f, type: 3}
 --- !u!1 &1209966375
