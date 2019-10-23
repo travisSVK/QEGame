@@ -14,28 +14,20 @@ public enum MessageType
     NextLevel
 }
 
+public class Message
+{
+    public MessageType messageType;
+}
+
 [Serializable]
-public struct OtherPlayerConnected
+public class MessageConnected : Message
 {
     public bool connected;
-}
-
-[Serializable]
-public struct Disconnect
-{
     public int clientId;
-    public int score;
-    public byte[] playerName;
 }
 
 [Serializable]
-public struct TimeElapsed
-{
-    public long miliseconds;
-}
-
-[Serializable]
-public struct Move
+public class Move : Message
 {
     public int clientId;
     public float x;
@@ -44,21 +36,23 @@ public struct Move
 }
 
 [Serializable]
-public struct MessageConnected
+public class OtherPlayerConnected : Message
 {
     public bool connected;
-    public int clientId;
 }
 
 [Serializable]
-public struct Message
+public class Disconnect : Message
 {
-    public MessageType messageType;
-    public MessageConnected messageConnected;
-    public OtherPlayerConnected otherPlayerConnected;
-    public Disconnect disconnect;
-    public TimeElapsed timeElapsed;
-    public Move move;
+    public int clientId;
+    public int score;
+    public byte[] playerName = new byte[100];
+}
+
+[Serializable]
+public class TimeElapsed : Message
+{
+    public long miliseconds;
 }
 
 public static class MessageUtils
