@@ -272,26 +272,26 @@ public class Client : MonoBehaviour
                 }
                 break;
             case MessageType.TimeElapsed:
-                TimeElapsed timeElapsed = (TimeElapsed)msg;
-                long timeElapsedSec = timeElapsed.miliseconds / 1000;
-                Debug.Log((int)timeElapsedSec);
-                if (!_gameFinished && ((int)timeElapsedSec >= _deadlineInSec))
-                {
-                    _playerBase.InstantiateDeath();
-                    _otherPlayerInput = Vector3.zero;
-                    Destroy(_rigidbody.gameObject);
-                    _rigidbody = null;
-                    _gameFinished = true;
-                    ShowHighScore();
-                }
-                else
-                {
-                    if (!_text)
-                    {
-                        _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
-                    }
-                    _text.text = timeElapsedSec.ToString();
-                }
+                //TimeElapsed timeElapsed = (TimeElapsed)msg;
+                //long timeElapsedSec = timeElapsed.miliseconds / 1000;
+                //Debug.Log((int)timeElapsedSec);
+                //if (!_gameFinished && ((int)timeElapsedSec >= _deadlineInSec))
+                //{
+                //    _playerBase.InstantiateDeath();
+                //    _otherPlayerInput = Vector3.zero;
+                //    Destroy(_rigidbody.gameObject);
+                //    _rigidbody = null;
+                //    _gameFinished = true;
+                //    ShowHighScore();
+                //}
+                //else
+                //{
+                //    if (!_text)
+                //    {
+                //        _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
+                //    }
+                //    _text.text = timeElapsedSec.ToString();
+                //}
                 break;
             case MessageType.Disconnect:
                 Debug.Log("Disconnect response received.");
@@ -424,23 +424,18 @@ public class Client : MonoBehaviour
         }
         catch (Exception e)
         {
-            StateObject newState = new StateObject();
-            newState.workSocket = sender;
-            sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReceiveAckCallback), newState);
             Debug.Log(e.ToString());
         }
     }
 
     private void ReceiveCallback(IAsyncResult ar)
     {
+        // Retrieve the state object and the client socket
+        // from the asynchronous state object.
+        StateObject state = (StateObject)ar.AsyncState;
+        Socket sender = state.workSocket;
         try
         {
-            // Retrieve the state object and the client socket
-            // from the asynchronous state object.
-            StateObject state = (StateObject)ar.AsyncState;
-            Socket sender = state.workSocket;
-
             // Read data from the remote device.
             if (sender.Connected)
             {
@@ -463,6 +458,7 @@ public class Client : MonoBehaviour
         }
         catch (Exception e)
         {
+            Debug.Log(state.buffer.Length);
             Debug.Log(e.ToString());
         }
     }

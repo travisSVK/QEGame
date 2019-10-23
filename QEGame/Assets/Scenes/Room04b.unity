@@ -3959,7 +3959,7 @@ GameObject:
   - component: {fileID: 1191788934}
   - component: {fileID: 1191788935}
   m_Layer: 9
-  m_Name: SpawnerRoom04b
+  m_Name: SpawnerRoom04
   m_TagString: Spawner04
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3991,7 +3991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 530a2f5ba7506af488f96c70a9e396e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7905049469288540612, guid: 27650b0696c90b64d9ccce6bca8a50de, type: 3}
+  prefab: {fileID: 7905049469288540612, guid: e070cd2787889de48844271660842c0e, type: 3}
   spawnEffect: {fileID: 100002, guid: 43cd9440a6b0f644dbf500837634ced5, type: 3}
   spawnOnStart: 0
 --- !u!1001 &1230363325

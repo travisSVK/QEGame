@@ -99,15 +99,15 @@ public class Server : MonoBehaviour
                 {
                     _milisElapsedPrevious = elapsedTime;
                     _text.text = (elapsedTime / 1000).ToString();
-                    //foreach (KeyValuePair<int, StateObject> entry in _states)
-                    //{
-                    //    TimeElapsed msg = new TimeElapsed();
-                    //    msg.messageType = MessageType.TimeElapsed;
-                    //    msg.miliseconds = elapsedTime;
-                    //    StateObject state = new StateObject();
-                    //    state.workSocket = entry.Value.workSocket;
-                    //    SendTimer(state, msg);
-                    //}
+                    foreach (KeyValuePair<int, StateObject> entry in _states)
+                    {
+                        TimeElapsed msg = new TimeElapsed();
+                        msg.messageType = MessageType.TimeElapsed;
+                        msg.miliseconds = elapsedTime;
+                        StateObject state = new StateObject();
+                        state.workSocket = entry.Value.workSocket;
+                        SendTimer(state, msg);
+                    }
                     //_messageSent = true;
                 }
             }

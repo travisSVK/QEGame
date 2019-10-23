@@ -14,6 +14,7 @@ public enum MessageType
     NextLevel
 }
 
+[Serializable]
 public class Message
 {
     public MessageType messageType;

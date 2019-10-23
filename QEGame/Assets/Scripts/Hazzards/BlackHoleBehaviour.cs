@@ -16,7 +16,7 @@ public class BlackHoleBehaviour : MonoBehaviour
         if (_playerRigidBody)
         {
             float distance = Vector3.Distance(transform.position, _playerRigidBody.transform.position);
-            Debug.Log(distance);
+            
             PlayerControllerBase _playerController = _playerRigidBody.GetComponent<PlayerControllerBase>();
             if (distance <= 0.08f)
             {
