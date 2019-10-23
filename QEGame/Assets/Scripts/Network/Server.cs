@@ -100,7 +100,9 @@ public class Server : MonoBehaviour
                         TimeElapsed msg = new TimeElapsed();
                         msg.messageType = MessageType.TimeElapsed;
                         msg.miliseconds = elapsedTime;
-                        Send(entry.Value, msg, false);
+                        StateObject state = new StateObject();
+                        state.workSocket = entry.Value.workSocket;
+                        Send(state, msg, false);
                     }
                 }
             }
@@ -132,7 +134,9 @@ public class Server : MonoBehaviour
             {
                 Message msg = new Message();
                 msg.messageType = MessageType.NextLevel;
-                Send(entry.Value, msg, false);
+                StateObject state = new StateObject();
+                state.workSocket = entry.Value.workSocket;
+                Send(state, msg, false);
             }
             _rigidBodiesLoaded = false;
             foreach (Rigidbody rigidbody in _rigidBodies.Values)
@@ -170,7 +174,9 @@ public class Server : MonoBehaviour
         {
             Message msg = new Message();
             msg.messageType = MessageType.RestartLevel;
-            Send(entry.Value, msg, false);
+            StateObject state = new StateObject();
+            state.workSocket = entry.Value.workSocket;
+            Send(state, msg, false);
         }
         _rigidBodiesLoaded = false;
         foreach (Rigidbody rigidbody in _rigidBodies.Values)
@@ -237,7 +243,9 @@ public class Server : MonoBehaviour
             msg.connected = true;
             msg.messageType = MessageType.OtherPlayerConnected;
             Debug.Log("Sending otherplayer connected: " + entry.Key);
-            Send(entry.Value, msg, true);
+            StateObject state = new StateObject();
+            state.workSocket = entry.Value.workSocket;
+            Send(state, msg, true);
         }
     }
 
@@ -255,7 +263,9 @@ public class Server : MonoBehaviour
                     {
                         if (entry.Key != move.clientId)
                         {
-                            Send(entry.Value, msg, false);
+                            StateObject state = new StateObject();
+                            state.workSocket = entry.Value.workSocket;
+                            Send(state, msg, false);
                             _positions[entry.Key] = new Vector3(move.x, move.y, move.z);
                         }
                     }
