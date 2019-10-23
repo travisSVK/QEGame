@@ -15,27 +15,27 @@ public enum MessageType
 }
 
 [Serializable]
-public class OtherPlayerConnected
+public struct OtherPlayerConnected
 {
     public bool connected;
 }
 
 [Serializable]
-public class Disconnect
+public struct Disconnect
 {
     public int clientId;
     public int score;
-    public byte[] playerName = new byte[100];
+    public byte[] playerName;
 }
 
 [Serializable]
-public class TimeElapsed
+public struct TimeElapsed
 {
     public long miliseconds;
 }
 
 [Serializable]
-public class Move
+public struct Move
 {
     public int clientId;
     public float x;
@@ -44,14 +44,14 @@ public class Move
 }
 
 [Serializable]
-public class MessageConnected
+public struct MessageConnected
 {
     public bool connected;
     public int clientId;
 }
 
 [Serializable]
-public class Message
+public struct Message
 {
     public MessageType messageType;
     public MessageConnected messageConnected;

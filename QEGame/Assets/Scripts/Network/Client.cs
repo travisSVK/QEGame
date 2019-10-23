@@ -188,7 +188,7 @@ public class Client : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         Debug.Log(ipAddr.ToString());
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::d408:1ce1:45a1:8991"), 11111);
+        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
         //IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
         _sender = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
