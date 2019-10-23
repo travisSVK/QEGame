@@ -74,7 +74,7 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
         if (server)
         {
             InstantiateDeath();
-            server.RestartLevel();
+            server.RestartLevel(false);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -24,12 +25,17 @@ public class Server : MonoBehaviour
     private bool _clientsConnected = false;
     private int _numberOfFinishedPlayers = 0;
     private bool _joined = false;
+    private Text _text;
 
     private string _playerNames = "";
     private int _score = 0;
+    private long _milisElapsedPrevious = 0;
+    
+    private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
 
     private void Start()
     {
+        _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
         _currentNumOfClients = 0;
         _messageProcessingThread = new Thread(StartListening);
         _messageProcessingThread.Start();
@@ -80,6 +86,29 @@ public class Server : MonoBehaviour
 
         if (_rigidBodiesLoaded)
         {
+            if (_stopwatch.IsRunning)
+            {
+                _stopwatch.Stop();
+                long elapsedTime = _stopwatch.ElapsedMilliseconds;
+                _stopwatch.Start();
+                if ((elapsedTime - _milisElapsedPrevious) >= 1000)
+                {
+                    _milisElapsedPrevious = elapsedTime;
+                    _text.text = (elapsedTime / 1000).ToString();
+                    foreach (KeyValuePair<int, StateObject> entry in _states)
+                    {
+                        TimeElapsed msg = new TimeElapsed();
+                        msg.messageType = MessageType.TimeElapsed;
+                        msg.miliseconds = elapsedTime;
+                        Send(entry.Value, msg, false);
+                    }
+                }
+            }
+            else
+            {
+                _stopwatch.Start();
+            }
+
             List<int> keys = new List<int>(_positions.Keys);
             foreach (int key in keys)
             {
@@ -134,9 +163,8 @@ public class Server : MonoBehaviour
         }
         return false;
     }
-
-    // TODO
-    public void RestartLevel()
+    
+    public void RestartLevel(bool forced)
     {
         foreach (KeyValuePair<int, StateObject> entry in _states)
         {
@@ -173,8 +201,8 @@ public class Server : MonoBehaviour
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
-        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
-        //IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
+        //IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
+        IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
         _listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         // Bind the socket to the local endpoint and listen for incoming connections.
@@ -205,11 +233,9 @@ public class Server : MonoBehaviour
         }
         foreach (KeyValuePair<int, StateObject> entry in _states)
         {
-            OtherPlayerConnected opc = new OtherPlayerConnected();
-            opc.connected = true;
-            Message msg = new Message();
+            OtherPlayerConnected msg = new OtherPlayerConnected();
+            msg.connected = true;
             msg.messageType = MessageType.OtherPlayerConnected;
-            msg.otherPlayerConnected = opc;
             Debug.Log("Sending otherplayer connected: " + entry.Key);
             Send(entry.Value, msg, true);
         }
@@ -223,37 +249,38 @@ public class Server : MonoBehaviour
             case MessageType.Move:
                 if (_currentNumOfClients == maxNumberOfClients)
                 {
-                    _positions[msg.move.clientId] = new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                    Move move = (Move)msg;
+                    _positions[move.clientId] = new Vector3(move.x, move.y, move.z);
                     foreach (KeyValuePair<int, StateObject> entry in _states)
                     {
-                        if (entry.Key != msg.move.clientId)
+                        if (entry.Key != move.clientId)
                         {
                             Send(entry.Value, msg, false);
-                            _positions[entry.Key] = new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                            _positions[entry.Key] = new Vector3(move.x, move.y, move.z);
                         }
                     }
                 }
                 break;
             case MessageType.Disconnect:
+                Disconnect disconnect = (Disconnect)msg;
                 if (_playerNames.Length == 0)
                 {
-                    _playerNames += Encoding.UTF8.GetString(msg.disconnect.playerName);
+                    _playerNames += Encoding.UTF8.GetString(disconnect.playerName);
                 }
                 else
                 {
-                    _playerNames += "+" + Encoding.UTF8.GetString(msg.disconnect.playerName);
+                    _playerNames += "+" + Encoding.UTF8.GetString(disconnect.playerName);
                 }
-                _score = msg.disconnect.score;
+                _score = disconnect.score;
 
                 if (--_currentNumOfClients == 0)
                 {
                     foreach (KeyValuePair<int, StateObject> entry in _states)
                     {
                         _disconnected.Reset();
-                        Message message = new Message();
+                        Disconnect message = new Disconnect();
                         message.messageType = MessageType.Disconnect;
-                        message.disconnect = new Disconnect();
-                        message.disconnect.clientId = entry.Key;
+                        message.clientId = entry.Key;
 
                         Debug.Log("Sending disconnect: " + entry.Key);
                         SendDisconnect(entry.Value, message);
@@ -338,8 +365,9 @@ public class Server : MonoBehaviour
             Message msg = MessageUtils.Deserialize(state.buffer);
             if (msg.messageType == MessageType.Connected)
             {
-                _positions.Add(msg.messageConnected.clientId, Vector3.zero);
-                _states.Add(msg.messageConnected.clientId, state);
+                MessageConnected messageConnected = (MessageConnected)msg;
+                _positions.Add(messageConnected.clientId, Vector3.zero);
+                _states.Add(messageConnected.clientId, state);
                 // Signal the main thread to continue.
                 _allDone.Set();
                 Send(state, msg, false);

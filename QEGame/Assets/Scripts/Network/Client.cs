@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 using System.Net;
@@ -28,6 +29,11 @@ public class Client : MonoBehaviour
     private Vector3 _otherPlayerInput = Vector3.zero;
     private PlayerControllerBase _playerBase;
     private bool _inputSent = false;
+    private long _timeElapsedSec = 0;
+    private Text _text = null;
+
+    [SerializeField]
+    private int _deadlineInSec = 100;
 
     private void Start()
     {
@@ -49,13 +55,13 @@ public class Client : MonoBehaviour
 
         if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
         {
-            Message msg = new Message();
+            Move msg = new Move();
             msg.messageType = MessageType.Move;
-            msg.move.clientId = clientId;
+            msg.clientId = clientId;
             //msg.timestamp = (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            msg.move.x = _playerBase.movementIncrement.x;
-            msg.move.y = _playerBase.movementIncrement.y;
-            msg.move.z = _playerBase.movementIncrement.z;
+            msg.x = _playerBase.movementIncrement.x;
+            msg.y = _playerBase.movementIncrement.y;
+            msg.z = _playerBase.movementIncrement.z;
             _playerBase.movementIncrement = Vector3.zero;
             StateObject state = new StateObject();
             state.workSocket = _sender;
@@ -104,12 +110,11 @@ public class Client : MonoBehaviour
 
     public void GameFinished(string playerName, int lastScore)
     {
-        Message message = new Message();
+        Disconnect message = new Disconnect();
         message.messageType = MessageType.Disconnect;
-        message.disconnect = new Disconnect();
-        message.disconnect.clientId = clientId;
-        message.disconnect.playerName = Encoding.UTF8.GetBytes(playerName);
-        message.disconnect.score = lastScore;
+        message.clientId = clientId;
+        message.playerName = Encoding.UTF8.GetBytes(playerName);
+        message.score = lastScore;
         StateObject state = new StateObject();
         state.workSocket = _sender;
         _disconnectDone.Reset();
@@ -149,8 +154,8 @@ public class Client : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         Debug.Log(ipAddr.ToString());
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
-        //IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
+        //IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
+        IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
         _sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         try
@@ -167,12 +172,10 @@ public class Client : MonoBehaviour
             MessageConnected msg = new MessageConnected();
             msg.connected = true;
             msg.clientId = clientId;
+            msg.messageType = MessageType.Connected;
             StateObject state = new StateObject();
             state.workSocket = _sender;
-            Message message = new Message();
-            message.messageType = MessageType.Connected;
-            message.messageConnected = msg;
-            Send(state, message, false);
+            Send(state, msg, false);
             _sendDone.WaitOne();
 
             // Receive the ACK from the remote device.
@@ -192,7 +195,8 @@ public class Client : MonoBehaviour
         switch (msg.messageType)
         {
             case MessageType.Move:
-                _otherPlayerInput = new Vector3(msg.move.x, msg.move.y, msg.move.z);
+                Move move = (Move)msg;
+                _otherPlayerInput = new Vector3(move.x, move.y, move.z);
                 break;
             case MessageType.OtherPlayerConnected:
                 Debug.Log("Other player connected received.");
@@ -235,9 +239,32 @@ public class Client : MonoBehaviour
                     cc.RestartLevel();
                 }
                 break;
+            case MessageType.TimeElapsed:
+                TimeElapsed timeElapsed = (TimeElapsed)msg;
+                long timeElapsedSec = timeElapsed.miliseconds / 1000;
+                Debug.Log((int)timeElapsedSec);
+                if (!_gameFinished && ((int)timeElapsedSec >= _deadlineInSec))
+                {
+                    _playerBase.InstantiateDeath();
+                    _otherPlayerInput = Vector3.zero;
+                    Destroy(_rigidbody.gameObject);
+                    _rigidbody = null;
+                    _gameFinished = true;
+                    ShowHighScore();
+                }
+                else
+                {
+                    if (!_text)
+                    {
+                        _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
+                    }
+                    _text.text = timeElapsedSec.ToString();
+                }
+                break;
             case MessageType.Disconnect:
                 Debug.Log("Disconnect response received.");
-                if (msg.disconnect.clientId == clientId)
+                Disconnect disconnect = (Disconnect)msg;
+                if (disconnect.clientId == clientId)
                 {
                     Debug.Log("Disconnect response received.");
                     Restart();
@@ -339,7 +366,7 @@ public class Client : MonoBehaviour
             if (bytesRead > 0)
             {
                 Message msg = MessageUtils.Deserialize(state.buffer);
-                if ((msg.messageType == MessageType.Connected) && (msg.messageConnected.clientId == clientId))
+                if ((msg.messageType == MessageType.Connected) && (((MessageConnected)msg).clientId == clientId))
                 {
                     _receiveDone.Set();
                     StateObject newState = new StateObject();
@@ -349,7 +376,7 @@ public class Client : MonoBehaviour
                     sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), newState);
                 }
-                else if ((msg.messageType == MessageType.Disconnect) && (msg.disconnect.clientId == clientId))
+                else if ((msg.messageType == MessageType.Disconnect) && (((Disconnect)msg).clientId == clientId))
                 {
                     _receiveDone.Set();
                 }

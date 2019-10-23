@@ -10,6 +10,7 @@ TagManager:
   - Spawner03
   - Spawner04
   - Spawner05
+  - Timer
   layers:
   - Default
   - TransparentFX
