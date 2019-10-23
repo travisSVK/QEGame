@@ -103,7 +103,7 @@ public class EndScreen : MonoBehaviour
         _pointsUIText = numberUIElements[1].Find("ContainerAnimation").Find("Content").Find("Text Mask").Find("Content").Find("Text").GetComponent<Text>();
         _timeRemainingUIText = numberUIElements[3].Find("ContainerAnimation").Find("Content").Find("Text Mask").Find("Content").Find("Text").GetComponent<Text>();
         _stagesCompletedUIText = numberUIElements[6].Find("ContainerAnimation").Find("Content").Find("Text Mask").Find("Content").Find("Text").GetComponent<Text>();
-        _score = (int)(_remainingTime * 100) + (_stagesCompleted * 100);
+        _score = (int)((_remainingTime * 100) + (_stagesCompleted * 100));
         StartCoroutine(WaitForAppearing(numberUIElements));
     }
 

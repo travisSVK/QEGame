@@ -39,8 +39,8 @@ public struct OtherPlayerConnected
 public struct Disconnect
 {
     public int clientId;
-    //public string playerName;
     public int score;
+    public char[] playerName;
 }
 
 

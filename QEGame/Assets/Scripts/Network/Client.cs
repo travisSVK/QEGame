@@ -107,7 +107,7 @@ public class Client : MonoBehaviour
         message.messageType = MessageType.Disconnect;
         message.disconnect = new Disconnect();
         message.disconnect.clientId = clientId;
-        //message.disconnect.playerName = playerName;
+        message.disconnect.playerName = playerName.ToCharArray();
         message.disconnect.score = lastScore;
         StateObject state = new StateObject();
         state.workSocket = _sender;

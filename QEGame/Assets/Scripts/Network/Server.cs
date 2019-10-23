@@ -234,16 +234,16 @@ public class Server : MonoBehaviour
                 }
                 break;
             case MessageType.Disconnect:
-                //if (_playerNames.Length == 0)
-                //{
-                //    _playerNames += msg.disconnect.playerName;
-                //}
-                //else
-                //{
-                //    _playerNames += "+" + msg.disconnect.playerName;
-                //}
+                if (_playerNames.Length == 0)
+                {
+                    _playerNames += msg.disconnect.playerName;
+                }
+                else
+                {
+                    _playerNames += "+" + msg.disconnect.playerName;
+                }
                 _score = msg.disconnect.score;
-                
+
                 if (--_currentNumOfClients == 0)
                 {
                     foreach (KeyValuePair<int, StateObject> entry in _states)
@@ -253,6 +253,7 @@ public class Server : MonoBehaviour
                         message.messageType = MessageType.Disconnect;
                         message.disconnect = new Disconnect();
                         message.disconnect.clientId = entry.Key;
+
                         Debug.Log("Sending disconnect: " + entry.Key);
                         SendDisconnect(entry.Value, message);
                         _disconnected.WaitOne();
