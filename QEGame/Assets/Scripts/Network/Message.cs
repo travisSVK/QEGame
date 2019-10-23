@@ -40,7 +40,7 @@ public struct Disconnect
 {
     public int clientId;
     public int score;
-    public char[] playerName;
+    public byte[] playerName;
 }
 
 

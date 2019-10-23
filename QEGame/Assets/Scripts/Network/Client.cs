@@ -4,6 +4,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Text;
 using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour
@@ -107,7 +108,7 @@ public class Client : MonoBehaviour
         message.messageType = MessageType.Disconnect;
         message.disconnect = new Disconnect();
         message.disconnect.clientId = clientId;
-        message.disconnect.playerName = playerName.ToCharArray();
+        message.disconnect.playerName = Encoding.UTF8.GetBytes(playerName);
         message.disconnect.score = lastScore;
         StateObject state = new StateObject();
         state.workSocket = _sender;

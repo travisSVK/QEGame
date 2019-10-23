@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 public class Server : MonoBehaviour
@@ -236,11 +237,11 @@ public class Server : MonoBehaviour
             case MessageType.Disconnect:
                 if (_playerNames.Length == 0)
                 {
-                    _playerNames += msg.disconnect.playerName;
+                    _playerNames += Encoding.UTF8.GetString(msg.disconnect.playerName);
                 }
                 else
                 {
-                    _playerNames += "+" + msg.disconnect.playerName;
+                    _playerNames += "+" + Encoding.UTF8.GetString(msg.disconnect.playerName);
                 }
                 _score = msg.disconnect.score;
 
