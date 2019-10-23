@@ -234,14 +234,14 @@ public class Server : MonoBehaviour
                 }
                 break;
             case MessageType.Disconnect:
-                if (_playerNames.Length == 0)
-                {
-                    _playerNames += msg.disconnect.playerName;
-                }
-                else
-                {
-                    _playerNames += "+" + msg.disconnect.playerName;
-                }
+                //if (_playerNames.Length == 0)
+                //{
+                //    _playerNames += msg.disconnect.playerName;
+                //}
+                //else
+                //{
+                //    _playerNames += "+" + msg.disconnect.playerName;
+                //}
                 _score = msg.disconnect.score;
                 
                 if (--_currentNumOfClients == 0)

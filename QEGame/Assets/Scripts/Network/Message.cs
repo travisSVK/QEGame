@@ -39,7 +39,7 @@ public struct OtherPlayerConnected
 public struct Disconnect
 {
     public int clientId;
-    public string playerName;
+    //public string playerName;
     public int score;
 }
 
@@ -52,7 +52,7 @@ public struct Message
     public MessageConnected messageConnected;
     public OtherPlayerConnected otherPlayerConnected;
     public Move move;
-    //public Disconnect disconnect;
+    public Disconnect disconnect;
 }
 
 public static class MessageUtils
