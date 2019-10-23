@@ -52,7 +52,7 @@ public struct Message
     public MessageConnected messageConnected;
     public OtherPlayerConnected otherPlayerConnected;
     public Move move;
-    public Disconnect disconnect;
+    //public Disconnect disconnect;
 }
 
 public static class MessageUtils
