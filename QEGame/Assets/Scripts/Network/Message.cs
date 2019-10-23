@@ -15,20 +15,27 @@ public enum MessageType
 }
 
 [Serializable]
-public class Message
-{
-    public MessageType messageType;
-}
-
-[Serializable]
-public class MessageConnected : Message
+public class OtherPlayerConnected
 {
     public bool connected;
-    public int clientId;
 }
 
 [Serializable]
-public class Move : Message
+public class Disconnect
+{
+    public int clientId;
+    public int score;
+    public byte[] playerName = new byte[100];
+}
+
+[Serializable]
+public class TimeElapsed
+{
+    public long miliseconds;
+}
+
+[Serializable]
+public class Move
 {
     public int clientId;
     public float x;
@@ -37,23 +44,21 @@ public class Move : Message
 }
 
 [Serializable]
-public class OtherPlayerConnected : Message
+public class MessageConnected
 {
     public bool connected;
-}
-
-[Serializable]
-public class Disconnect : Message
-{
     public int clientId;
-    public int score;
-    public byte[] playerName = new byte[100];
 }
 
 [Serializable]
-public class TimeElapsed : Message
+public class Message
 {
-    public long miliseconds;
+    public MessageType messageType;
+    public MessageConnected messageConnected;
+    public OtherPlayerConnected otherPlayerConnected;
+    public Disconnect disconnect;
+    public TimeElapsed timeElapsed;
+    public Move move;
 }
 
 public static class MessageUtils
