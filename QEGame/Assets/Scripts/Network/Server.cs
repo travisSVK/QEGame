@@ -17,6 +17,7 @@ public class Server : MonoBehaviour
     private List<Message> _messageQueue = new List<Message>();
     private ManualResetEvent _allDone = new ManualResetEvent(false);
     private ManualResetEvent _disconnected = new ManualResetEvent(false);
+    private ManualResetEvent _timerSent = new ManualResetEvent(false);
     private Thread _messageProcessingThread = null;
     private Dictionary<int, Vector3> _positions = new Dictionary<int, Vector3>();
     private Dictionary<int, StateObject> _states = new Dictionary<int, StateObject>();
@@ -30,7 +31,9 @@ public class Server : MonoBehaviour
     private string _playerNames = "";
     private int _score = 0;
     private long _milisElapsedPrevious = 0;
-    
+
+    private bool _messageSent = false;
+
     private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
 
     private void Start()
@@ -54,6 +57,7 @@ public class Server : MonoBehaviour
             _messageProcessingThread.Join();
             _joined = true;
         }
+        _messageSent = false;
 
         if (!_rigidBodiesLoaded)
         {
@@ -95,15 +99,16 @@ public class Server : MonoBehaviour
                 {
                     _milisElapsedPrevious = elapsedTime;
                     _text.text = (elapsedTime / 1000).ToString();
-                    foreach (KeyValuePair<int, StateObject> entry in _states)
-                    {
-                        TimeElapsed msg = new TimeElapsed();
-                        msg.messageType = MessageType.TimeElapsed;
-                        msg.miliseconds = elapsedTime;
-                        StateObject state = new StateObject();
-                        state.workSocket = entry.Value.workSocket;
-                        Send(state, msg, false);
-                    }
+                    //foreach (KeyValuePair<int, StateObject> entry in _states)
+                    //{
+                    //    TimeElapsed msg = new TimeElapsed();
+                    //    msg.messageType = MessageType.TimeElapsed;
+                    //    msg.miliseconds = elapsedTime;
+                    //    StateObject state = new StateObject();
+                    //    state.workSocket = entry.Value.workSocket;
+                    //    SendTimer(state, msg);
+                    //}
+                    //_messageSent = true;
                 }
             }
             else
@@ -118,7 +123,10 @@ public class Server : MonoBehaviour
                 _positions[key] = Vector3.zero;
             }
         }
-        ProcessMessage();
+        if (!_messageSent)
+        {
+            ProcessMessage();
+        }
     }
 
     public void LevelFinishedRetracted()
@@ -207,9 +215,9 @@ public class Server : MonoBehaviour
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
-        //IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
-        IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
-        _listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::d408:1ce1:45a1:8991"), 11111);
+        //IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
+        _listener = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         // Bind the socket to the local endpoint and listen for incoming connections.
         try
@@ -263,9 +271,15 @@ public class Server : MonoBehaviour
                     {
                         if (entry.Key != move.clientId)
                         {
+                            Move newMove = new Move();
+                            newMove.x = move.x;
+                            newMove.y = move.y;
+                            newMove.z = move.z;
+                            newMove.messageType = MessageType.Move;
+                            newMove.clientId = move.clientId;
                             StateObject state = new StateObject();
                             state.workSocket = entry.Value.workSocket;
-                            Send(state, msg, false);
+                            Send(state, newMove, false);
                             _positions[entry.Key] = new Vector3(move.x, move.y, move.z);
                         }
                     }
@@ -380,7 +394,9 @@ public class Server : MonoBehaviour
                 _states.Add(messageConnected.clientId, state);
                 // Signal the main thread to continue.
                 _allDone.Set();
-                Send(state, msg, false);
+                StateObject newState = new StateObject();
+                newState.workSocket = state.workSocket;
+                Send(newState, msg, false);
             }
         }
     }
@@ -405,9 +421,22 @@ public class Server : MonoBehaviour
                 //_messageQueue.Sort((x, y) => x.timestamp.CompareTo(y.timestamp));
                 _messageQueueMutex.ReleaseMutex();
 
-                state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
+                StateObject newState = new StateObject();
+                newState.workSocket = state.workSocket;
+                state.workSocket.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReadCallback), newState);
             }
+        }
+    }
+    
+    private void SendTimer(StateObject state, Message message)
+    {
+        byte[] byteData = MessageUtils.Serialize(message);
+
+        if (state.workSocket.Connected)
+        {
+            state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendTimerCallback), state);
         }
     }
 
@@ -440,8 +469,10 @@ public class Server : MonoBehaviour
             // Complete sending the data to the remote device.
             int bytesSent = state.workSocket.EndSend(ar);
             Debug.Log("Sent " + bytesSent + " bytes to client.");
-            state.workSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+            StateObject newState = new StateObject();
+            newState.workSocket = state.workSocket;
+            state.workSocket.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
+                new AsyncCallback(ReadCallback), newState);
         }
         catch (Exception e)
         {
@@ -458,6 +489,23 @@ public class Server : MonoBehaviour
             // Complete sending the data to the remote device.
             int bytesSent = state.workSocket.EndSend(ar);
             Debug.Log("Sent " + bytesSent + " bytes to client.");
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
+    }
+
+    private void SendTimerCallback(IAsyncResult ar)
+    {
+        try
+        {
+            // Retrieve the socket from the state object.
+            StateObject state = (StateObject)ar.AsyncState;
+            // Complete sending the data to the remote device.
+            int bytesSent = state.workSocket.EndSend(ar);
+            Debug.Log("Sent " + bytesSent + " bytes to client.");
+            _timerSent.Set();
         }
         catch (Exception e)
         {

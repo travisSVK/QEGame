@@ -35,6 +35,10 @@ public class Client : MonoBehaviour
     [SerializeField]
     private int _deadlineInSec = 100;
 
+    private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+    private long _milisElapsedPrevious = 0;
+    private int _completedStages = 0;
+
     private void Start()
     {
         _lastPosition = transform.position;
@@ -43,7 +47,34 @@ public class Client : MonoBehaviour
     private void Update()
     {
         ProcessMessage();
-
+        if (!_text)
+        {
+            GameObject timerObj = GameObject.FindGameObjectWithTag("Timer");
+            if (timerObj)
+            {
+                _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
+            }
+        }
+        if (_stopwatch.IsRunning && _text)
+        {
+            _stopwatch.Stop();
+            long elapsedTime = _stopwatch.ElapsedMilliseconds;
+            if (!_gameFinished && ((int)(elapsedTime / 1000) >= _deadlineInSec))
+            {
+                _playerBase.InstantiateDeath();
+                _otherPlayerInput = Vector3.zero;
+                Destroy(_rigidbody.gameObject);
+                _rigidbody = null;
+                _gameFinished = true;
+                ShowHighScore();
+            }
+            _stopwatch.Start();
+            if ((elapsedTime - _milisElapsedPrevious) >= 1000)
+            {
+                _milisElapsedPrevious = elapsedTime;
+                _text.text = (elapsedTime / 1000).ToString();
+            }
+        }
         if (_inputSent)
         {
             _inputSent = false;
@@ -102,8 +133,9 @@ public class Client : MonoBehaviour
         {
             endScreen.gameObject.SetActive(true);
             // TODO implement this
-            endScreen.SetCompletedStages(1);
-            endScreen.SetRemainingTime(2.0f);
+            _stopwatch.Stop();
+            endScreen.SetCompletedStages(_completedStages);
+            endScreen.SetRemainingTime(_deadlineInSec - _stopwatch.ElapsedMilliseconds / 1000);
             endScreen.ActivateScreen();
         }
     }
@@ -154,9 +186,9 @@ public class Client : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         Debug.Log(ipAddr.ToString());
-        //IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::11ec:b6d2:d1bf:e144"), 11111);
-        IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
-        _sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::d408:1ce1:45a1:8991"), 11111);
+        //IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
+        _sender = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         try
         {
@@ -205,6 +237,7 @@ public class Client : MonoBehaviour
                 if (menuManager)
                 {
                     menuManager.StartFirstScene();
+                    _stopwatch.Start();
                 }
                 break;
             case MessageType.NextLevel:
@@ -217,14 +250,17 @@ public class Client : MonoBehaviour
                     _rigidbody = null;
                     //TEST
                     _gameFinished = true;
+                    ++_completedStages;
                     ShowHighScore();
                     //if (cameraControlller.canMoveForward)
                     //{
+                    //    ++_completedStages;
                     //    cameraControlller.MoveForward();
                     //}
                     //else
                     //{
                     //    _gameFinished = true;
+                    //    ShowHighScore();
                     //}
                 }
                 break;
@@ -417,8 +453,10 @@ public class Client : MonoBehaviour
                     _messageQueueMutex.ReleaseMutex();
 
                     // Begin receiving the data from the remote device.
-                    sender.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReceiveCallback), state);
+                    StateObject newState = new StateObject();
+                    newState.workSocket = state.workSocket;
+                    sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReceiveCallback), newState);
                 }
             }
         }
