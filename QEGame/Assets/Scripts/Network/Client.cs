@@ -79,21 +79,24 @@ public class Client : MonoBehaviour
             if (_stopwatch.IsRunning)
             {
                 _stopwatch.Stop();
-                long elapsedTime = _stopwatch.ElapsedMilliseconds + _lastLevelElapsed;
-                if (!_gameFinished && ((int)(elapsedTime / 1000) >= _deadlineInSec))
+                if(!_gameFinished)
                 {
-                    _playerBase.InstantiateDeath();
-                    _otherPlayerInput = Vector3.zero;
-                    Destroy(_rigidbody.gameObject);
-                    _rigidbody = null;
-                    _gameFinished = true;
-                    ShowHighScore();
-                }
-                _stopwatch.Start();
-                if ((elapsedTime - _milisElapsedPrevious) >= 1000)
-                {
-                    _milisElapsedPrevious = elapsedTime;
-                    _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
+                    long elapsedTime = _stopwatch.ElapsedMilliseconds + _lastLevelElapsed;
+                    if ((int)(elapsedTime / 1000) >= _deadlineInSec)
+                    {
+                        _playerBase.InstantiateDeath();
+                        _otherPlayerInput = Vector3.zero;
+                        Destroy(_rigidbody.gameObject);
+                        _rigidbody = null;
+                        _gameFinished = true;
+                        ShowHighScore();
+                    }
+                    _stopwatch.Start();
+                    if ((elapsedTime - _milisElapsedPrevious) >= 1000)
+                    {
+                        _milisElapsedPrevious = elapsedTime;
+                        _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
+                    }
                 }
             }
             else

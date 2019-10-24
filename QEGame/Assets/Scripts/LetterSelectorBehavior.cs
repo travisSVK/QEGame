@@ -78,6 +78,7 @@ public class LetterSelectorBehavior : MonoBehaviour
         animator.SetTrigger("CloseTrigger");
         highscoreTableScript.AddHighscoreEntry(_score, fullName);
         highscoreTableObject.SetActive(true);
+        highscoreTableObject.GetComponent<CanvasGroup>().alpha = 1.0f;
         gameObject.SetActive(false);
     }
 

@@ -120,7 +120,10 @@ public class Server : MonoBehaviour
                 if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                 {
                     _milisElapsedPrevious = elapsedTime;
-                    _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
+                    if (_deadlineInSec >= (elapsedTime / 1000))
+                    {
+                        _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
+                    }
                 }
             }
             else

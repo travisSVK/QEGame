@@ -109,7 +109,7 @@ public class EndScreen : MonoBehaviour
 
     public void LoadNextScreen()
     {
-        if (_score > highscoreTableScript.GetLastScore())
+        if (_score > highscoreTableScript.GetLastScore() && _score > 0)
         {
             //animator.SetTrigger("AutoCloseTrigger");
             letterSelectorObject.SetActive(true);
@@ -119,6 +119,7 @@ public class EndScreen : MonoBehaviour
         else
         {
             highscoreTableObject.SetActive(true);
+            highscoreTableObject.GetComponent<CanvasGroup>().alpha = 1.0f;
             gameObject.SetActive(false);
         }
     }
@@ -186,18 +187,17 @@ public class EndScreen : MonoBehaviour
         //===========
         //FOR TESTING
         //===========
-        
-        //SetRemainingTime(260000f);
-        //SetCompletedStages(3);
-        //ActivateScreen();
-        
-    }
 
+        SetRemainingTime(0.0f);
+        SetCompletedStages(0);
+        ActivateScreen();
+    }
     private void Update()
     {
         if (animator && (Input.GetKeyDown("joystick button 0") || Input.GetKeyDown("joystick button 1") || Input.GetKeyDown("joystick button 2") || Input.GetKeyDown("joystick button 3")))
         {
             animator.SetTrigger("AutoCloseTrigger");
+            LoadNextScreen();
         }
 
         if (_currentScoreNumber != _desiredScoreNumber)

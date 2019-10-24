@@ -150,7 +150,7 @@ public class HighscoreTable : MonoBehaviour
 
         
 
-        if (highscores.highscoreEntryList.Count > 8)
+        if (highscores.highscoreEntryList.Count > 7)
         {
             SortList(highscores);
             return highscores.highscoreEntryList[highscores.highscoreEntryList.Count - 1].score;            
