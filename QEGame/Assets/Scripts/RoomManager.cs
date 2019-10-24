@@ -35,9 +35,12 @@ public class RoomManager : MonoBehaviour
     private void Awake()
     {
         EnableBasedOnClientID enableBasedOnClientID = GetComponent<EnableBasedOnClientID>();
-        if (enableBasedOnClientID && enableBasedOnClientID.Check())
+        if (enableBasedOnClientID)
         {
-            Refresh();
+            if (enableBasedOnClientID.Check())
+            {
+                Refresh();
+            }
         }
         else
         {
