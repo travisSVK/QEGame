@@ -26,6 +26,8 @@ public class CameraController : MonoBehaviour
 
     public UnityEvent onArrival = new UnityEvent();
 
+    public bool firstUpdate = true;
+
     [SerializeField]
     private float _speed = 5.0f;
 
@@ -35,6 +37,7 @@ public class CameraController : MonoBehaviour
     private bool _isMovingForward = true;
     private int _currentControlPoint = 0;
     private float _movementProgress = 0.0f;
+
 
     public float speed
     {
@@ -254,8 +257,22 @@ public class CameraController : MonoBehaviour
             transform.rotation = _controlPoints[0].rotation;
         }
 
-        RestartLevel();
-
         enabled = false;
+
+        foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(_controlPoints[_currentControlPoint].spawnerObjectName))
+        {
+            if (spawnerObject)
+            {
+                Spawner spawner = spawnerObject.GetComponent<Spawner>();
+                if (spawner)
+                {
+                    spawner.Spawn();
+                }
+                else
+                {
+                    Debug.LogError("No spawner found at control point " + _currentControlPoint);
+                }
+            }
+        }
     }
 }

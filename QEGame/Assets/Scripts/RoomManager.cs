@@ -32,7 +32,7 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         Refresh();
     }
