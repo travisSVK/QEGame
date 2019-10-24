@@ -31,7 +31,6 @@ public class Server : MonoBehaviour
     private string _playerNames = "";
     private int _score = 0;
     private long _milisElapsedPrevious = 0;
-    private long _timeRestartDifference = 0;
     private long _lastLevelElapsed = 0;
 
     private bool _messageSent = false;
@@ -65,11 +64,6 @@ public class Server : MonoBehaviour
             {
                 Screen.SetResolution(1920, 1080, true);
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            //RestartLevel(true);
         }
 
         // TODO update both players values depending on values in dictionary (in a
@@ -119,22 +113,13 @@ public class Server : MonoBehaviour
             if (_stopwatch.IsRunning)
             {
                 _stopwatch.Stop();
-                long elapsedTime = _stopwatch.ElapsedMilliseconds - _timeRestartDifference;
+                long elapsedTime = _stopwatch.ElapsedMilliseconds + _lastLevelElapsed;
+                Debug.Log(_stopwatch.ElapsedMilliseconds + " " + _lastLevelElapsed);
                 _stopwatch.Start();
                 if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                 {
                     _milisElapsedPrevious = elapsedTime;
                     _text.text = (elapsedTime / 1000).ToString();
-                    //foreach (KeyValuePair<int, StateObject> entry in _states)
-                    //{
-                    //    TimeElapsed msg = new TimeElapsed();
-                    //    msg.messageType = MessageType.TimeElapsed;
-                    //    msg.miliseconds = elapsedTime;
-                    //    StateObject state = new StateObject();
-                    //    state.workSocket = entry.Value.workSocket;
-                    //    SendTimer(state, msg);
-                    //}
-                    //_messageSent = true;
                 }
             }
             else
@@ -150,6 +135,11 @@ public class Server : MonoBehaviour
             }
         }
         ProcessMessage();
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartLevel(true);
+        }
     }
 
     public void LevelFinishedRetracted()
@@ -162,10 +152,12 @@ public class Server : MonoBehaviour
         if (++_numberOfFinishedPlayers == _currentNumOfClients)
         {
             _lastLevelElapsed = _stopwatch.ElapsedMilliseconds;
+            _stopwatch.Reset();
             foreach (KeyValuePair<int, StateObject> entry in _states)
             {
-                Message msg = new Message();
+                NextLevel msg = new NextLevel();
                 msg.messageType = MessageType.NextLevel;
+                msg.lastLevelElapsed = _lastLevelElapsed;
                 StateObject state = new StateObject();
                 state.workSocket = entry.Value.workSocket;
                 Send(state, msg, false);
@@ -204,13 +196,15 @@ public class Server : MonoBehaviour
     {
         if (forced)
         {
-            _stopwatch.Stop();
-            _timeRestartDifference = _stopwatch.ElapsedMilliseconds - _lastLevelElapsed;
+            _milisElapsedPrevious = _lastLevelElapsed;
+            _stopwatch.Reset();
         }
         foreach (KeyValuePair<int, StateObject> entry in _states)
         {
-            Message msg = new Message();
+            RestartLevel msg = new RestartLevel();
             msg.messageType = MessageType.RestartLevel;
+            msg.lastLevelElapsed = _lastLevelElapsed;
+            msg.forced = forced;
             StateObject state = new StateObject();
             state.workSocket = entry.Value.workSocket;
             Send(state, msg, false);
@@ -244,7 +238,7 @@ public class Server : MonoBehaviour
     {
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
-        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::c54f:82ca:29de:3963"), 11111);
+        IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("fe80::d408:1ce1:45a1:8991"), 11111);
         //IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
         _listener = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -304,9 +298,6 @@ public class Server : MonoBehaviour
                             newMove.x = move.x;
                             newMove.y = move.y;
                             newMove.z = move.z;
-                            newMove.bx = move.bx;
-                            newMove.by = move.by;
-                            newMove.bz = move.bz;
                             newMove.messageType = MessageType.Move;
                             newMove.clientId = move.clientId;
                             StateObject state = new StateObject();

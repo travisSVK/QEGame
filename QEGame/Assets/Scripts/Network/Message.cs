@@ -21,6 +21,19 @@ public class Message
 }
 
 [Serializable]
+public class NextLevel : Message
+{
+    public long lastLevelElapsed;
+}
+
+[Serializable]
+public class RestartLevel : Message
+{
+    public bool forced;
+    public long lastLevelElapsed;
+}
+
+[Serializable]
 public class MessageConnected : Message
 {
     public bool connected;
@@ -34,9 +47,6 @@ public class Move : Message
     public float x;
     public float y;
     public float z;
-    public float bx;
-    public float by;
-    public float bz;
 }
 
 [Serializable]

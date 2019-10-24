@@ -15,46 +15,44 @@ public class BlackHoleBehaviour : MonoBehaviour
     {
         if (_playerRigidBody)
         {
-            //Server server = FindObjectOfType<Server>();
-            //if (!server)
-            //{
-                float distance = Vector3.Distance(transform.position, _playerRigidBody.transform.position);
-            
-                PlayerControllerBase _playerController = _playerRigidBody.GetComponent<PlayerControllerBase>();
-                if (distance <= 0.2f)
-                {
-                    Debug.Log("Dead");
-                    _playerRigidBody = null;
-                    _playerController.OnPlayerDeath();
-                    return;
-                }
-                Vector3 direction = transform.position - _playerRigidBody.transform.position;
-                float gravitationalPull = Mathf.Clamp(_pullFactor - distance, 0.0f, _pullFactor);
+            float distance = Vector3.Distance(transform.position, _playerRigidBody.transform.position);
 
-                _playerController.blackholeIncrement += direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant;
+            PlayerControllerBase _playerController = _playerRigidBody.GetComponent<PlayerControllerBase>();
+            if (distance <= 0.2f)
+            {
+                Debug.Log("Dead");
+                _playerRigidBody = null;
+                _playerController.OnPlayerDeath();
+                return;
+            }
+            Vector3 direction = transform.position - _playerRigidBody.transform.position;
+            float gravitationalPull = Mathf.Clamp(_pullFactor - distance, 0.0f, _pullFactor);
+
+            _playerController.movementIncrement += direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant;
+            Server server = FindObjectOfType<Server>();
+            if (!server)
+            {
                 _playerRigidBody.MovePosition(_playerRigidBody.position + direction * gravitationalPull * Time.fixedDeltaTime * _gravitationalPullConstant);
-            //}
+            }
         }
     }
 
     private void Update()
     {
-        //Server server = FindObjectOfType<Server>();
-        //if (_playerRigidBody && server)
-        //{
-        //    float distance = Vector3.Distance(transform.position, _playerRigidBody.transform.position);
-
-        //    PlayerControllerBase _playerController = _playerRigidBody.GetComponent<PlayerControllerBase>();
-        //    if (distance <= 0.08f)
-        //    {
-        //        Debug.Log("Dead");
-        //        _playerRigidBody = null;
-        //        _playerController.OnPlayerDeath();
-        //        return;
-        //    }
-        //    Vector3 direction = transform.position - _playerRigidBody.transform.position;
-        //    float gravitationalPull = Mathf.Clamp(_pullFactor - distance, 0.0f, _pullFactor);
-        //}
+        Server server = FindObjectOfType<Server>();
+        if (server)
+        {
+            PlayerControllerBase[] playerControllers = FindObjectsOfType<PlayerControllerBase>();
+            foreach (PlayerControllerBase playerControllerBase in playerControllers)
+            {
+                float distance = Vector3.Distance(transform.position, playerControllerBase.transform.position);
+                if (distance <= 0.2f)
+                {
+                    Debug.Log("Dead");
+                    playerControllerBase.OnPlayerDeath();
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider collider)

@@ -34,7 +34,7 @@ public class Client : MonoBehaviour
 
     [SerializeField]
     private int _deadlineInSec = 100;
-
+    private long _lastLevelElapsed = 0;
     private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
     private long _milisElapsedPrevious = 0;
     private int _completedStages = 0;
@@ -68,30 +68,37 @@ public class Client : MonoBehaviour
         ProcessMessage();
         if (!_text)
         {
-            GameObject timerObj = GameObject.FindGameObjectWithTag("Timer");
-            if (timerObj)
+            GameObject[] timerObj = GameObject.FindGameObjectsWithTag("Timer");
+            if (timerObj.Length > 0)
             {
-                _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
+                _text = timerObj[0].GetComponent<Text>();
             }
         }
-        if (_stopwatch.IsRunning && _text)
+        if (_text)
         {
-            _stopwatch.Stop();
-            long elapsedTime = _stopwatch.ElapsedMilliseconds;
-            if (!_gameFinished && ((int)(elapsedTime / 1000) >= _deadlineInSec))
+            if (_stopwatch.IsRunning)
             {
-                _playerBase.InstantiateDeath();
-                _otherPlayerInput = Vector3.zero;
-                Destroy(_rigidbody.gameObject);
-                _rigidbody = null;
-                _gameFinished = true;
-                ShowHighScore();
+                _stopwatch.Stop();
+                long elapsedTime = _stopwatch.ElapsedMilliseconds + _lastLevelElapsed;
+                if (!_gameFinished && ((int)(elapsedTime / 1000) >= _deadlineInSec))
+                {
+                    _playerBase.InstantiateDeath();
+                    _otherPlayerInput = Vector3.zero;
+                    Destroy(_rigidbody.gameObject);
+                    _rigidbody = null;
+                    _gameFinished = true;
+                    ShowHighScore();
+                }
+                _stopwatch.Start();
+                if ((elapsedTime - _milisElapsedPrevious) >= 1000)
+                {
+                    _milisElapsedPrevious = elapsedTime;
+                    _text.text = (elapsedTime / 1000).ToString();
+                }
             }
-            _stopwatch.Start();
-            if ((elapsedTime - _milisElapsedPrevious) >= 1000)
+            else
             {
-                _milisElapsedPrevious = elapsedTime;
-                _text.text = (elapsedTime / 1000).ToString();
+                _stopwatch.Start();
             }
         }
         if (_inputSent)
@@ -103,7 +110,7 @@ public class Client : MonoBehaviour
             _inputSent = true;
         }
 
-        if (!_inputSent && !_gameFinished && _rigidbody && ((_playerBase.movementIncrement != Vector3.zero) || (_playerBase.blackholeIncrement != Vector3.zero))/*(_lastPosition != _rigidbody.transform.position)*/)
+        if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
         {
             Move msg = new Move();
             msg.messageType = MessageType.Move;
@@ -112,11 +119,7 @@ public class Client : MonoBehaviour
             msg.x = _playerBase.movementIncrement.x;
             msg.y = _playerBase.movementIncrement.y;
             msg.z = _playerBase.movementIncrement.z;
-            msg.bx = _playerBase.blackholeIncrement.x;
-            msg.by = _playerBase.blackholeIncrement.y;
-            msg.bz = _playerBase.blackholeIncrement.z;
             _playerBase.movementIncrement = Vector3.zero;
-            _playerBase.blackholeIncrement = Vector3.zero;
             StateObject state = new StateObject();
             state.workSocket = _sender;
             Send(state, msg, false);
@@ -209,7 +212,7 @@ public class Client : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         Debug.Log(ipAddr.ToString());
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::c54f:82ca:29de:3963"), 11111);
+        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::d408:1ce1:45a1:8991"), 11111);
         //IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
         _sender = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -251,7 +254,7 @@ public class Client : MonoBehaviour
         {
             case MessageType.Move:
                 Move move = (Move)msg;
-                _otherPlayerInput = new Vector3(move.x + move.bx, move.y + move.by, move.z + move.bz);
+                _otherPlayerInput = new Vector3(move.x, move.y, move.z);
                 break;
             case MessageType.OtherPlayerConnected:
                 Debug.Log("Other player connected received.");
@@ -274,6 +277,9 @@ public class Client : MonoBehaviour
                     if (cameraControlller.canMoveForward)
                     {
                         ++_completedStages;
+                        _stopwatch.Reset();
+                        NextLevel nl = (NextLevel)msg;
+                        _lastLevelElapsed = nl.lastLevelElapsed;
                         cameraControlller.MoveForward();
                     }
                     else
@@ -287,6 +293,13 @@ public class Client : MonoBehaviour
                 CameraController cc = FindObjectOfType<CameraController>();
                 if (cc)
                 {
+                    RestartLevel resLevel = (RestartLevel)msg;
+                    if (resLevel.forced)
+                    {
+                        _lastLevelElapsed = resLevel.lastLevelElapsed;
+                        _milisElapsedPrevious = _lastLevelElapsed;
+                        _stopwatch.Reset();
+                    }
                     _playerBase.InstantiateDeath();
                     _otherPlayerInput = Vector3.zero;
                     Destroy(_rigidbody.gameObject);
