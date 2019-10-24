@@ -921,6 +921,7 @@ MonoBehaviour:
   onArrival:
     m_PersistentCalls:
       m_Calls: []
+  firstUpdate: 1
   _speed: 5
   _controlPoints:
   - name: Room01
@@ -939,7 +940,7 @@ MonoBehaviour:
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner03
   - name: Room04
-    position: {x: 20, y: 12.5, z: 34}
+    position: {x: 40, y: 12.5, z: 34}
     rotation: {x: 0.5735765, y: 0, z: 0, w: 0.819152}
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner04
