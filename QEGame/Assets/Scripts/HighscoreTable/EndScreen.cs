@@ -188,9 +188,9 @@ public class EndScreen : MonoBehaviour
         //FOR TESTING
         //===========
 
-        SetRemainingTime(0.0f);
-        SetCompletedStages(0);
-        ActivateScreen();
+        //SetRemainingTime(0.0f);
+        //SetCompletedStages(0);
+        //ActivateScreen();
     }
     private void Update()
     {

@@ -1372,10 +1372,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 167192892}
     m_Modifications:
-    - target: {fileID: 1023997329816958, guid: 8b5e499f6f9530e4494faf83b28e4c1e, type: 3}
-      propertyPath: m_Name
-      value: Style 1
-      objectReference: {fileID: 0}
     - target: {fileID: 224959977710168114, guid: 8b5e499f6f9530e4494faf83b28e4c1e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1480,6 +1476,10 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1023997329816958, guid: 8b5e499f6f9530e4494faf83b28e4c1e, type: 3}
+      propertyPath: m_Name
+      value: Style 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b5e499f6f9530e4494faf83b28e4c1e, type: 3}
@@ -1881,7 +1881,7 @@ PrefabInstance:
     - target: {fileID: 1520018675056648073, guid: e1ca169d4c2ee634ca3d9b42cd7a07b9,
         type: 3}
       propertyPath: _deadlineInSec
-      value: 500
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1ca169d4c2ee634ca3d9b42cd7a07b9, type: 3}
