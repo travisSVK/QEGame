@@ -6,14 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/GameScene.unity
+    guid: 8ef05445f2f99e64cb6070e120796704
+  - enabled: 0
     path: Assets/Scenes/Spectator.unity
     guid: d6c9d419653977841ab4456cf2d3ad92
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: 1801db046b9769f46a211f1e0274e0ef
-  - enabled: 0
-    path: Assets/Scenes/GameScene.unity
-    guid: 8ef05445f2f99e64cb6070e120796704
   - enabled: 0
     path: Assets/Scenes/GraphicsScene.unity
     guid: 92b0708d18f94e64f9a1cb1840b8f785
@@ -77,7 +77,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Scoreboard.unity
     guid: c21b878a96ae8d741a4e1bfb73b917c0
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/FirstScene.unity
     guid: 770627f15dda1b949b6ae1f3c1077667
   m_configObjects: {}
