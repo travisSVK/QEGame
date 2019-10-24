@@ -39,5 +39,9 @@ public class RoomManager : MonoBehaviour
         {
             Refresh();
         }
+        else
+        {
+            Refresh();
+        }
     }
 }

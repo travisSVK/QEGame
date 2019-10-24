@@ -259,18 +259,21 @@ public class CameraController : MonoBehaviour
 
         enabled = false;
 
-        foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(_controlPoints[_currentControlPoint].spawnerObjectName))
+        if (_controlPoints[_currentControlPoint].callSpawnerOnArrival)
         {
-            if (spawnerObject)
+            foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(_controlPoints[_currentControlPoint].spawnerObjectName))
             {
-                Spawner spawner = spawnerObject.GetComponent<Spawner>();
-                if (spawner)
+                if (spawnerObject)
                 {
-                    spawner.Spawn();
-                }
-                else
-                {
-                    Debug.LogError("No spawner found at control point " + _currentControlPoint);
+                    Spawner spawner = spawnerObject.GetComponent<Spawner>();
+                    if (spawner)
+                    {
+                        spawner.Spawn();
+                    }
+                    else
+                    {
+                        Debug.LogError("No spawner found at control point " + _currentControlPoint);
+                    }
                 }
             }
         }

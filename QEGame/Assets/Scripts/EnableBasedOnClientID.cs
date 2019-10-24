@@ -16,9 +16,7 @@ public class EnableBasedOnClientID : MonoBehaviour
 
             return id == activeId;
         }
-
-        Debug.Log("No client in this scene.");
-
+        
         return false;
     }
 
