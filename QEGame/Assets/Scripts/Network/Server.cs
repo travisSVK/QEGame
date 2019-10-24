@@ -57,10 +57,13 @@ public class Server : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.F))
         {
-            Screen.fullScreen = !Screen.fullScreen;
-            if (!Screen.fullScreen)
+            if (Screen.fullScreen)
             {
                 Screen.SetResolution(1280, 720, false);
+            }
+            else
+            {
+                Screen.SetResolution(1920, 1080, false);
             }
         }
 
