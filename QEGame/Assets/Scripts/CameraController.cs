@@ -254,6 +254,8 @@ public class CameraController : MonoBehaviour
             transform.rotation = _controlPoints[0].rotation;
         }
 
+        RestartLevel();
+
         enabled = false;
     }
 }

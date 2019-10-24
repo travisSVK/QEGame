@@ -666,18 +666,18 @@ MonoBehaviour:
   - name: Room02b
     position: {x: 0, y: 9, z: 20}
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
-    callSpawnerOnArrival: 1
-    spawnerObjectName: Spawner02
+    callSpawnerOnArrival: 0
+    spawnerObjectName: 
   - name: Room03b
     position: {x: 0, y: 16, z: 40}
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
-    callSpawnerOnArrival: 1
-    spawnerObjectName: Spawner03
+    callSpawnerOnArrival: 0
+    spawnerObjectName: 
   - name: Room04b
     position: {x: 40, y: 12.5, z: 37}
     rotation: {x: 0, y: 0, z: 0, w: 1}
-    callSpawnerOnArrival: 1
-    spawnerObjectName: Spawner04
+    callSpawnerOnArrival: 0
+    spawnerObjectName: 
 --- !u!20 &952063257
 Camera:
   m_ObjectHideFlags: 0
@@ -856,6 +856,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1230245647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1230245648}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1230245648
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230245647}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.932837, y: -2.7013154, z: 26.507523}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1382683012
 GameObject:
   m_ObjectHideFlags: 0
@@ -1526,8 +1556,8 @@ MonoBehaviour:
   - name: Room01a
     position: {x: 0, y: 9, z: 0}
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
-    callSpawnerOnArrival: 0
-    spawnerObjectName: 
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner01
   - name: Room02a
     position: {x: 0, y: 9, z: 20}
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
@@ -1541,8 +1571,8 @@ MonoBehaviour:
   - name: Room04a
     position: {x: 40, y: 12.5, z: 37}
     rotation: {x: 0.5948229, y: 0, z: 0, w: 0.8038568}
-    callSpawnerOnArrival: 0
-    spawnerObjectName: 
+    callSpawnerOnArrival: 1
+    spawnerObjectName: Spawner04
 --- !u!20 &1818868013
 Camera:
   m_ObjectHideFlags: 0
