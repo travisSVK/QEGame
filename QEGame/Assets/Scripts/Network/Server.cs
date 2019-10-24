@@ -31,6 +31,8 @@ public class Server : MonoBehaviour
     private string _playerNames = "";
     private int _score = 0;
     private long _milisElapsedPrevious = 0;
+    private long _timeRestartDifference = 0;
+    private long _lastLevelElapsed = 0;
 
     private bool _messageSent = false;
 
@@ -62,6 +64,11 @@ public class Server : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartLevel(true);
+        }
+
         // TODO update both players values depending on values in dictionary (in a
         // way which keeps Unity-specific values detached from our custom threads)
         if (!_clientsConnected)
@@ -86,7 +93,7 @@ public class Server : MonoBehaviour
                     PlayerControllerBase playerBase = r.GetComponent<PlayerControllerBase>();
                     if (playerBase && !_rigidBodies.ContainsKey(playerBase.ClientId))
                     {
-                        r.useGravity = false;
+                        //r.useGravity = false;
                         _rigidBodies.Add(playerBase.ClientId, r);
                     }
                 }
@@ -109,7 +116,7 @@ public class Server : MonoBehaviour
             if (_stopwatch.IsRunning)
             {
                 _stopwatch.Stop();
-                long elapsedTime = _stopwatch.ElapsedMilliseconds;
+                long elapsedTime = _stopwatch.ElapsedMilliseconds - _timeRestartDifference;
                 _stopwatch.Start();
                 if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                 {
@@ -151,6 +158,7 @@ public class Server : MonoBehaviour
     {
         if (++_numberOfFinishedPlayers == _currentNumOfClients)
         {
+            _lastLevelElapsed = _stopwatch.ElapsedMilliseconds;
             foreach (KeyValuePair<int, StateObject> entry in _states)
             {
                 Message msg = new Message();
@@ -191,6 +199,11 @@ public class Server : MonoBehaviour
     
     public void RestartLevel(bool forced)
     {
+        if (forced)
+        {
+            _stopwatch.Stop();
+            _timeRestartDifference = _stopwatch.ElapsedMilliseconds - _lastLevelElapsed;
+        }
         foreach (KeyValuePair<int, StateObject> entry in _states)
         {
             Message msg = new Message();
