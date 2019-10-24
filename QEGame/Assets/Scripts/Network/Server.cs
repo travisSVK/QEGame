@@ -304,9 +304,7 @@ public class Server : MonoBehaviour
                             newMove.z = move.z;
                             newMove.messageType = MessageType.Move;
                             newMove.clientId = move.clientId;
-                            StateObject state = new StateObject();
-                            state.workSocket = entry.Value.workSocket;
-                            Send(state, newMove, false);
+                            Send(entry.Value, newMove, false);
                             _positions[entry.Key] = new Vector3(move.x, move.y, move.z);
                         }
                     }
