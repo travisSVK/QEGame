@@ -594,7 +594,7 @@ public class Server : MonoBehaviour
     private void SendDisconnect(StateObject state, Message message)
     {
         byte[] byteData = MessageUtils.Serialize(message);
-
+        byteData = BitConverter.GetBytes(byteData.Length).Concat(byteData).ToArray();
         if (state.workSocket.Connected)
         {
             state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,

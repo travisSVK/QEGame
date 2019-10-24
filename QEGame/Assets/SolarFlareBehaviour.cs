@@ -19,7 +19,8 @@ public class SolarFlareBehaviour : MonoBehaviour
             PlayerControllerBase[] playerControllers = FindObjectsOfType<PlayerControllerBase>();
             foreach (PlayerControllerBase playerControllerBase in playerControllers)
             {
-                float distance = Vector3.Distance(transform.position, playerControllerBase.transform.position);
+                float distance = Vector3.Distance(new Vector3(transform.position.x, 0.0f, transform.position.z), 
+                    new Vector3(playerControllerBase.transform.position.x, 0.0f, playerControllerBase.transform.position.z));
                 if (distance <= 0.2f)
                 {
                     Debug.Log("Dead");
