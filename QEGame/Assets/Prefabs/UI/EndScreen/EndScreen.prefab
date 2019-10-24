@@ -908,14 +908,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810642589429702}
     m_Modifications:
-    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
-      propertyPath: m_Name
-      value: pointsText
-      objectReference: {fileID: 0}
-    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 224534580805094364, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1036,6 +1028,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.42456445
       objectReference: {fileID: 0}
+    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
+      propertyPath: m_Name
+      value: pointsText
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114897716830227066, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
       propertyPath: m_FontData.m_FontStyle
@@ -1061,10 +1061,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810643445171817}
     m_Modifications:
-    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
-      propertyPath: m_Name
-      value: ContainerAnimation
-      objectReference: {fileID: 0}
     - target: {fileID: 224626237504306436, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1169,6 +1165,10 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
+      propertyPath: m_Name
+      value: ContainerAnimation
       objectReference: {fileID: 0}
     - target: {fileID: 114797492431922182, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
@@ -1198,7 +1198,7 @@ PrefabInstance:
     - target: {fileID: 114171041739272598, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_Text
-      value: 1000
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
@@ -1215,10 +1215,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810643441527347}
     m_Modifications:
-    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
-      propertyPath: m_Name
-      value: ContainerAnimation
-      objectReference: {fileID: 0}
     - target: {fileID: 224626237504306436, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1323,6 +1319,10 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
+      propertyPath: m_Name
+      value: ContainerAnimation
       objectReference: {fileID: 0}
     - target: {fileID: 114797492431922182, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
@@ -1369,10 +1369,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810642589429702}
     m_Modifications:
-    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
-      propertyPath: m_Name
-      value: titleText
-      objectReference: {fileID: 0}
     - target: {fileID: 224534580805094364, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1493,6 +1489,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.42456445
       objectReference: {fileID: 0}
+    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
+      propertyPath: m_Name
+      value: titleText
+      objectReference: {fileID: 0}
     - target: {fileID: 114897716830227066, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
       propertyPath: m_FontData.m_FontStyle
@@ -1518,10 +1518,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810642115546888}
     m_Modifications:
-    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
-      propertyPath: m_Name
-      value: ContainerAnimation
-      objectReference: {fileID: 0}
     - target: {fileID: 224626237504306436, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1627,6 +1623,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
+      propertyPath: m_Name
+      value: ContainerAnimation
+      objectReference: {fileID: 0}
     - target: {fileID: 114797492431922182, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_Enabled
@@ -1655,7 +1655,7 @@ PrefabInstance:
     - target: {fileID: 114171041739272598, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_Text
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
@@ -1672,14 +1672,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810642589429702}
     m_Modifications:
-    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
-      propertyPath: m_Name
-      value: stagesClearedText
-      objectReference: {fileID: 0}
-    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 224534580805094364, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1800,6 +1792,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.42456445
       objectReference: {fileID: 0}
+    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
+      propertyPath: m_Name
+      value: stagesClearedText
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114897716830227066, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
       propertyPath: m_FontData.m_FontStyle
@@ -1825,10 +1825,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810642501668404}
     m_Modifications:
-    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
-      propertyPath: m_Name
-      value: ContainerAnimation
-      objectReference: {fileID: 0}
     - target: {fileID: 224626237504306436, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1934,6 +1930,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
+      propertyPath: m_Name
+      value: ContainerAnimation
+      objectReference: {fileID: 0}
     - target: {fileID: 224095964125092152, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2009,10 +2009,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810643701169927}
     m_Modifications:
-    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
-      propertyPath: m_Name
-      value: ContainerAnimation
-      objectReference: {fileID: 0}
     - target: {fileID: 224626237504306436, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2118,6 +2114,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1931494220070850, guid: fc2ad0cd842d6ac48b545a1bf04b2e07, type: 3}
+      propertyPath: m_Name
+      value: ContainerAnimation
+      objectReference: {fileID: 0}
     - target: {fileID: 224095964125092152, guid: fc2ad0cd842d6ac48b545a1bf04b2e07,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2193,14 +2193,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 604810642589429702}
     m_Modifications:
-    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
-      propertyPath: m_Name
-      value: timeText
-      objectReference: {fileID: 0}
-    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 224534580805094364, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2320,6 +2312,14 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.42456445
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
+      propertyPath: m_Name
+      value: timeText
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177236126222066, guid: 79248b353c684764ba7f502a12d2e2c8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114897716830227066, guid: 79248b353c684764ba7f502a12d2e2c8,
         type: 3}
