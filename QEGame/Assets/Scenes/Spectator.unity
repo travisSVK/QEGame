@@ -1881,7 +1881,7 @@ PrefabInstance:
     - target: {fileID: 1520018675056648073, guid: e1ca169d4c2ee634ca3d9b42cd7a07b9,
         type: 3}
       propertyPath: _deadlineInSec
-      value: 20
+      value: 500
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1ca169d4c2ee634ca3d9b42cd7a07b9, type: 3}

@@ -115,7 +115,7 @@ public class Server : MonoBehaviour
             {
                 _stopwatch.Stop();
                 long elapsedTime = _stopwatch.ElapsedMilliseconds + _lastLevelElapsed;
-                Debug.Log(_stopwatch.ElapsedMilliseconds + " " + _lastLevelElapsed);
+                //Debug.Log(_stopwatch.ElapsedMilliseconds + " " + _lastLevelElapsed);
                 _stopwatch.Start();
                 if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                 {
