@@ -128,7 +128,7 @@ public class Client : MonoBehaviour
             ++_inputSent;
         }
 
-        if (/*(_inputSent == 1) &&*/ !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
+        if ((_inputSent == 1) && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
         {
             Move msg = new Move();
             msg.messageType = MessageType.Move;
