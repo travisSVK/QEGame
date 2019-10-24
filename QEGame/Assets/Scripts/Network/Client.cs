@@ -28,7 +28,7 @@ public class Client : MonoBehaviour
     private Rigidbody _rigidbody;
     private Vector3 _otherPlayerInput = Vector3.zero;
     private PlayerControllerBase _playerBase;
-    private bool _inputSent = false;
+    private int _inputSent = 0;
     private long _timeElapsedSec = 0;
     private Text _text = null;
 
@@ -104,16 +104,16 @@ public class Client : MonoBehaviour
                 _stopwatch.Start();
             }
         }
-        if (_inputSent)
+        if (_inputSent == 2)
         {
-            _inputSent = false;
+            _inputSent = 0;
         }
         else
         {
-            _inputSent = true;
+            ++_inputSent;
         }
 
-        if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
+        if ((_inputSent == 2) && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
         {
             Move msg = new Move();
             msg.messageType = MessageType.Move;
@@ -479,14 +479,15 @@ public class Client : MonoBehaviour
             if (sender.Connected)
             {
                 int bytesRead = sender.EndReceive(ar);
-
                 if (bytesRead > 0)
                 {
-                    Message msg = MessageUtils.Deserialize(state.buffer);
-                    _messageQueueMutex.WaitOne();
-                    _messageQueue.Enqueue(msg);
-                    _messageQueueMutex.ReleaseMutex();
-
+                    if (bytesRead < StateObject.BufferSize)
+                    {
+                        Message msg = MessageUtils.Deserialize(state.buffer);
+                        _messageQueueMutex.WaitOne();
+                        _messageQueue.Enqueue(msg);
+                        _messageQueueMutex.ReleaseMutex();
+                    }
                     // Begin receiving the data from the remote device.
                     StateObject newState = new StateObject();
                     newState.workSocket = state.workSocket;
@@ -497,6 +498,10 @@ public class Client : MonoBehaviour
         }
         catch (Exception e)
         {
+            StateObject newState = new StateObject();
+            newState.workSocket = state.workSocket;
+            sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
+            new AsyncCallback(ReceiveCallback), newState);
             Debug.Log(e.ToString());
         }
     }
