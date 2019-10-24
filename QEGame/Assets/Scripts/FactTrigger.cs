@@ -41,7 +41,7 @@ public class FactTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         Debug.Log("FUck you UYNITY");
 
