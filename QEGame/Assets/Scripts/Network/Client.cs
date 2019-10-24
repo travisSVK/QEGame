@@ -39,6 +39,13 @@ public class Client : MonoBehaviour
     private long _milisElapsedPrevious = 0;
     private int _completedStages = 0;
 
+    private void Awake()
+    {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
+        Screen.fullScreen = false;
+    }
+
     private void Start()
     {
         _lastPosition = transform.position;
@@ -46,6 +53,11 @@ public class Client : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.F))
+        {
+            Screen.fullScreen = !Screen.fullScreen;
+        }
+
         ProcessMessage();
         if (!_text)
         {

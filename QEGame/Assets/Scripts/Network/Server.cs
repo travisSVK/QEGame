@@ -36,6 +36,13 @@ public class Server : MonoBehaviour
 
     private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
 
+    private void Awake()
+    {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
+        Screen.fullScreen = false;
+    }
+
     private void Start()
     {
         _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
@@ -46,6 +53,13 @@ public class Server : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(Time.deltaTime);
+
+        if (Input.GetKey(KeyCode.F))
+        {
+            Screen.fullScreen = !Screen.fullScreen;
+        }
+
         // TODO update both players values depending on values in dictionary (in a
         // way which keeps Unity-specific values detached from our custom threads)
         if (!_clientsConnected)
