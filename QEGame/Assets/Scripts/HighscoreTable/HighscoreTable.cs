@@ -24,7 +24,9 @@ public class HighscoreTable : MonoBehaviour
         Highscores highscores = JsonUtility.FromJson<Highscores>(jsonString);
 
         if (highscores.highscoreEntryList.Count > 0)
+        {
             SortList(highscores);
+        }
 
         // Keep only top 8
         if (highscores.highscoreEntryList.Count > 8)

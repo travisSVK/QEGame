@@ -53,8 +53,6 @@ public class Server : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(Time.deltaTime);
-
         if (Input.GetKeyUp(KeyCode.F))
         {
             Screen.fullScreen = !Screen.fullScreen;

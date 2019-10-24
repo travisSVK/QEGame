@@ -577,24 +577,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 713050411}
   m_CullTransparentMesh: 0
---- !u!1 &800951892 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1023997329816958, guid: 8b5e499f6f9530e4494faf83b28e4c1e,
-    type: 3}
-  m_PrefabInstance: {fileID: 1799200786}
-  m_PrefabAsset: {fileID: 0}
---- !u!225 &800951893
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 800951892}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &914767199
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,6 +868,7 @@ GameObject:
   - component: {fileID: 1382683015}
   - component: {fileID: 1382683014}
   - component: {fileID: 1382683016}
+  - component: {fileID: 1382683017}
   m_Layer: 5
   m_Name: FactText
   m_TagString: Untagged
@@ -943,9 +926,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "A black hole is a region of spacetime exhibiting gravitational acceleration
-    so strong that nothing\u2014no particles or even electromagnetic radiation such
-    as light\u2014can escape from it."
+  m_Text: This game is about quantum entanglement. This is a phenomenon where two
+    or more particles share properties.
 --- !u!222 &1382683015
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -966,6 +948,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a1f631a63205ec4bb482c1ed5c29289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1382683017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382683012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c0802bf90f6b94c8305adaca145001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimumTimeForTextDisplay: 10
+  transitionTime: 2
+  _textDisplayProgress: 0
 --- !u!1 &1487184908
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,10 +1375,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Style 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1023997329816958, guid: 8b5e499f6f9530e4494faf83b28e4c1e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 224959977710168114, guid: 8b5e499f6f9530e4494faf83b28e4c1e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1618,6 +1611,8 @@ GameObject:
   - component: {fileID: 1854468588}
   - component: {fileID: 1854468590}
   - component: {fileID: 1854468589}
+  - component: {fileID: 1854468592}
+  - component: {fileID: 1854468591}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1662,9 +1657,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 519411d3611769d439cfc7574ac3fe52, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2c8d622f3819afb4eb680b3c62dd0631, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1680,6 +1675,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1854468587}
   m_CullTransparentMesh: 0
+--- !u!114 &1854468591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854468587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33a22da4713bd7540a84d951127d9c72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1854468592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854468587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9322b3817a8250d428922836179111d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimumTimeForTextDisplay: 10
+  transitionTime: 2
+  _textDisplayProgress: 0
 --- !u!1 &2062725797
 GameObject:
   m_ObjectHideFlags: 0
@@ -1692,6 +1714,7 @@ GameObject:
   - component: {fileID: 2062725800}
   - component: {fileID: 2062725799}
   - component: {fileID: 2062725801}
+  - component: {fileID: 2062725802}
   m_Layer: 5
   m_Name: FactText
   m_TagString: Untagged
@@ -1749,9 +1772,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Ett svart h\xE5l \xE4r, enligt den allm\xE4nna relativitetsteorin, en koncentration
-    av massa med ett s\xE5 starkt gravitationsf\xE4lt att ingenting, inte ens ljus,
-    kan \xF6vervinna kroppens gravitation."
+  m_Text: "Detta spelet handlar om kvantsammanfl\xE4tning. Detta \xE4r ett fenomen
+    n\xE4r tv\xE5 eller mer particlar delar egenskaper."
 --- !u!222 &2062725800
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1772,6 +1794,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76cca009546d3f7418c3cdb71fd17c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2062725802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062725797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32c0802bf90f6b94c8305adaca145001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimumTimeForTextDisplay: 10
+  transitionTime: 2
+  _textDisplayProgress: 0
 --- !u!1001 &1520018673769662036
 PrefabInstance:
   m_ObjectHideFlags: 0

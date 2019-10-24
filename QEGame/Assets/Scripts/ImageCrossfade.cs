@@ -13,7 +13,7 @@ public class ImageCrossfade : MonoBehaviour
 
     private bool _isTransitioning = false;
 
-    private Sprite _currentText = null;
+    private Sprite _currentSprite = null;
 
     private Sprite _nextSprite = null;
 
@@ -36,7 +36,10 @@ public class ImageCrossfade : MonoBehaviour
         if (!_image)
         {
             Debug.LogError("Missing Text Component.");
+            return;
         }
+
+        _currentSprite = _image.sprite;
     }
 
     private void Update()
@@ -52,7 +55,7 @@ public class ImageCrossfade : MonoBehaviour
         float progress = (_transitionProgress / transitionTime) * 2.0f;
         if (progress >= 2.0f)
         {
-            _currentText = _nextSprite;
+            _currentSprite = _nextSprite;
             _nextSprite = null;
             _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 1.0f);
             _isTransitioning = false;
@@ -65,7 +68,7 @@ public class ImageCrossfade : MonoBehaviour
         }
         else
         {
-            _image.sprite = _currentText;
+            _image.sprite = _currentSprite;
             _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, Mathf.SmoothStep(1.0f, 0.0f, progress));
         }
     }

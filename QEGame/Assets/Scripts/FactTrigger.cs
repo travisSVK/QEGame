@@ -20,7 +20,7 @@ public class FactTrigger : MonoBehaviour
     [HideInInspector]
     public ImageCrossfade image = null;
 
-    private void Start()
+    private void Update()
     {
         SwedishFactTag sweFact = FindObjectOfType<SwedishFactTag>();
         if (sweFact)
@@ -41,8 +41,10 @@ public class FactTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
+        Debug.Log("FUck you UYNITY");
+
         VerticalPlayerController verticalPlayer = other.GetComponent<VerticalPlayerController>();
         HorizontalPlayerController horizontalPlayer = other.GetComponent<HorizontalPlayerController>();
         if (verticalPlayer || horizontalPlayer)

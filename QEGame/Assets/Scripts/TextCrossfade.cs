@@ -36,7 +36,9 @@ public class TextCrossfade : MonoBehaviour
         if (!_text)
         {
             Debug.LogError("Missing Text Component.");
+            return;
         }
+        _currentText = _text.text;
     }
 
     private void Update()

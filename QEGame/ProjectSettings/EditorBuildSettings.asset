@@ -38,10 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Room03b.unity
     guid: 95d844834ad937d418211f2668828053
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Room04a.unity
     guid: 05e641f1ee38de04f95b252a51dc6049
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Room04b.unity
     guid: ab941271a04f9ec4b9a2c7a2c820f131
   - enabled: 0
