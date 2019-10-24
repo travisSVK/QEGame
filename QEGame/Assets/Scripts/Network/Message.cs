@@ -11,6 +11,7 @@ public enum MessageType
     Disconnect,
     Uninitialized,
     TimeElapsed,
+    SyncPosition,
     NextLevel
 }
 
@@ -44,6 +45,14 @@ public class MessageConnected : Message
 public class Move : Message
 {
     public int clientId;
+    public float x;
+    public float y;
+    public float z;
+}
+
+[Serializable]
+public class SyncPosition : Message
+{
     public float x;
     public float y;
     public float z;

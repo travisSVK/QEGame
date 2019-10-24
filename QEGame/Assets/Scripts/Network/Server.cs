@@ -123,6 +123,18 @@ public class Server : MonoBehaviour
                     _milisElapsedPrevious = elapsedTime;
                     if (_deadlineInSec >= (elapsedTime / 1000))
                     {
+                        foreach (KeyValuePair<int, StateObject> entry in _states)
+                        {
+                            SyncPosition syncPosition = new SyncPosition();
+                            syncPosition.messageType = MessageType.SyncPosition;
+                            syncPosition.x = _rigidBodies[entry.Key].position.x;
+                            syncPosition.y = _rigidBodies[entry.Key].position.y;
+                            syncPosition.z = _rigidBodies[entry.Key].position.z;
+                            StateObject state = new StateObject();
+                            state.workSocket = entry.Value.workSocket;
+                            Send(state, syncPosition, false, false);
+                        }
+
                         _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
                     }
                 }

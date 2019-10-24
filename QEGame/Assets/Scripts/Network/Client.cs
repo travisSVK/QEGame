@@ -294,6 +294,10 @@ public class Client : MonoBehaviour
                     }
                 }
                 break;
+            case MessageType.SyncPosition:
+                SyncPosition syncPosition = (SyncPosition)msg;
+                _rigidbody.position = new Vector3(syncPosition.x, syncPosition.y, syncPosition.z);
+                break;
             case MessageType.RestartLevel:
                 CameraController cc = FindObjectOfType<CameraController>();
                 if (cc)
