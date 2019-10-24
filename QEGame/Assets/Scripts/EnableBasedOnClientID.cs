@@ -6,17 +6,24 @@ public class EnableBasedOnClientID : MonoBehaviour
 {
     public int id;
 
-    private void Awake()
+    public bool Check()
     {
         Client client = FindObjectOfType<Client>();
         if (client)
         {
             int activeId = client.clientId;
             gameObject.SetActive(id == activeId);
+
+            return id == activeId;
         }
-        else
-        {
-            Debug.Log("No client in this scene.");
-        }
+
+        Debug.Log("No client in this scene.");
+
+        return false;
+    }
+
+    private void Awake()
+    {
+        Check();
     }
 }
