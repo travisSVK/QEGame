@@ -96,6 +96,16 @@ public class Client : MonoBehaviour
                     _stopwatch.Start();
                     if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                     {
+                        SyncPosition syncPosition = new SyncPosition();
+                        syncPosition.messageType = MessageType.SyncPosition;
+                        syncPosition.x = _playerBase.transform.position.x;
+                        syncPosition.y = _playerBase.transform.position.y;
+                        syncPosition.z = _playerBase.transform.position.z;
+                        syncPosition.clientId = clientId;
+                        StateObject state = new StateObject();
+                        state.workSocket = _sender;
+                        Send(state, syncPosition, false, false);
+
                         _milisElapsedPrevious = elapsedTime;
                         _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
                     }
@@ -293,10 +303,6 @@ public class Client : MonoBehaviour
                         ShowHighScore();
                     }
                 }
-                break;
-            case MessageType.SyncPosition:
-                SyncPosition syncPosition = (SyncPosition)msg;
-                _rigidbody.position = new Vector3(syncPosition.x, syncPosition.y, syncPosition.z);
                 break;
             case MessageType.RestartLevel:
                 CameraController cc = FindObjectOfType<CameraController>();
