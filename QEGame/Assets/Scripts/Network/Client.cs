@@ -470,7 +470,6 @@ public class Client : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(state.buffer.Length);
             Debug.Log(e.ToString());
         }
     }

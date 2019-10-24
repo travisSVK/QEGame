@@ -934,7 +934,7 @@ MonoBehaviour:
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner02
   - name: Room03
-    position: {x: 20, y: 14, z: 40}
+    position: {x: 0, y: 14, z: 40}
     rotation: {x: 0.57357657, y: 0, z: 0, w: 0.81915194}
     callSpawnerOnArrival: 1
     spawnerObjectName: Spawner03
