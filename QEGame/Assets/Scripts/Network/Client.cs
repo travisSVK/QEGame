@@ -96,15 +96,18 @@ public class Client : MonoBehaviour
                     _stopwatch.Start();
                     if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                     {
-                        SyncPosition syncPosition = new SyncPosition();
-                        syncPosition.messageType = MessageType.SyncPosition;
-                        syncPosition.x = _playerBase.transform.position.x;
-                        syncPosition.y = _playerBase.transform.position.y;
-                        syncPosition.z = _playerBase.transform.position.z;
-                        syncPosition.clientId = clientId;
-                        StateObject state = new StateObject();
-                        state.workSocket = _sender;
-                        Send(state, syncPosition, false, false);
+                        if (_playerBase)
+                        {
+                            SyncPosition syncPosition = new SyncPosition();
+                            syncPosition.messageType = MessageType.SyncPosition;
+                            syncPosition.x = _playerBase.transform.position.x;
+                            syncPosition.y = _playerBase.transform.position.y;
+                            syncPosition.z = _playerBase.transform.position.z;
+                            syncPosition.clientId = clientId;
+                            StateObject state = new StateObject();
+                            state.workSocket = _sender;
+                            Send(state, syncPosition, false, false);
+                        }
 
                         _milisElapsedPrevious = elapsedTime;
                         _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
@@ -494,6 +497,10 @@ public class Client : MonoBehaviour
                 int bytesRead = sender.EndReceive(ar);
                 if (bytesRead > 0)
                 {
+                    if (bytesRead > 1000)
+                    {
+                        Debug.Log("Message size received: " + bytesRead);
+                    }
                     int position = 0;
                     if (_leftOverMessage.Length != 0)
                     {
