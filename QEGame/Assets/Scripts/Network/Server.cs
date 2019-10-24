@@ -304,6 +304,9 @@ public class Server : MonoBehaviour
                             newMove.x = move.x;
                             newMove.y = move.y;
                             newMove.z = move.z;
+                            newMove.bx = move.bx;
+                            newMove.by = move.by;
+                            newMove.bz = move.bz;
                             newMove.messageType = MessageType.Move;
                             newMove.clientId = move.clientId;
                             StateObject state = new StateObject();

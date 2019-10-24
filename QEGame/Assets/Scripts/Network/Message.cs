@@ -34,6 +34,9 @@ public class Move : Message
     public float x;
     public float y;
     public float z;
+    public float bx;
+    public float by;
+    public float bz;
 }
 
 [Serializable]

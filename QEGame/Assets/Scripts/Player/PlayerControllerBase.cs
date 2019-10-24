@@ -19,6 +19,7 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     protected Vector3 _input;
 
     private Vector3 _movementIncrement = Vector3.zero;
+    private Vector3 _blackholeIncrement = Vector3.zero;
 
     // For local connections only
     protected ILocalConnection _localConnection = null;
@@ -34,6 +35,12 @@ public abstract class PlayerControllerBase : MonoBehaviour, ILocalConnection
     {
         get { return _movementIncrement; }
         set { _movementIncrement = value; }
+    }
+
+    public Vector3 blackholeIncrement
+    {
+        get { return _blackholeIncrement; }
+        set { _blackholeIncrement = value; }
     }
 
     public Vector3 input

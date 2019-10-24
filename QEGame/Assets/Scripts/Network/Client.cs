@@ -103,7 +103,7 @@ public class Client : MonoBehaviour
             _inputSent = true;
         }
 
-        if (!_inputSent && !_gameFinished && _rigidbody && (_playerBase.movementIncrement != Vector3.zero)/*(_lastPosition != _rigidbody.transform.position)*/)
+        if (!_inputSent && !_gameFinished && _rigidbody && ((_playerBase.movementIncrement != Vector3.zero) || (_playerBase.blackholeIncrement != Vector3.zero))/*(_lastPosition != _rigidbody.transform.position)*/)
         {
             Move msg = new Move();
             msg.messageType = MessageType.Move;
@@ -112,7 +112,11 @@ public class Client : MonoBehaviour
             msg.x = _playerBase.movementIncrement.x;
             msg.y = _playerBase.movementIncrement.y;
             msg.z = _playerBase.movementIncrement.z;
+            msg.bx = _playerBase.blackholeIncrement.x;
+            msg.by = _playerBase.blackholeIncrement.y;
+            msg.bz = _playerBase.blackholeIncrement.z;
             _playerBase.movementIncrement = Vector3.zero;
+            _playerBase.blackholeIncrement = Vector3.zero;
             StateObject state = new StateObject();
             state.workSocket = _sender;
             Send(state, msg, false);
@@ -247,7 +251,7 @@ public class Client : MonoBehaviour
         {
             case MessageType.Move:
                 Move move = (Move)msg;
-                _otherPlayerInput = new Vector3(move.x, move.y, move.z);
+                _otherPlayerInput = new Vector3(move.x + move.bx, move.y + move.by, move.z + move.bz);
                 break;
             case MessageType.OtherPlayerConnected:
                 Debug.Log("Other player connected received.");
