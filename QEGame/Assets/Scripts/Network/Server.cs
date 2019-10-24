@@ -433,55 +433,64 @@ public class Server : MonoBehaviour
         // from the asynchronous state object.
         StateObject state = (StateObject)ar.AsyncState;
         Socket handler = state.workSocket;
-
-        // Read data from the client socket.
-        if (handler.Connected)
+        try
         {
-            int bytesRead = handler.EndReceive(ar);
-
-            if (bytesRead > 0)
+            // Read data from the client socket.
+            if (handler.Connected)
             {
-                int position = 0;
-                if (_leftOverMessage.Length != 0)
+                int bytesRead = handler.EndReceive(ar);
+
+                if (bytesRead > 0)
                 {
-                    byte[] expectedLengthBytes = state.buffer.Take(4).ToArray();
-                    int expectedLength = BitConverter.ToInt32(expectedLengthBytes, 0);
-                    expectedLength = expectedLength - _leftOverMessage.Length - 4;
-                    byte[] messagePart = state.buffer.Take(expectedLength).ToArray();
-                    messagePart = _leftOverMessage.Skip(4).ToArray().Concat(messagePart).ToArray();
-                    Message msg = MessageUtils.Deserialize(messagePart);
-                    _messageQueueMutex.WaitOne();
-                    _messageQueue.Add(msg);
-                    _messageQueueMutex.ReleaseMutex();
-                    position = expectedLength;
-                    Array.Clear(_leftOverMessage, 0, _leftOverMessage.Length);
-                }
-                while (position != StateObject.BufferSize)
-                {
-                    byte[] expectedLengthBytes = state.buffer.Skip(position).Take(position + 4).ToArray();
-                    int expectedLength = BitConverter.ToInt32(expectedLengthBytes, 0);
-                    if ((position + 4 + expectedLength) > StateObject.BufferSize)
+                    int position = 0;
+                    if (_leftOverMessage.Length != 0)
                     {
-                        _leftOverMessage = state.buffer.Skip(position).Take(StateObject.BufferSize - position).ToArray();
-                        break;
+                        Debug.Log(_leftOverMessage.Length);
+                        byte[] expectedLengthBytes = state.buffer.Take(4).ToArray();
+                        int expectedLength = BitConverter.ToInt32(expectedLengthBytes, 0);
+                        expectedLength = expectedLength - _leftOverMessage.Length - 4;
+                        byte[] messagePart = state.buffer.Take(expectedLength).ToArray();
+                        messagePart = _leftOverMessage.Skip(4).ToArray().Concat(messagePart).ToArray();
+                        Message msg = MessageUtils.Deserialize(messagePart);
+                        _messageQueueMutex.WaitOne();
+                        _messageQueue.Add(msg);
+                        _messageQueueMutex.ReleaseMutex();
+                        position = expectedLength;
+                        Array.Clear(_leftOverMessage, 0, _leftOverMessage.Length);
                     }
-                    byte[] messagePart = state.buffer.Skip(position + 4).Take(expectedLength).ToArray();
-                    Message msg = MessageUtils.Deserialize(messagePart);
-                    _messageQueueMutex.WaitOne();
-                    _messageQueue.Add(msg);
-                    _messageQueueMutex.ReleaseMutex();
-                    position += 4 + expectedLength;
-                    if (position >= bytesRead)
+                    while (position != StateObject.BufferSize)
                     {
-                        break;
+                        byte[] expectedLengthBytes = state.buffer.Skip(position).Take(position + 4).ToArray();
+                        int expectedLength = BitConverter.ToInt32(expectedLengthBytes, 0);
+                        if ((position + 4 + expectedLength) > StateObject.BufferSize)
+                        {
+                            _leftOverMessage = state.buffer.Skip(position).Take(StateObject.BufferSize - position).ToArray();
+                            break;
+                        }
+                        Debug.Log(expectedLength);
+                        byte[] messagePart = state.buffer.Skip(position + 4).Take(expectedLength).ToArray();
+                        Message msg = MessageUtils.Deserialize(messagePart);
+                        _messageQueueMutex.WaitOne();
+                        _messageQueue.Add(msg);
+                        _messageQueueMutex.ReleaseMutex();
+                        position += 4 + expectedLength;
+                        if (position >= bytesRead)
+                        {
+                            break;
+                        }
                     }
+                    // Begin receiving the data from the remote device.
+                    StateObject newState = new StateObject();
+                    newState.workSocket = state.workSocket;
+                    state.workSocket.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
+                        new AsyncCallback(ReadCallback), newState);
                 }
-                // Begin receiving the data from the remote device.
-                StateObject newState = new StateObject();
-                newState.workSocket = state.workSocket;
-                state.workSocket.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), newState);
             }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(state.buffer.Length);
+            Debug.Log(e.ToString());
         }
     }
     
