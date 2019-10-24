@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -38,6 +39,7 @@ public class Client : MonoBehaviour
     private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
     private long _milisElapsedPrevious = 0;
     private int _completedStages = 0;
+    private byte[] _leftOverMessage = new byte[0];
 
     private void Awake()
     {
@@ -125,7 +127,7 @@ public class Client : MonoBehaviour
             _playerBase.movementIncrement = Vector3.zero;
             StateObject state = new StateObject();
             state.workSocket = _sender;
-            Send(state, msg, false);
+            Send(state, msg, false, false);
             //_sendDone.WaitOne();
         }
 
@@ -179,7 +181,7 @@ public class Client : MonoBehaviour
         StateObject state = new StateObject();
         state.workSocket = _sender;
         _disconnectDone.Reset();
-        Send(state, message, true);
+        Send(state, message, true, false);
         _disconnectDone.WaitOne();
         Debug.Log("Disconnect request sent.");
         _endSceneLoading = true;
@@ -215,8 +217,8 @@ public class Client : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         Debug.Log(ipAddr.ToString());
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::2444:881b:bf8c:86ca"), 11111);
-        //IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
+        //IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::2444:881b:bf8c:86ca"), 11111);
+        IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
         _sender = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         try
@@ -236,7 +238,7 @@ public class Client : MonoBehaviour
             msg.messageType = MessageType.Connected;
             StateObject state = new StateObject();
             state.workSocket = _sender;
-            Send(state, msg, false);
+            Send(state, msg, false, true);
             _sendDone.WaitOne();
 
             // Receive the ACK from the remote device.
@@ -482,12 +484,42 @@ public class Client : MonoBehaviour
                 int bytesRead = sender.EndReceive(ar);
                 if (bytesRead > 0)
                 {
-                    if (bytesRead < StateObject.BufferSize)
+                    int position = 0;
+                    if (_leftOverMessage.Length != 0)
                     {
-                        Message msg = MessageUtils.Deserialize(state.buffer);
+                        Debug.Log(_leftOverMessage.Length);
+                        byte[] expectedLengthBytes = state.buffer.Take(4).ToArray();
+                        int expectedLength = BitConverter.ToInt32(expectedLengthBytes, 0);
+                        expectedLength = expectedLength - _leftOverMessage.Length - 4;
+                        byte[] messagePart = state.buffer.Take(expectedLength).ToArray();
+                        messagePart = _leftOverMessage.Skip(4).ToArray().Concat(messagePart).ToArray();
+                        Message msg = MessageUtils.Deserialize(messagePart);
                         _messageQueueMutex.WaitOne();
                         _messageQueue.Add(msg);
                         _messageQueueMutex.ReleaseMutex();
+                        position = expectedLength;
+                        Array.Clear(_leftOverMessage, 0, _leftOverMessage.Length);
+                    }
+                    while (position != StateObject.BufferSize)
+                    {
+                        byte[] expectedLengthBytes = state.buffer.Skip(position).Take(position + 4).ToArray();
+                        int expectedLength = BitConverter.ToInt32(expectedLengthBytes, 0);
+                        if ((position + 4 + expectedLength) > StateObject.BufferSize)
+                        {
+                            _leftOverMessage = state.buffer.Skip(position).Take(StateObject.BufferSize - position).ToArray();
+                            break;
+                        }
+                        Debug.Log(expectedLength);
+                        byte[] messagePart = state.buffer.Skip(position + 4).Take(expectedLength).ToArray();
+                        Message msg = MessageUtils.Deserialize(messagePart);
+                        _messageQueueMutex.WaitOne();
+                        _messageQueue.Add(msg);
+                        _messageQueueMutex.ReleaseMutex();
+                        position += 4 + expectedLength;
+                        if (position >= bytesRead)
+                        {
+                            break;
+                        }
                     }
                     // Begin receiving the data from the remote device.
                     StateObject newState = new StateObject();
@@ -507,7 +539,7 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void Send(StateObject state, Message message, bool disconnect)
+    private void Send(StateObject state, Message message, bool disconnect, bool ack)
     {
         byte[] byteData = MessageUtils.Serialize(message);
 
@@ -515,11 +547,19 @@ public class Client : MonoBehaviour
         {
             if (disconnect)
             {
+                if (!ack)
+                {
+                    byteData = BitConverter.GetBytes(byteData.Length).Concat(byteData).ToArray();
+                }
                 state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
                    new AsyncCallback(SendDisconnectCallback), state);
             }
             else
             {
+                if (!ack)
+                {
+                    byteData = BitConverter.GetBytes(byteData.Length).Concat(byteData).ToArray();
+                }
                 state.workSocket.BeginSend(byteData, 0, byteData.Length, 0,
                    new AsyncCallback(SendCallback), state);
             }
