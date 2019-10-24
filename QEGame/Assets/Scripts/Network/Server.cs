@@ -66,7 +66,7 @@ public class Server : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            RestartLevel(true);
+            //RestartLevel(true);
         }
 
         // TODO update both players values depending on values in dictionary (in a

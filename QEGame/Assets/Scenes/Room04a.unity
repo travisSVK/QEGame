@@ -4104,7 +4104,7 @@ GameObject:
   - component: {fileID: 1191788935}
   m_Layer: 8
   m_Name: SpawnerRoom04
-  m_TagString: Spawner02
+  m_TagString: Spawner04
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
