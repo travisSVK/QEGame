@@ -442,11 +442,13 @@ public class Server : MonoBehaviour
 
             if (bytesRead > 0)
             {
-                Message msg = MessageUtils.Deserialize(state.buffer);
-                _messageQueueMutex.WaitOne();
-                _messageQueue.Add(msg);
-                //_messageQueue.Sort((x, y) => x.timestamp.CompareTo(y.timestamp));
-                _messageQueueMutex.ReleaseMutex();
+                if (bytesRead < StateObject.BufferSize)
+                {
+                    Message msg = MessageUtils.Deserialize(state.buffer);
+                    _messageQueueMutex.WaitOne();
+                    _messageQueue.Add(msg);
+                    _messageQueueMutex.ReleaseMutex();
+                }
 
                 StateObject newState = new StateObject();
                 newState.workSocket = state.workSocket;

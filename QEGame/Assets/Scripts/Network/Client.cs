@@ -19,7 +19,7 @@ public class Client : MonoBehaviour
     private ManualResetEvent _receiveDone = new ManualResetEvent(false);
     private ManualResetEvent _disconnectDone = new ManualResetEvent(false);
     private Mutex _messageQueueMutex = new Mutex();
-    private Queue<Message> _messageQueue = new Queue<Message>();
+    private List<Message> _messageQueue = new List<Message>();
     private Socket _sender;
     private Thread _messageProcessingThread = null;
     private bool _endSceneLoading = false;
@@ -355,7 +355,8 @@ public class Client : MonoBehaviour
         _messageQueueMutex.WaitOne();
         if (_messageQueue.Count != 0)
         {
-            msg = _messageQueue.Dequeue();
+            msg = _messageQueue[0];
+            _messageQueue.RemoveAt(0);
         }
         _messageQueueMutex.ReleaseMutex();
         return msg;
@@ -485,7 +486,7 @@ public class Client : MonoBehaviour
                     {
                         Message msg = MessageUtils.Deserialize(state.buffer);
                         _messageQueueMutex.WaitOne();
-                        _messageQueue.Enqueue(msg);
+                        _messageQueue.Add(msg);
                         _messageQueueMutex.ReleaseMutex();
                     }
                     // Begin receiving the data from the remote device.
@@ -498,11 +499,11 @@ public class Client : MonoBehaviour
         }
         catch (Exception e)
         {
+            Debug.Log(e.ToString());
             StateObject newState = new StateObject();
             newState.workSocket = state.workSocket;
             sender.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
             new AsyncCallback(ReceiveCallback), newState);
-            Debug.Log(e.ToString());
         }
     }
 
