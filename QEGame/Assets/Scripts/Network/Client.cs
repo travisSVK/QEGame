@@ -93,7 +93,7 @@ public class Client : MonoBehaviour
                 if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                 {
                     _milisElapsedPrevious = elapsedTime;
-                    _text.text = (elapsedTime / 1000).ToString();
+                    _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
                 }
             }
             else
@@ -212,7 +212,7 @@ public class Client : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         Debug.Log(ipAddr.ToString());
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::d408:1ce1:45a1:8991"), 11111);
+        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::2444:881b:bf8c:86ca"), 11111);
         //IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
         _sender = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 

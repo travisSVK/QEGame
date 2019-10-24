@@ -27,7 +27,8 @@ public class Server : MonoBehaviour
     private int _numberOfFinishedPlayers = 0;
     private bool _joined = false;
     private Text _text;
-
+    [SerializeField]
+    private int _deadlineInSec = 100;
     private string _playerNames = "";
     private int _score = 0;
     private long _milisElapsedPrevious = 0;
@@ -119,7 +120,7 @@ public class Server : MonoBehaviour
                 if ((elapsedTime - _milisElapsedPrevious) >= 1000)
                 {
                     _milisElapsedPrevious = elapsedTime;
-                    _text.text = (elapsedTime / 1000).ToString();
+                    _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
                 }
             }
             else

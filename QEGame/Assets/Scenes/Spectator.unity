@@ -656,6 +656,7 @@ MonoBehaviour:
   onArrival:
     m_PersistentCalls:
       m_Calls: []
+  firstUpdate: 1
   _speed: 5
   _controlPoints:
   - name: Room01b
@@ -1521,6 +1522,7 @@ MonoBehaviour:
   onArrival:
     m_PersistentCalls:
       m_Calls: []
+  firstUpdate: 1
   _speed: 5
   _controlPoints:
   - name: Room01a
@@ -1875,6 +1877,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1520018675056648073, guid: e1ca169d4c2ee634ca3d9b42cd7a07b9,
+        type: 3}
+      propertyPath: _deadlineInSec
+      value: 500
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1ca169d4c2ee634ca3d9b42cd7a07b9, type: 3}
