@@ -61,7 +61,7 @@ public class Client : MonoBehaviour
             }
             else
             {
-                Screen.SetResolution(1920, 1080, false);
+                Screen.SetResolution(1920, 1080, true);
             }
         }
 
