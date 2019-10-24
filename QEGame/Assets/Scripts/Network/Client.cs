@@ -53,9 +53,13 @@ public class Client : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.F))
+        if (Input.GetKeyUp(KeyCode.F))
         {
             Screen.fullScreen = !Screen.fullScreen;
+            if (!Screen.fullScreen)
+            {
+                Screen.SetResolution(1280, 720, false);
+            }
         }
 
         ProcessMessage();

@@ -55,9 +55,13 @@ public class Server : MonoBehaviour
     {
         Debug.Log(Time.deltaTime);
 
-        if (Input.GetKey(KeyCode.F))
+        if (Input.GetKeyUp(KeyCode.F))
         {
             Screen.fullScreen = !Screen.fullScreen;
+            if (!Screen.fullScreen)
+            {
+                Screen.SetResolution(1280, 720, false);
+            }
         }
 
         // TODO update both players values depending on values in dictionary (in a
