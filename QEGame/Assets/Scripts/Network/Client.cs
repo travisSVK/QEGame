@@ -30,17 +30,16 @@ public class Client : MonoBehaviour
     private Vector3 _otherPlayerInput = Vector3.zero;
     private PlayerControllerBase _playerBase;
     private int _inputSent = 0;
-    private long _timeElapsedSec = 0;
     private Text _text = null;
 
     [SerializeField]
     private int _deadlineInSec = 100;
-    private long _lastLevelElapsed = 0;
-    private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
     private long _milisElapsedPrevious = 0;
+
     private int _completedStages = 0;
     private byte[] _leftOverMessage = new byte[0];
     private bool _solarsEnabled = false;
+    private long _elapsedTime = 0;
 
     private void Awake()
     {
@@ -90,47 +89,34 @@ public class Client : MonoBehaviour
                 _text = timerObj[0].GetComponent<Text>();
             }
         }
-        if (_text)
+        if (_text && !_gameFinished)
         {
-            if (_stopwatch.IsRunning)
+            if ((int)(_elapsedTime / 1000) >= _deadlineInSec)
             {
-                _stopwatch.Stop();
-                if(!_gameFinished)
-                {
-                    long elapsedTime = _stopwatch.ElapsedMilliseconds + _lastLevelElapsed;
-                    if ((int)(elapsedTime / 1000) >= _deadlineInSec)
-                    {
-                        _playerBase.InstantiateDeath();
-                        _otherPlayerInput = Vector3.zero;
-                        Destroy(_rigidbody.gameObject);
-                        _rigidbody = null;
-                        _gameFinished = true;
-                        ShowHighScore();
-                    }
-                    _stopwatch.Start();
-                    if ((elapsedTime - _milisElapsedPrevious) >= 1000)
-                    {
-                        if (_playerBase)
-                        {
-                            SyncPosition syncPosition = new SyncPosition();
-                            syncPosition.messageType = MessageType.SyncPosition;
-                            syncPosition.x = _playerBase.transform.position.x;
-                            syncPosition.y = _playerBase.transform.position.y;
-                            syncPosition.z = _playerBase.transform.position.z;
-                            syncPosition.clientId = clientId;
-                            StateObject state = new StateObject();
-                            state.workSocket = _sender;
-                            Send(state, syncPosition, false, false);
-                        }
-
-                        _milisElapsedPrevious = elapsedTime;
-                        _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
-                    }
-                }
+                _playerBase.InstantiateDeath();
+                _otherPlayerInput = Vector3.zero;
+                Destroy(_rigidbody.gameObject);
+                _rigidbody = null;
+                _gameFinished = true;
+                ShowHighScore();
             }
-            else
+            if ((_elapsedTime - _milisElapsedPrevious) >= 1000)
             {
-                _stopwatch.Start();
+                if (_playerBase)
+                {
+                    SyncPosition syncPosition = new SyncPosition();
+                    syncPosition.messageType = MessageType.SyncPosition;
+                    syncPosition.x = _playerBase.transform.position.x;
+                    syncPosition.y = _playerBase.transform.position.y;
+                    syncPosition.z = _playerBase.transform.position.z;
+                    syncPosition.clientId = clientId;
+                    StateObject state = new StateObject();
+                    state.workSocket = _sender;
+                    Send(state, syncPosition, false, false);
+                }
+
+                _milisElapsedPrevious = _elapsedTime;
+                _text.text = (_deadlineInSec - (_elapsedTime / 1000)).ToString();
             }
         }
         if (_inputSent == 1)
@@ -190,10 +176,8 @@ public class Client : MonoBehaviour
         if (endScreen)
         {
             endScreen.gameObject.SetActive(true);
-            // TODO implement this
-            _stopwatch.Stop();
             endScreen.SetCompletedStages(_completedStages);
-            endScreen.SetRemainingTime(_deadlineInSec - _stopwatch.ElapsedMilliseconds / 1000);
+            endScreen.SetRemainingTime(_deadlineInSec - _elapsedTime / 1000);
             endScreen.ActivateScreen();
         }
     }
@@ -295,7 +279,6 @@ public class Client : MonoBehaviour
                 if (menuManager)
                 {
                     menuManager.StartFirstScene();
-                    _stopwatch.Start();
                 }
                 break;
             case MessageType.NextLevel:
@@ -309,9 +292,7 @@ public class Client : MonoBehaviour
                     if (cameraControlller.canMoveForward)
                     {
                         ++_completedStages;
-                        _stopwatch.Reset();
-                        NextLevel nl = (NextLevel)msg;
-                        _lastLevelElapsed = nl.lastLevelElapsed;
+                        //NextLevel nl = (NextLevel)msg;
                         cameraControlller.MoveForward();
                     }
                     else
@@ -328,9 +309,9 @@ public class Client : MonoBehaviour
                     RestartLevel resLevel = (RestartLevel)msg;
                     if (resLevel.forced)
                     {
-                        _lastLevelElapsed = resLevel.lastLevelElapsed;
-                        _milisElapsedPrevious = _lastLevelElapsed;
-                        _stopwatch.Reset();
+                        //_lastLevelElapsed = resLevel.lastLevelElapsed;
+                        //_milisElapsedPrevious = _lastLevelElapsed;
+                        //_stopwatch.Reset();
                     }
                     _playerBase.InstantiateDeath();
                     _otherPlayerInput = Vector3.zero;
@@ -340,26 +321,13 @@ public class Client : MonoBehaviour
                 }
                 break;
             case MessageType.TimeElapsed:
-                //TimeElapsed timeElapsed = (TimeElapsed)msg;
-                //long timeElapsedSec = timeElapsed.miliseconds / 1000;
-                //Debug.Log((int)timeElapsedSec);
-                //if (!_gameFinished && ((int)timeElapsedSec >= _deadlineInSec))
-                //{
-                //    _playerBase.InstantiateDeath();
-                //    _otherPlayerInput = Vector3.zero;
-                //    Destroy(_rigidbody.gameObject);
-                //    _rigidbody = null;
-                //    _gameFinished = true;
-                //    ShowHighScore();
-                //}
-                //else
-                //{
-                //    if (!_text)
-                //    {
-                //        _text = GameObject.FindGameObjectWithTag("Timer").GetComponent<Text>();
-                //    }
-                //    _text.text = timeElapsedSec.ToString();
-                //}
+                TimeElapsed timeElapsed = (TimeElapsed)msg;
+                _elapsedTime = timeElapsed.miliseconds;
+                SolarFlareMovement[] solarFlareMovements = FindObjectsOfType<SolarFlareMovement>();
+                foreach (SolarFlareMovement sm in solarFlareMovements)
+                {
+                    sm.NewTime(_elapsedTime / 1000.0f);
+                }
                 break;
             case MessageType.Disconnect:
                 Debug.Log("Disconnect response received.");
