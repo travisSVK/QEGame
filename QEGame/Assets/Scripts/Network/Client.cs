@@ -34,6 +34,7 @@ public class Client : MonoBehaviour
 
     [SerializeField]
     private int _deadlineInSec = 100;
+    private long _milisElapsedPrevious = 0;
 
     private int _completedStages = 0;
     private byte[] _leftOverMessage = new byte[0];
@@ -99,19 +100,24 @@ public class Client : MonoBehaviour
                 _gameFinished = true;
                 ShowHighScore();
             }
-            if (_playerBase)
+            if ((_elapsedTime - _milisElapsedPrevious) >= 1000)
             {
-                SyncPosition syncPosition = new SyncPosition();
-                syncPosition.messageType = MessageType.SyncPosition;
-                syncPosition.x = _playerBase.transform.position.x;
-                syncPosition.y = _playerBase.transform.position.y;
-                syncPosition.z = _playerBase.transform.position.z;
-                syncPosition.clientId = clientId;
-                StateObject state = new StateObject();
-                state.workSocket = _sender;
-                Send(state, syncPosition, false, false);
+                if (_playerBase)
+                {
+                    SyncPosition syncPosition = new SyncPosition();
+                    syncPosition.messageType = MessageType.SyncPosition;
+                    syncPosition.x = _playerBase.transform.position.x;
+                    syncPosition.y = _playerBase.transform.position.y;
+                    syncPosition.z = _playerBase.transform.position.z;
+                    syncPosition.clientId = clientId;
+                    StateObject state = new StateObject();
+                    state.workSocket = _sender;
+                    Send(state, syncPosition, false, false);
+                }
+
+                _milisElapsedPrevious = _elapsedTime;
+                _text.text = (_deadlineInSec - (_elapsedTime / 1000)).ToString();
             }
-            _text.text = (_deadlineInSec - (_elapsedTime / 1000)).ToString();
         }
         if (_inputSent == 1)
         {
