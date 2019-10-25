@@ -56,7 +56,7 @@ public class Server : MonoBehaviour
 
     private void Update()
     {
-        if (_solarsEnabled)
+        if (!_solarsEnabled)
         {
             SolarFlareBehaviour[] solars = FindObjectsOfType<SolarFlareBehaviour>();
             if (solars.Length > 0)
