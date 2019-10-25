@@ -36,7 +36,7 @@ public class Server : MonoBehaviour
     private long _lastLevelElapsed = 0;
     private byte[] _leftOverMessage = new byte[0];
     private bool _messageSent = false;
-
+    private bool _solarsEnabled = false;
     private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
 
     private void Awake()
@@ -56,6 +56,19 @@ public class Server : MonoBehaviour
 
     private void Update()
     {
+        if (_solarsEnabled)
+        {
+            SolarFlareBehaviour[] solars = FindObjectsOfType<SolarFlareBehaviour>();
+            if (solars.Length > 0)
+            {
+                foreach (SolarFlareBehaviour s in solars)
+                {
+                    s.gameObject.SetActive(true);
+                }
+                _solarsEnabled = true;
+            }
+        }
+
         if (Input.GetKeyUp(KeyCode.F))
         {
             if (Screen.fullScreen)

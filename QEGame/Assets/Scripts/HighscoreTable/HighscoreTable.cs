@@ -39,7 +39,7 @@ public class HighscoreTable : MonoBehaviour
         }
 
         StartCoroutine(WaitForAppearing(highscores.highscoreEntryList));
-        //StartCoroutine(closeWindowDelay());
+        StartCoroutine(closeWindowDelay());
     }
 
     private void Update()
@@ -197,6 +197,7 @@ public class HighscoreTable : MonoBehaviour
     IEnumerator closeWindowDelay()
     {
         yield return new WaitForSeconds(8.0f);
+        isHighScoreClosed = true;
         _containerAnimator.SetTrigger("AutoCloseTrigger");
     }
 

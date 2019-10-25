@@ -40,6 +40,7 @@ public class Client : MonoBehaviour
     private long _milisElapsedPrevious = 0;
     private int _completedStages = 0;
     private byte[] _leftOverMessage = new byte[0];
+    private bool _solarsEnabled = false;
 
     private void Awake()
     {
@@ -55,6 +56,19 @@ public class Client : MonoBehaviour
 
     private void Update()
     {
+        if (_solarsEnabled)
+        {
+            SolarFlareBehaviour[] solars = FindObjectsOfType<SolarFlareBehaviour>();
+            if (solars.Length > 0)
+            {
+                foreach (SolarFlareBehaviour s in solars)
+                {
+                    s.gameObject.SetActive(true);
+                }
+                _solarsEnabled = true;
+            }
+        }
+
         if (Input.GetKeyUp(KeyCode.F))
         {
             if (Screen.fullScreen)
