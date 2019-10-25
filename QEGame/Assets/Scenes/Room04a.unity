@@ -225,7 +225,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -722,7 +722,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -2105,7 +2105,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -2255,7 +2255,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -3286,7 +3286,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -3760,7 +3760,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 992918740}
-  - component: {fileID: 992918741}
   m_Layer: 8
   m_Name: SolarFlares
   m_TagString: SolarFlare
@@ -3790,18 +3789,6 @@ Transform:
   m_Father: {fileID: 1958533597}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &992918741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 992918739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 016607e4f32f59d4db7638a2c18291d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1004874153
 GameObject:
   m_ObjectHideFlags: 0
@@ -5461,7 +5448,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -5599,7 +5586,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -8176,7 +8163,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}

@@ -53,7 +53,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Spectator.unity
     guid: d6c9d419653977841ab4456cf2d3ad92
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/StartScene0.unity
     guid: 1af0ba9de5d650d4c9dfe00c1b25509d
   - enabled: 0
