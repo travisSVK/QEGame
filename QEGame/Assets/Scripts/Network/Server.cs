@@ -169,7 +169,8 @@ public class Server : MonoBehaviour
     {
         if (++_numberOfFinishedPlayers == _currentNumOfClients)
         {
-            _lastLevelElapsed = _stopwatch.ElapsedMilliseconds;
+            _lastLevelElapsed = _stopwatch.ElapsedMilliseconds + _lastLevelElapsed;
+            _milisElapsedPrevious = _lastLevelElapsed;
             _stopwatch.Reset();
             foreach (KeyValuePair<int, StateObject> entry in _states)
             {
