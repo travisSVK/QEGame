@@ -137,9 +137,14 @@ public class Server : MonoBehaviour
                     if (_deadlineInSec >= (elapsedTime / 1000))
                     {
                         _text.text = (_deadlineInSec - (elapsedTime / 1000)).ToString();
-                        TimeElapsed timeElapsed = new TimeElapsed();
-                        timeElapsed.messageType = MessageType.TimeElapsed;
-                        timeElapsed.miliseconds = elapsedTime;
+
+                        foreach (KeyValuePair<int, StateObject> entry in _states)
+                        {
+                            TimeElapsed timeElapsed = new TimeElapsed();
+                            timeElapsed.messageType = MessageType.TimeElapsed;
+                            timeElapsed.miliseconds = elapsedTime;
+                            Send(entry.Value, timeElapsed, false, false);
+                        }
                         SolarFlareMovement[] solarFlareMovements = FindObjectsOfType<SolarFlareMovement>();
                         foreach (SolarFlareMovement sm in solarFlareMovements)
                         {

@@ -34,7 +34,6 @@ public class Client : MonoBehaviour
 
     [SerializeField]
     private int _deadlineInSec = 100;
-    private long _milisElapsedPrevious = 0;
 
     private int _completedStages = 0;
     private byte[] _leftOverMessage = new byte[0];
@@ -100,24 +99,19 @@ public class Client : MonoBehaviour
                 _gameFinished = true;
                 ShowHighScore();
             }
-            if ((_elapsedTime - _milisElapsedPrevious) >= 1000)
+            if (_playerBase)
             {
-                if (_playerBase)
-                {
-                    SyncPosition syncPosition = new SyncPosition();
-                    syncPosition.messageType = MessageType.SyncPosition;
-                    syncPosition.x = _playerBase.transform.position.x;
-                    syncPosition.y = _playerBase.transform.position.y;
-                    syncPosition.z = _playerBase.transform.position.z;
-                    syncPosition.clientId = clientId;
-                    StateObject state = new StateObject();
-                    state.workSocket = _sender;
-                    Send(state, syncPosition, false, false);
-                }
-
-                _milisElapsedPrevious = _elapsedTime;
-                _text.text = (_deadlineInSec - (_elapsedTime / 1000)).ToString();
+                SyncPosition syncPosition = new SyncPosition();
+                syncPosition.messageType = MessageType.SyncPosition;
+                syncPosition.x = _playerBase.transform.position.x;
+                syncPosition.y = _playerBase.transform.position.y;
+                syncPosition.z = _playerBase.transform.position.z;
+                syncPosition.clientId = clientId;
+                StateObject state = new StateObject();
+                state.workSocket = _sender;
+                Send(state, syncPosition, false, false);
             }
+            _text.text = (_deadlineInSec - (_elapsedTime / 1000)).ToString();
         }
         if (_inputSent == 1)
         {
@@ -228,8 +222,8 @@ public class Client : MonoBehaviour
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
         IPAddress ipAddr = ipHost.AddressList[0];
         Debug.Log(ipAddr.ToString());
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::2444:881b:bf8c:86ca"), 11111);
-        //IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
+        //IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse("fe80::2444:881b:bf8c:86ca"), 11111);
+        IPEndPoint remoteEndPoint = new IPEndPoint(ipAddr, 11111);
         _sender = new Socket(remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         try
