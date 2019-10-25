@@ -225,7 +225,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -722,7 +722,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -2105,7 +2105,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -2255,7 +2255,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -3286,7 +3286,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -3762,11 +3762,11 @@ GameObject:
   - component: {fileID: 992918740}
   m_Layer: 8
   m_Name: SolarFlares
-  m_TagString: Untagged
+  m_TagString: SolarFlare
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &992918740
 Transform:
   m_ObjectHideFlags: 0
@@ -5448,7 +5448,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -5586,7 +5586,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
@@ -8163,7 +8163,7 @@ PrefabInstance:
     - target: {fileID: 1102512029523828933, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102512029523737829, guid: 162d2966cfc225043bd1369f81e1739b,
         type: 3}

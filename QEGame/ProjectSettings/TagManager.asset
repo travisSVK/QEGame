@@ -11,6 +11,7 @@ TagManager:
   - Spawner04
   - Spawner05
   - Timer
+  - SolarFlare
   layers:
   - Default
   - TransparentFX

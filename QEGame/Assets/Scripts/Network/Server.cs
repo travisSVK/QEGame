@@ -58,12 +58,12 @@ public class Server : MonoBehaviour
     {
         if (!_solarsEnabled)
         {
-            SolarFlareBehaviour[] solars = FindObjectsOfType<SolarFlareBehaviour>();
+            GameObject[] solars = GameObject.FindGameObjectsWithTag("SolarFlare");
             if (solars.Length > 0)
             {
-                foreach (SolarFlareBehaviour s in solars)
+                foreach (GameObject s in solars)
                 {
-                    s.gameObject.SetActive(true);
+                    s.SetActive(true);
                 }
                 _solarsEnabled = true;
             }
