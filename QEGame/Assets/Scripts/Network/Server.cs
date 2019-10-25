@@ -56,19 +56,6 @@ public class Server : MonoBehaviour
 
     private void Update()
     {
-        if (!_solarsEnabled)
-        {
-            SolarFlareActivator[] solars = FindObjectsOfType<SolarFlareActivator>();
-            if (solars.Length > 0)
-            {
-                foreach (SolarFlareActivator s in solars)
-                {
-                    s.Activate();
-                }
-                _solarsEnabled = true;
-            }
-        }
-
         if (Input.GetKeyUp(KeyCode.F))
         {
             if (Screen.fullScreen)

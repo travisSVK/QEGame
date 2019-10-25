@@ -27,10 +27,10 @@ public class SolarFlareMovement : MonoBehaviour
 
     private void Update()
     {
-        _currentTime = Mathf.Lerp(_prevTime, _currentTime, Mathf.Min(1.0f, _alpha));
+        float t = Mathf.Lerp(_prevTime, _currentTime, Mathf.Min(1.0f, _alpha));
         _alpha += Time.deltaTime;
 
-        float finalTime = (_currentTime / 10.0f) % 3.0f;
+        float finalTime = (t / 10.0f) % 3.0f;
         int currentPoint = (int)finalTime;
         int prevPoint = currentPoint - 1;
         prevPoint = prevPoint < 0 ? 2 : prevPoint;
