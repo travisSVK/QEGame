@@ -4,55 +4,38 @@ using UnityEngine;
 
 public class SolarFlareMovement : MonoBehaviour
 {
-    private Vector3 movePoint0;
-    private Vector3 movePoint1;
-    private Vector3 movePoint2;
-    private Vector3 newPoint;
+    private Vector3[] _points = new Vector3[3];
 
-    private float smooth = 0.7f;
-    private float resetTime = 7.0f;
+    private float _prevTime = 0.0f;
+    private float _currentTime = 0.0f;
+    private float _alpha = 0.0f;
+    private float _realTime = 0.0f;
 
-    public int currentState = 0;
+    public void NewTime(float newTime)
+    {
+        _prevTime = _currentTime;
+        _currentTime = newTime;
+        _alpha = 0.0f;
+    }
 
-
-    // Start is called before the first frame update
     void Awake()
     {
-        movePoint0 = gameObject.transform.Find("MovePoint0").position;
-        movePoint1 = gameObject.transform.Find("MovePoint1").position;
-        movePoint2 = gameObject.transform.Find("MovePoint2").position;
-
-        ChangeTarget();
+        _points[0] = gameObject.transform.Find("MovePoint0").position;
+        _points[1] = gameObject.transform.Find("MovePoint1").position;
+        _points[2] = gameObject.transform.Find("MovePoint2").position;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, newPoint, smooth * Time.deltaTime);
-    }
+        _currentTime = Mathf.Lerp(_prevTime, _currentTime, Mathf.Min(1.0f, _alpha));
+        _alpha += Time.deltaTime;
 
-    void ChangeTarget()
-    {
-        if (currentState == 0)
-        {
-            currentState = 1;
-            newPoint = movePoint1;
-        }
-        else if (currentState == 1)
-        {
-            currentState = 2;
-            newPoint = movePoint2;
-        }
-        else if (currentState == 2)
-        {
-            currentState = 3;
-            newPoint = movePoint1;
-        }
-        else if (currentState == 3)
-        {
-            currentState = 0;
-            newPoint = movePoint0;
-        }
-        Invoke("ChangeTarget", resetTime);
+        float finalTime = (_currentTime / 10.0f) % 3.0f;
+        int currentPoint = (int)finalTime;
+        int prevPoint = currentPoint - 1;
+        prevPoint = prevPoint < 0 ? 2 : prevPoint;
+        finalTime %= 1.0f;
+
+        transform.position = Vector3.Lerp(_points[prevPoint], _points[currentPoint], Mathf.SmoothStep(0.0f, 1.0f, finalTime));
     }
 }
