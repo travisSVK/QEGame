@@ -12,19 +12,17 @@ public class SolarFlareBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
         Server server = FindObjectOfType<Server>();
-        if (server)
+        PlayerControllerBase playerBase = other.GetComponent<PlayerControllerBase>();
+        if (server && playerBase)
         {
-            PlayerControllerBase[] playerControllers = FindObjectsOfType<PlayerControllerBase>();
-            foreach (PlayerControllerBase playerControllerBase in playerControllers)
-            {
-                float distance = Vector3.Distance(transform.position, playerControllerBase.transform.position);
-                if (distance <= 0.15f)
-                {
-                    Debug.Log("Dead");
-                    playerControllerBase.OnPlayerDeath();
-                }
-            }
+            Debug.Log("Dead");
+            playerBase.OnPlayerDeath();
         }
     }
 }
